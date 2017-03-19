@@ -1,8 +1,6 @@
 チームとしての業務の進め方について最近悩むところがあって、なんかいい手はないものかと思っていたらこんなイベントが。
 
-Productivity Engineering − Forkwell Meetup #4
-
-https://forkwell.connpass.com/event/51332/
+[Productivity Engineering − Forkwell Meetup #4](https://forkwell.connpass.com/event/51332/)
 
 ということで行ってきた。
 
@@ -10,7 +8,7 @@ https://forkwell.connpass.com/event/51332/
 
 ## レトロスペクティブの話
 
-http://www.ryuzee.com/contents/blog/7107
+[スライド](http://www.ryuzee.com/contents/blog/7107)
 
 * ほめたほうがいい、とか時間をきっちり守って忙しいときほど定期的にやる、とかは今のチーム(というか会議体、というか)に対してもかなり口酸っぱく言っていておおかた進め方は間違ってない、と自信になった
 * チーム全体になるとMTGがうまくないと思ってて、｢MTGはじめに口を無理やり開かせるアクティビティ｣はうまく取り入れたい、と思った。
