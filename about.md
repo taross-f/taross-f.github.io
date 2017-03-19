@@ -10,9 +10,9 @@ TARO FURUYA
 
 興味がある→C# / Unity / ASP.NET / ProjectManagement / Golang / MachineLearning
 
-### Qiita
-http://qiita.com/t_furuya
-
+[Qiita](http://qiita.com/t_furuya)
+[Twitter](https://twitter.com/tarofufufu)
+[Github](https://github.com/taross-f)
 
 ### Contact me
 
