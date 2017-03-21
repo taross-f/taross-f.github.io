@@ -1,9 +1,14 @@
-# TL;DR
+---
+excerpt_separator: <!--more-->
+---
+
+
+## TL;DR
 
 hipchatにRe:ボタンとquoteボタンを追加するchrome拡張を作ったよ
+<!--more-->
 
-
-# 背景
+## 背景
 
 業務で他のチャットツールと使っていたが、もろもろの事情によりhipchatに移行したところメンバーからhipchatがつかいづらいという声があがった
 
@@ -11,11 +16,11 @@ hipchatにRe:ボタンとquoteボタンを追加するchrome拡張を作った�
 
 hipchatにない返信ボタンをつくったり、quoteコマンドを1ボタンでいけたら多少は楽になるんじゃないかという考え
 
-# モノ
+## モノ
 
 [https://github.com/taross-f/HipchatButtons](https://github.com/taross-f/HipchatButtons)
 
-# ソース
+## ソース
 
 * ボタンがなかったら追加する、ってのを5秒毎にやってるだけ(room変わったり発言あったりするので)
 * ボタンクリックで発言内容をとってinputにつっこむだけ
