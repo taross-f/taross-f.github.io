@@ -29,7 +29,10 @@ USキーボードしかキートップ販売がない。(僕のリアフォはJI
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=tarossf-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=B000EQHU6M&linkId=fa17cc6071d46d95a08501fc4f9824db&bc1=000000&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
     </iframe>
 
-after
+### 見た目
+
+
+![無刻印Realforce](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/IMG_4450.JPG "無刻印Realforce")
 
 
 ## 感想
