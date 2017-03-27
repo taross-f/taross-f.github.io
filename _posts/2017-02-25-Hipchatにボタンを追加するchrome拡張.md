@@ -1,5 +1,6 @@
 ---
 excerpt_separator: <!--more-->
+tags: hipchat chrome
 ---
 
 
