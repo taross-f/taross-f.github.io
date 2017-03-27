@@ -1,3 +1,10 @@
+---
+tags: meetup
+
+
+---
+
+
 チームとしての業務の進め方について最近悩むところがあって、なんかいい手はないものかと思っていたらこんなイベントが。
 
 [Productivity Engineering − Forkwell Meetup #4](https://forkwell.connpass.com/event/51332/)
