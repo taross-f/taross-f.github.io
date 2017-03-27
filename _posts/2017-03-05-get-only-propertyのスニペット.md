@@ -1,3 +1,8 @@
+---
+tags: C#
+
+---
+
 C#6.0でget-only propertyがありますね。
 
 [http://ufcpp.net/study/csharp/oo_property.html#get-only](http://ufcpp.net/study/csharp/oo_property.html#get-only)
