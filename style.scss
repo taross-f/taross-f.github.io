@@ -215,6 +215,13 @@ img {
   }
 }
 
+.tag {
+  font-size: 12px;
+  @include mobile {
+    font-size: 10px;
+  }
+}
+
 nav {
   float: right;
   margin-top: 23px; // @TODO: Vertically middle align
