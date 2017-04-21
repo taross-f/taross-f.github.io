@@ -1,3 +1,8 @@
+---
+tags: vscode
+
+---
+
 VisualStudio(Code)の置換のときにマッチしてる値を使いたいってときありますよね。
 
 
