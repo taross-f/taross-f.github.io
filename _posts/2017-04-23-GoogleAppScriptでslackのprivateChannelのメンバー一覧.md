@@ -6,7 +6,7 @@ tags: googleappscript
 
 GASでprivate channelのメンバー一覧取りたいってときありますよね。抽選したりとか。
 
-ただ単純な`groups.info`だとdeletedな人だったりIDだけだったりでアレなので`users.list`と突き合わせる形に。
+ただ単純な`groups.info`だとdeletedな人いたりIDだけだったりでアレなので`users.list`と突き合わせる形に。
 
 
 ## 使ったライブラリ
