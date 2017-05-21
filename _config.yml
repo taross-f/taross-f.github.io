@@ -14,6 +14,8 @@ avatar: https://avatars1.githubusercontent.com/u/1595823?v=3&s=460
 # Flags below are optional
 #
 
+paginate: 5
+paginate_path: "/page:num/" 
 # Includes an icon in the footer for each username you enter
 footer-links:
   dribbble:
