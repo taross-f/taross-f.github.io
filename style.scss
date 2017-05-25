@@ -260,7 +260,7 @@ nav {
 
 .posts > .post:last-child {
   padding-bottom: 1em;
-  border-bottom: none;
+  border-bottom: 2px solid $lightGray;
 }
 
 .post {
@@ -296,8 +296,7 @@ footer {
 }
 
 .pagination {
-  margin: 0 auto;
-  border-top: 1px solid #ddd;
+  text-align: center;
 }
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
