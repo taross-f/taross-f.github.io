@@ -18,9 +18,7 @@ EFCoreだとScafoldが入っててそもそもEFCoreだけでできたり、SQLS
 EFCoreだと複数PKの場合にKeyAttributeがつくとおかしくなるけど、それも対応してくれる(CompositeKeyの場合KeyAttributeをつけない)
 
 ### 注意
-ただしそのままだとTimestampが自動的に`IsConcurrencyToken()`になるようで、使用側で`AddOrUpdate()`してたりするとWhere句に勝手にTimestampのカラムが入ってきて死にます。
-そういうコードの場合は中身の書き換えが必要そう(書き換えた)
+ただしそのままだと`Timestamp`のカラムが自動的に`IsConcurrencyToken()`になるようで、使用側で`AddOrUpdate()`してたりするとWhere句に勝手に入ってきて死にます。
+使用側でそういうコードの場合(`OptimisticConcurrencyException`が出るとき)は中身の書き換えが必要そう(そういうコードだったので書き換えて使ってます)
 
-あとはContextの単位もカスタマイズしたかったので、外部から渡せる
-
-中身は素朴…本家のHPにもコードベース古いよって書いてある
+中身は素朴…本家のHPにもコードベース古いよって書いてありますね
