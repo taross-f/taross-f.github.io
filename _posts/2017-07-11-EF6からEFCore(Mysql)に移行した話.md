@@ -9,7 +9,7 @@ ASP.NETでmysql + entityframework6のプロジェクトで、今後のASP.NET Co
 
 ので、やってみた。
 
-
+## 注意
 ただし
 [https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/)
 には、よっぽどのことがない限りEF6からEFCoreに移行するのは薦めない、と書いてある…
