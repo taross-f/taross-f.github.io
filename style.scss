@@ -110,6 +110,10 @@ img {
   max-width: 100%;
 }
 
+table, tr, td, th {
+  border: 2px $lightGray solid;
+}
+
 // Fixes images in popup boxes from Google Translate
 .gmnoprint img {
   max-width: none;
@@ -213,9 +217,6 @@ img {
   @include mobile {
     margin: 3px 0;
   }
-}
-table {
-  border: 2px #101010 solid;
 }
 .tag {
   font-size: 12px;
