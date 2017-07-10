@@ -3,7 +3,7 @@ tags: entityframeworkcore mysql
 
 ---
 
-ASP.NETでmysqlにentityframework6のプロジェクトで、今後のASP.NET Core化を見据えたときにEntityFrameworkCoreに移行しておいたほうが辛くなさそう。EFCore自体はASP.NET上でも動くみたいなので、先に入れ替えておきたい、という動機。
+ASP.NET+mysql+EntityFramework6で、今後のASP.NET Core化を見据えたときにEntityFrameworkCoreに移行しておいたほうが辛くなさそう。EFCore自体はASP.NET上でも動くみたいなので、先に入れ替えておきたい、という動機。
 
 また現状のコードがEF6のUnitOfWorkだったりDI的なところにがっつり依存しているので、ASP.NET Core化時に辛くなるのが目に見えたのと別のDBライブラリ使うのも厳しそうだった。
 
@@ -73,3 +73,10 @@ prereleaseなのがアレ。プロジェクト的にまだ時間はかかるの�
 
 ## まとめ
 破壊的変更が多数あり、情報も少ない(公式のドキュメントが少ない)ため調査が大変だったり手探りだったり。が、全然移行できたので今後の不安がなくなって一安心でした。同じようなことを考えている方の助けになれば幸い
+
+## 参考
+* 本家Document   
+[https://docs.microsoft.com/en-us/ef/core/](https://docs.microsoft.com/en-us/ef/core/)
+* このブログが一番詳しそう  
+[https://weblogs.asp.net/dixin/Tags/Entity%20Framework](https://weblogs.asp.net/dixin/Tags/Entity%20Framework)
+
