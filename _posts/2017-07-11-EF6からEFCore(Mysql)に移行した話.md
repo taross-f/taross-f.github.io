@@ -57,7 +57,7 @@ prereleaseなのがアレ。プロジェクト的にまだ時間はかかるの�
 * `IDbSet<>`いなくなってるので`DbSet<>`に置き換え
 * `connectionString`をname指定できなくなっているので、connectionStringを直接渡せるように修正
 * `DbContext.OnConfiguring()`で`UseMYSql()`することでDBを指定するように修正
-* `DbContext.OnModelCreating()`で
+* `DbContext.OnModelCreating()`でMappingを呼ぶように修正
 * `Context.Database.Log`がなくなってるので消す
     * ちょっと調べた感じMysql側だとまだうまく生成されたSQLだけ吐き出せなそう。[ここ](https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging#other-applications)と同じように実装するも、Categoryが`CommandExecuted`が一切来ない…
     * `SaveChanges().WriteLine()`がもしかしたら欲しい動作っぽいので、あとで試す
