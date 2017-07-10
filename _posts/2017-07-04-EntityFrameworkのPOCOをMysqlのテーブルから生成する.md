@@ -4,12 +4,12 @@ tags: mysql entityframework
 
 要件としてMysql+EntityFrameworkで既存のテーブルからPOCOをGenerateしたくなった。
 
-EFCoreだとScafoldが入っててそもそもEFCoreだけでできたり、SQLServerだったら(ReversePOCOGenerator)[https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator]のほうがスタンダードなのかも。
+EFCoreだとScafoldが入っててそもそもEFCoreだけでできたり、SQLServerだったら[ReversePOCOGenerator](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator)のほうがスタンダードなのかも。
 
 ということでMysqlだとどれが正解なんだろ、と探したのでメモ
 
 ## DBSchemaReader
-(これ)[https://dbschemareader.codeplex.com/]を使う
+[これ](https://dbschemareader.codeplex.com/)を使う
 
 * Target選ぶと、EF6でもEFCoreでも適切にPOCOをGenerateしてくれる。
 * KeyAttributeとかも必要に応じてつけてくれるし、不要だったり動作がおかしくなる場合つけないでくれる。
