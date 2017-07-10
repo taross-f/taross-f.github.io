@@ -23,9 +23,9 @@ featureがあったりなかったりの表がこちら。
 
 
 ## 調査
-* [Official](https://www.nuget.org/packages/MySql.Data.EntityFrameworkCore)
+* [Official](https://www.nuget.org/packages/MySql.Data.EntityFrameworkCore)  
 prereleaseなのがアレ。プロジェクト的にまだ時間はかかるので早くpreとれてほしい
-* [Pomelo](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)
+* [Pomelo](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)  
 活発そう。本家よりも早く実装が進んでる。
 
 
