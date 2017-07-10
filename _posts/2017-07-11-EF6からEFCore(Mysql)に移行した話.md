@@ -14,6 +14,8 @@ ASP.NETでmysql + entityframework6のプロジェクトで、今後のASP.NET Co
 [https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/)
 には、よっぽどのことがない限りEF6からEFCoreに移行するのは薦めない、と書いてある…
 
+> Because of the fundamental changes in EF Core we do not recommend attempting to move an EF6.x application to EF Core unless you have a compelling reason to make the change.
+
 featureがあったりなかったりの表がこちら。
 
 [https://docs.microsoft.com/en-us/ef/efcore-and-ef6/features](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/features)
