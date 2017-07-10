@@ -3,9 +3,9 @@ tags: entityframeworkcore mysql
 
 ---
 
-ASP.NETでmysql + entityframework6のプロジェクトで、今後のASP.NET Core化を見据えたときにEntityFrameworkCoreに移行しておいたほうが辛くなさそう。EFCore自体はASP.NET上でも動くみたいなので、先に入れ替えておきたい、という動機。
+ASP.NETでmysqlにentityframework6のプロジェクトで、今後のASP.NET Core化を見据えたときにEntityFrameworkCoreに移行しておいたほうが辛くなさそう。EFCore自体はASP.NET上でも動くみたいなので、先に入れ替えておきたい、という動機。
 
-また現状のコードがEF6のUnitOfWorkだったりDI的なところにがっつり依存しているので、ASP.NET Core化時に辛くなるのが目に見えた、+ 別のDBライブラリ使うのも厳しそうだった。
+また現状のコードがEF6のUnitOfWorkだったりDI的なところにがっつり依存しているので、ASP.NET Core化時に辛くなるのが目に見えたのと別のDBライブラリ使うのも厳しそうだった。
 
 ので、やってみた。
 
@@ -41,7 +41,7 @@ prereleaseなのがアレ。プロジェクト的にまだ時間はかかるの�
 
 のケースに関して実際の環境で測定してみた。
 
-|EF6を100とした所要時間|EF6|Official|Pomelo|
+||EF6|Official|Pomelo|
 |--|--|--|--|
 |Select|100|72|126|
 |Update|100|85|105|
