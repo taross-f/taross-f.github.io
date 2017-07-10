@@ -3,8 +3,6 @@ tags: entityframeworkcore mysql
 
 ---
 
-
-## なぜ移行したか
 ASP.NETでmysql + entityframework6のプロジェクトで、今後のASP.NET Core化を見据えたときにEntityFrameworkCoreに移行しておいたほうが辛くなさそう。EFCore自体はASP.NET上でも動くみたいなので、先に入れ替えておきたい、という動機。
 
 また現状のコードがEF6のUnitOfWorkだったりDI的なところにがっつり依存しているので、ASP.NET Core化時に辛くなるのが目に見えた、+ 別のDBライブラリ使うのも厳しそうだった。
