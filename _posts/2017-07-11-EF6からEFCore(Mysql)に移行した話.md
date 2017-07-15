@@ -1,5 +1,6 @@
 ---
 tags: entityframeworkcore mysql 
+excerpt_separator: <!--more-->
 
 ---
 
@@ -8,6 +9,9 @@ ASP.NET+mysql+EntityFramework6で、今後のASP.NET Core化を見据えたと�
 また現状のコードがEF6のUnitOfWorkだったりDI的なところにがっつり依存しているので、ASP.NET Core化時に辛くなるのが目に見えたのと別のDBライブラリ使うのも厳しそうだった。
 
 ので、やってみた。
+
+
+<!--more-->
 
 ただし
 [https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/)
