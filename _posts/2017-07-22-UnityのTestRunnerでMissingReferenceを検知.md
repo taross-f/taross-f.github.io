@@ -2,7 +2,7 @@
 tags: unity testrunner
 ---
 
-Unityプロジェクトでprefabとかでアタッチされてるコンポーネントとかソースとかリソースがmissing referenceになることよくあって、Unity5.6から入ったTestRunnerのPlaymodeでのテストである程度判別できそうで、試してみた。
+Unityプロジェクトでprefabとかでアタッチされてるコンポーネントとかソースとかリソースがmissing referenceになることよくあって、Unity5.6から入ったTestRunnerのPlaymodeでのテストである程度判別できそうで、試してみた。
 
 ## TestRunnerのplaymodeについて
 
@@ -26,8 +26,8 @@ Unityプロジェクトでprefabとかでアタッチされてるコンポー�
 でも用意されてるメソッドは以下の感じ
 
 ```csharp
-        // これだと特定のログが出ていることをAssertするので
-        // ログが出ているとAssert:OKになっちゃう
+        // これだと特定のログが出ていることをAssertするので
+        // ログが出ているとAssert:OKになっちゃう
 		LogAssert.Expect(LogType.Warning, "missing");
 
         // これだと一切のログが出ていないことをチェックするしかない
@@ -35,9 +35,9 @@ Unityプロジェクトでprefabとかでアタッチされてるコンポー�
 ```
 
 
-## やれそうなこと
+## やれそうなこと
 
-以下のように`[SetUp]`で`LogEnabled`をfalseにすることで`Warning`以上しか出ないようにして、`LogAssert.NoUnexpectedReceived();`ってうやるのがよさそう。もちろん正常動作だったりSceneをLoadしただけでWarn以上のログが出ちゃう場合は引っかかってしまう
+以下のように`[SetUp]`で`LogEnabled`をfalseにすることで`Warning`以上しか出ないようにして、`LogAssert.NoUnexpectedReceived();`ってうやるのがよさそう。もちろん正常動作だったりSceneをLoadしただけでWarn以上のログが出ちゃう場合は引っかかってしまう
 
 ```csharp
 using UnityEngine;
@@ -64,9 +64,9 @@ public class PlayModeTest {
 
 ```
 
-[github](https://github.com/taross-f/playmodetest)に`CubeController.cs`の名前を変更して擬似的にmissingにすると試せます。Unity5.6.2p2/macOS Sierraで確認
+[github](https://github.com/taross-f/playmodetest)に`CubeController.cs`の名前を変更して擬似的にmissingにすると試せます。Unity5.6.2p2/macOS Sierraで確認
 
 ## まとめ
 
-上記のノリでCIで全Scene/必要なPrefab分のテストを回せばmissing referenceに気づけそうで助かりそう。  
-欲を言えば`Unexpected(LogType, Regex)`みたいなメソッドがあるともっとストレートに書けるので欲しい
+上記のノリでCIで全Scene/必要なPrefab分のテストを回せばmissing referenceに気づけそうで助かりそう。  
+欲を言えば`Unexpected(LogType, Regex)`みたいなメソッドがあるともっとストレートに書けるので欲しい
