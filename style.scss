@@ -46,6 +46,8 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 24px;
+  border-bottom: solid 3px #eee;
+
   a {
     color: inherit;
   }
@@ -53,6 +55,7 @@ h1 {
 
 h2 {
   font-size: 21px;
+  border-bottom: solid 3px #eee;
 }
 
 h3 {
