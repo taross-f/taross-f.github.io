@@ -4,9 +4,9 @@ tags: mac windows utility
 ---
 
 ## キーボード環境について
-職場Windows個人Macなのもあって、JISキーボードでなるべく同様のカスタマイズ可能なものだけ取り入れてるんですが、hjklでカーソル移動って便利なのでどっちも同じような感じでできないかやりたくなった。特にキーボード無刻印にしたらカーソルキーに移動するのがだるいのもあった。のでやってみた。ちなみに別にVimmerなわけではありません
+職場Windows個人Macなのもあって、JISキーボードでなるべく同様のカスタマイズ可能なものだけ取り入れてるんですが、hjklでカーソル移動って便利なのでどっちも同じような感じでできないかやりたくなった。特にキーボード無刻印にしたらカーソルキーに移動するのがだるいのもあった。のでやってみた。ちなみに別にVimmerなわけではありません
 
-ちょろっと調べたらMacはいろいろ手がありそうだったので、Windows側で導入簡単である程度求めるものができるものを探して環境を揃えられそうなやつを入れることにする
+ちょろっと調べたらMacはいろいろ手がありそうだったので、Windows側で導入簡単である程度求めるものができるものを探して環境を揃えられそうなやつを入れることにする
 
 ## Windows
 
@@ -14,12 +14,12 @@ tags: mac windows utility
 
 [enthumble](http://jp.enthumble.com/)
 
-決め手は、DL>インストール>設定を選ぶだけで無変換+hjklでカーソル移動できちゃう簡単さ。すごい  
-さらにあとから気付いたけど 無変換+n でbackspace, 無変換+m でdeleteもできてこれが地味に便利だった  
-
+決め手は、DL>インストール>設定を選ぶだけで無変換+hjklでカーソル移動できちゃう簡単さ。すごい  
+さらにあとから気付いたけど 無変換+n でbackspace, 無変換+m でdeleteもできてこれが地味に便利だった  
+
 今回の話とは関係ないけど 無変換/変換 でIME On/Off切り替えるようにするのもインストールするだけで出来てしまっていい感じ。いままではGoogleIMEでポチポチ設定変えてたので楽ちんポン
 
-問題はフリー版だとHotkeyとして**無変換**しか使えない点。これは後述するけどMac側での対応が難しい(hammerspoonでmuhenkanがhotkeyに無いっぽい)ので、Windows側のCapslockを無変換にするようにする。
+問題はフリー版だとHotkeyとして**無変換**しか使えない点。これは後述するけどMac側での対応が難しい(hammerspoonでmuhenkanがhotkeyに無いっぽい)ので、Windows側のCapslockを無変換にするようにする。
 
 [KeySwap for XP](http://www.vector.co.jp/soft/winnt/util/se228667.html)
 
@@ -30,9 +30,9 @@ XP!!?? ってなるけどWin10で問題なく動きました。これでレジ�
 
 
 以下を使う
-[hammerspoon](http://www.hammerspoon.org/)
+[hammerspoon](http://www.hammerspoon.org/)
 
-[KarabinerのVi Mode カーソル移動（Ctrl+hjkl）をSierraでも再現する](http://qiita.com/deg84/items/792bf6b2adf467df9bdc)を参考にした。 ~~というかほぼ丸パクり~~
+[KarabinerのVi Mode カーソル移動（Ctrl+hjkl）をSierraでも再現する](http://qiita.com/deg84/items/792bf6b2adf467df9bdc)を参考にした。 ~~というかほぼ丸パクり~~
 
 一応win版の対応であったdelete/backspaceの動きを追加したりしている
 
@@ -105,4 +105,4 @@ remapKey({'ctrl', 'cmd', 'alt'}, 'm', keyCode('delete', {'fn', 'cmd', 'alt'}))
 
 ## まとめ
 
-ホームポジションから離れづらくなった。便利。
+ホームポジションから離れづらくなった。便利。
