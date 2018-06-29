@@ -11,11 +11,11 @@ layout: default
   </div>
   <div class="entry">
     {{ content }} 
+    {% include share_bar.html %}
   </div>
 
   <div class="date">
     {{ page.date | date: "Posted on %Y.%m.%d" }}
-    {% include share_bar.html %}
   </div>
 
   {% include disqus.html %}
