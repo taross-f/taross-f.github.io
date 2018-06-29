@@ -17,6 +17,7 @@
 
     {% if page.title %}
     <meta property="og:title" content="{{ page.title }}" />
+    <meta property="og:url" content="{{ URI.escape(page.url) }}" />
     <meta name="twitter:title" content="{{ page.title }}" />
     {% else %}
     <meta property="og:title" content="{{ site.name }}" />
