@@ -25,11 +25,14 @@ include/share_bar.html
 でPostのレイアウトに入れる
 
 layouts/post.html
-
+{% raw %}
 ```html
-    # contents のあとに
+  <div class="entry">
+    {{ content }} 
     {% include share_bar.html %}
+  </div>
 ```
+{% endraw %}
 
 でなんか詰まりすぎてたのでCSS調整
 
@@ -43,3 +46,5 @@ style.scss
 ```
 
 ちなみにはじめにtwitterのボタンを`intent/tweet`でやろうとしたけど、URLエンコードがjekyll側でうまくできなくて、正しくURLが認識されなかった(埋めてるリンク自体はちゃんとエンコードされてたから、もしかしたらtwitter側の問題かも?)
+
+jekyll でタグをエスケープするときは {％ raw ％} {％ endraw ％}
