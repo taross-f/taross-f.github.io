@@ -27,10 +27,8 @@ include/share_bar.html
 layouts/post.html
 
 ```html
-  <div class="entry">
-    \{\{ content \}\} 
+    # contents のあとに
     {% include share_bar.html %}
-  </div>
 ```
 
 でなんか詰まりすぎてたのでCSS調整
