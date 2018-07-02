@@ -28,7 +28,7 @@ layouts/post.html
 
 ```html
   <div class="entry">
-    {{ content }} 
+    \{\{ content \}\} 
     {% include share_bar.html %}
   </div>
 ```
