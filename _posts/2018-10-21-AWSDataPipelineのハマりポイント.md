@@ -1,3 +1,7 @@
+---
+tags: AWS DataPipeline
+---
+
 最近AWS Data Pipelineを触っていろいろハマるポイントがあったので、同じ気持ちになる人を減らすためにも残してみる
 
 # そもそもAWS Data Pipeline とは
