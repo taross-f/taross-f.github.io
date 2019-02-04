@@ -18,7 +18,7 @@ title: tf-pose-estimation動かしてみた
 * Memory: 8 GB 1867 MHz LPDDR3
 
 # インストール
-さくっと動かすだけなので環境分離とか一切してないです
+さくっと動かすだけなので環境分離とか一切してないです。何番煎じかわからないけど。
 
 ```sh
 $ git clone https://www.github.com/ildoonet/tf-pose-estimation
