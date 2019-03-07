@@ -1,3 +1,3 @@
 # blog
 
-https://taross-f.github.io
+https://blog.taross-f.dev/
