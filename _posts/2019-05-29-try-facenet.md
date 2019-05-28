@@ -11,7 +11,7 @@ part1 は[こちら](https://blog.taross-f.dev/try-tf-pose-estimation/)
 
 [![facenet](https://github-link-card.s3.ap-northeast-1.amazonaws.com/davidsandberg/facenet.png)](https://github.com/davidsandberg/facenet)
 
-顔の特徴量を抜き出して比較できる、それぞれの顔で学習しなくても特徴のベクトルの距離(コサイン類似度?)で同一人物かどうかを検出できるみたい  
+顔の特徴量を抜き出して比較できる、それぞれの顔で学習しなくても特徴のベクトルの距離で同一人物かどうかを検出できるみたい  
 [OpenFace](https://github.com/cmusatyalab/openface)に inspire されてると  
 ただ last update が 1 年前になっちゃってるので、まあデモ的な感じですかね
 
