@@ -44,8 +44,8 @@ $ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0
 
 # まとめ
 動いた!  
-この最低スペックのmacbookでもwebcamで動かして1.5FPSくらい  
+この最低スペックのmacbook proでもwebcamで動かして1.5FPSくらい  
 テストで動かしてもスケルトンだったり顔の要素が表示されて面白い  
-次は顔認識系を試します
+[次は顔認識系を試します](https://blog.taross-f.dev/try-facenet/)
 
 <iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=42&l=ur1&category=echo&banner=0XJ2NCN6TEWJHJHZEH02&f=ifr&linkID=514cf9a39a9a2a60f4249e4a53231154&t=tarossf-22&tracking_id=tarossf-22" width="234" height="60" scrolling="no" border="0" marginwidth="0" align="center" style="border:none;" frameborder="0"></iframe>
