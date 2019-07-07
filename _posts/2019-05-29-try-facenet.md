@@ -227,4 +227,4 @@ id1,2 は同一人物、id0 は別人なので、しきい値を例えば 0.8 �
 
 次回は Intel の本気が見れる? [OpenVINO](https://docs.openvinotoolkit.org/) について書きたい気持ちがあります
 
-<iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=294&l=ur1&category=timesalefestival&banner=0RCY5RY7ZXKMTN2MED02&f=ifr&linkID=85ae2b8845422543490eed63c583a07c&t=tarossf-22&tracking_id=tarossf-22" width="320" height="100" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+<iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=288&l=ur1&category=musicunlimited&banner=16ETYA43WQV6H01G3982&f=ifr&linkID=613b340ea7107b05dbeba8cd4022946a&t=tarossf-22&tracking_id=tarossf-22" width="320" height="50" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
