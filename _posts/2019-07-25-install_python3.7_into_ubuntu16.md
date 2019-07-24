@@ -1,5 +1,5 @@
 ---
-tags: Python docker
+tags: Python Docker
 title: DockerでUbuntu16.04のimageにpython3.7をaptで入れる
 ---
 
