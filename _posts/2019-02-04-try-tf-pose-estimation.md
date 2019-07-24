@@ -1,5 +1,5 @@
 ---
-tags: python
+tags: Python cv
 title: tf-pose-estimation動かしてみた
 ---
 
