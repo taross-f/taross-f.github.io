@@ -9,7 +9,7 @@ title: DockerでUbuntu16.04のimageにpython3.7をaptで入れる
 
 # Dokcerfile
 
-```Dockerfile
+```
 FROM ubuntu:16.04
 RUN apt-get update -y && apt-get install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update -y  && apt-get install -y python3.7
@@ -20,7 +20,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update -y  && apt-get insta
 ## 確認
 
 ```
-$ docker run  eec8157144ee python3.7 --version
+$ docker run  <image> python3.7 --version
 Python 3.7.4
 ```
 
