@@ -17,6 +17,8 @@ NVIDIA には負けない、という Intel の本気が見れる [OpenVINO](htt
 
 普通のインストールは公式のリファレンスでちゃんと書いてあるので、今回は Web API として docker で動かすケースをやってみる。
 
-Docker 上で動かすところまでは linux 限定だけどリファレンスがある。Mac でも docker でやれるならやりたいんだけども、Mac 上のコンテナからホストの Webcam とか GPU にアクセスする方法が非常にめんどくさそうですぐ諦めてしまった。
+Docker 上で動かすところまでは linux 限定だけど[リファレンス](https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_docker_linux.html)がある。Mac でも docker である程度はいけるんだけど、Mac 上のコンテナからホストの Webcam とか X とか GPU にアクセスする方法が非常にめんどくさそう、というかできなそう?
+
+WebAPI としてモデルにデータを食わせて結果を取るだけだったら Docker でいけますね
 
 # サンプル実行
