@@ -9,6 +9,8 @@ title: Data Platform Meetup に行ってきた
 
 twitter はこちら [#DPM](https://twitter.com/search?q=%23DPM)
 
+(9/12 後半 2 つのスライドへのリンクを追加しました)
+
 ## カルチャーとエンジニアリングをつなぐ データプラットフォーム
 
 [スライド](https://speakerdeck.com/tkngue/karutiyatoenziniaringuwotunagu-detapuratutohuomu)
@@ -36,7 +38,9 @@ twitter はこちら [#DPM](https://twitter.com/search?q=%23DPM)
 
 ## DataPlatform 構築プロジェクト推進の事例と学び
 
-鉄本 環さん
+[スライド](https://speakerdeck.com/tamakitetsumoto/data-platformgou-zhu-puroziekutotui-jin-falseshi-li-toxue-bi)
+
+[鉄本 環](https://connpass.com/user/tamaki_tetsumoto/)さん
 
 BigQuery のハマりポイントは同じ轍を踏みそうなので、ありがたかった。
 というのも現職で Amazon Redshift を使っていて、結構つらみがあるので代替手段を検討したいんですよね。どこかで移行するってなったら参考になりそうでした
@@ -44,6 +48,8 @@ BigQuery のハマりポイントは同じ轍を踏みそうなので、あり�
 DataMart 層で非正規化しても困ったことはなかった、みたいな実際の運用の結果を聞くと今の自分の仕事の状況も大丈夫そうなんだなーって安心できますね
 
 ## 大規模サービス開発における分析用データの必要要件
+
+[スライド](https://speakerdeck.com/shoei/da-gui-mo-sabisukai-fa-niokerudetayun-yong-falseqing-xiang-todui-ce)
 
 [@**_shoei_**](https://twitter.com/___shoei___)さん
 
@@ -56,8 +62,8 @@ DataMart 層で非正規化しても困ったことはなかった、みたい�
 ## まとめ
 
 話を聞いていて一番思ったのは、自社の状況はまた違うな、でした。
-登壇していた人たちはみんな、プロダクトがあってそのデータをいかに分析するか という形だったのに対して、現職はデータ自体に希少性があって(語弊はあるけど)データ自体がプロダクト なので、扱いや考え方が異なるなあと。とはいえ援用できる部分がたくさんあったので、参加してよかったです。
+登壇していた人たちはみんな、プロダクトがあってそのデータをいかに分析するか という形だったのに対して、現職はデータ自体に希少性があって(語弊はあるけど)データ自体がプロダクト なので、扱いや考え方が異なるなあと。とはいえ援用できる部分がたくさんあったので、さっそく持ち帰って使えそうです
 
-逆に現職みたいなデータがプロダクトな会社の場合の考え方、みたいな形でアウトプットできると良さそうでした
+また逆に、現職みたいなデータがプロダクトな会社の場合の考え方、みたいな形でアウトプットをできると良さそうでした
 
 あとは Retty にいる元同僚と会えたりしてよかったです
