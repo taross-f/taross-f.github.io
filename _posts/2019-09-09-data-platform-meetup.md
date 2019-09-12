@@ -3,13 +3,13 @@ tags: meetup
 title: Data Platform Meetup に行ってきた
 ---
 
-[Data Platform Meetup](https://data-platform-meetup.connpass.com/event/142822/) 行ってきた。
+[Data Platform Meetup](https://data-platform-meetup.connpass.com/event/142822/) @ Retty 株式会社 行ってきた
 
-現職でまさしくデータ基盤の今後、みたいな話をしていて、なにかヒントが得られたらとの思いでした
+というのも現職でまさしくデータ基盤の今後、みたいな話をしていて、なにかヒントが得られたらとの思いで参加
 
 twitter はこちら [#DPM](https://twitter.com/search?q=%23DPM)
 
-(9/12 後半 2 つのスライドへのリンクを追加しました)
+(9/12 追記: 後半 2 つのスライドへのリンクを追加しました)
 
 ## カルチャーとエンジニアリングをつなぐ データプラットフォーム
 
