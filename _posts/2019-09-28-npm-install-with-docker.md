@@ -5,7 +5,7 @@ title: Dockerイメージでnpm installしたときdocker-composeのvolumesで�
 
 `docker run` で動くけど `docker-compose run` で動かないときはこれがあやしい、という小ネタです
 
-具体的な例でいうと、Dockerfile で `RUN npm install` したイメージを docker-compose で使うとき、volumes でマウントして `node_modules/` ディレクトリを残したい、というときのやり方です
+具体的な例でいうと、Dockerfile で `RUN npm install` したイメージを docker-compose で使うとき、volumes で開発ディレクトリをマウントするんだけど、その下にDockerImage内の `node_modules/` ディレクトリを残したい、というときのやり方です
 
 ## 対応
 
@@ -16,7 +16,7 @@ title: Dockerイメージでnpm installしたときdocker-composeのvolumesで�
 
 こんな感じの Dockerfile
 
-```Dockerfile
+```
 FROM node
 WORKDIR /app
 COPY . /app
@@ -25,7 +25,7 @@ RUN npm install && npm run build
 CMD http-server ./dist
 ```
 
-ビルドした Image の状態
+ビルドした Image のディレクトリの状態
 
 ```
 /app/
@@ -36,7 +36,7 @@ CMD http-server ./dist
 
 うまくいかない docker-compose.yml
 
-```docker-compose.yml
+```
 version: "3"
 services:
   hoge:
@@ -49,15 +49,15 @@ services:
 
 なので以下のようにしてあげるとホスト側のディレクトリがマウントされた上で、その下に Image 内のディレクトリがマウントされて良い感じです
 
-```docker-compose.yml
+```
 version: "3"
 services:
   hoge:
     build: .
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/dist
+      - /app/node_modules  # ここ
+      - /app/dist # ここ
 ```
 
 ### おまけ
