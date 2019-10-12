@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
 以下のような画面が出て顔識別できてそうで、ID も振られてますね
 
-![s1](images/screenshot_20190529.png "screenshot")
+![result](/images/screenshot_20190529.png "screenshot")
 
 ```
 Creating networks and loading parameters
