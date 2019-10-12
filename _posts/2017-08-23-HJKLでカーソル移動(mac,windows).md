@@ -1,12 +1,13 @@
 ---
 tags: mac windows utility
-
+title: HJKLでカーソル移動(Mac,Windows)
 ---
 
 ## キーボード環境について
-職場Windows個人Macなのもあって、JISキーボードでなるべく同様のカスタマイズ可能なものだけ取り入れてるんですが、hjklでカーソル移動って便利なのでどっちも同じような感じでできないかやりたくなった。特にキーボード無刻印にしたらカーソルキーに移動するのがだるいのもあった。のでやってみた。ちなみに別にVimmerなわけではありません
 
-ちょろっと調べたらMacはいろいろ手がありそうだったので、Windows側で導入簡単である程度求めるものができるものを探して環境を揃えられそうなやつを入れることにする
+職場 Windows 個人 Mac なのもあって、JIS キーボードでなるべく同様のカスタマイズ可能なものだけ取り入れてるんですが、hjkl でカーソル移動って便利なのでどっちも同じような感じでできないかやりたくなった。特にキーボード無刻印にしたらカーソルキーに移動するのがだるいのもあった。のでやってみた。ちなみに別に Vimmer なわけではありません
+
+ちょろっと調べたら Mac はいろいろ手がありそうだったので、Windows 側で導入簡単である程度求めるものができるものを探して環境を揃えられそうなやつを入れることにする
 
 ## Windows
 
@@ -14,27 +15,25 @@ tags: mac windows utility
 
 [enthumble](http://jp.enthumble.com/)
 
-決め手は、DL>インストール>設定を選ぶだけで無変換+hjklでカーソル移動できちゃう簡単さ。すごい  
-さらにあとから気付いたけど 無変換+n でbackspace, 無変換+m でdeleteもできてこれが地味に便利だった  
+決め手は、DL>インストール>設定を選ぶだけで無変換+hjkl でカーソル移動できちゃう簡単さ。すごい  
+さらにあとから気付いたけど 無変換+n で backspace, 無変換+m で delete もできてこれが地味に便利だった
 
-今回の話とは関係ないけど 無変換/変換 でIME On/Off切り替えるようにするのもインストールするだけで出来てしまっていい感じ。いままではGoogleIMEでポチポチ設定変えてたので楽ちんポン
+今回の話とは関係ないけど 無変換/変換 で IME On/Off 切り替えるようにするのもインストールするだけで出来てしまっていい感じ。いままでは GoogleIME でポチポチ設定変えてたので楽ちんポン
 
-問題はフリー版だとHotkeyとして**無変換**しか使えない点。これは後述するけどMac側での対応が難しい(hammerspoonでmuhenkanがhotkeyに無いっぽい)ので、Windows側のCapslockを無変換にするようにする。
+問題はフリー版だと Hotkey として**無変換**しか使えない点。これは後述するけど Mac 側での対応が難しい(hammerspoon で muhenkan が hotkey に無いっぽい)ので、Windows 側の Capslock を無変換にするようにする。
 
 [KeySwap for XP](http://www.vector.co.jp/soft/winnt/util/se228667.html)
 
-XP!!?? ってなるけどWin10で問題なく動きました。これでレジストリ書き換えもサクッと。
-
+XP!!?? ってなるけど Win10 で問題なく動きました。これでレジストリ書き換えもサクッと。
 
 ## Mac
-
 
 以下を使う
 [hammerspoon](http://www.hammerspoon.org/)
 
-[KarabinerのVi Mode カーソル移動（Ctrl+hjkl）をSierraでも再現する](http://qiita.com/deg84/items/792bf6b2adf467df9bdc)を参考にした。 ~~というかほぼ丸パクり~~
+[Karabiner の Vi Mode カーソル移動（Ctrl+hjkl）を Sierra でも再現する](http://qiita.com/deg84/items/792bf6b2adf467df9bdc)を参考にした。 ~~というかほぼ丸パクり~~
 
-一応win版の対応であったdelete/backspaceの動きを追加したりしている
+一応 win 版の対応であった delete/backspace の動きを追加したりしている
 
 ```lua
 local function keyCode(key, modifiers)

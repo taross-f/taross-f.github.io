@@ -1,12 +1,12 @@
 ---
 tags: vscode
-
+title: VisualStudio(Code)の置換のときにマッチしてる値をとる
 ---
 
 VisualStudio(Code)の置換のときにマッチしてる値を使いたいってときありますよね。
 
-
 # やり方
+
 マッチしてるかたまりを`$n`でとれます。
 
 ## 例:各行ごとにダブルクォーテーションで囲んでカンマつけたい
@@ -36,8 +36,9 @@ hage
 
 ## 使いドコロ
 
-ざーっとCSVとかのデータをコピペしてきて、ダブルクォーテーションで挟んでカンマつけたい、とか。
+ざーっと CSV とかのデータをコピペしてきて、ダブルクォーテーションで挟んでカンマつけたい、とか。
 
 ## 参考
+
 https://msdn.microsoft.com/ja-jp/library/2k3te2cs.aspx
 https://msdn.microsoft.com/ja-jp/library/ewy2t5e0.aspx

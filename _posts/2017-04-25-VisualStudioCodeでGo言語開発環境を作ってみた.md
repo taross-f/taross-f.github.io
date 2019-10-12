@@ -1,32 +1,34 @@
 ---
 tags: vscode golang
-
+title: VisualStudioCodeでGo言語開発環境を作ってみた
 ---
 
-先日社内でちょっとしたプログラミングコンテストをやるとのことで、速度重視で並列処理ならGoでしょ(?)
-と思ったのでGoでやってみようとなった。
+先日社内でちょっとしたプログラミングコンテストをやるとのことで、速度重視で並列処理なら Go でしょ(?)
+と思ったので Go でやってみようとなった。
 
-で、エディタどうしようかなと思ってちょっと調べたらVisualStudioCodeでやればいい感じぽいので、環境をつくってみた
+で、エディタどうしようかなと思ってちょっと調べたら VisualStudioCode でやればいい感じぽいので、環境をつくってみた
 
 ## 手順
+
 ### ダウンロード
 
 [VisualStudioCode](https://code.visualstudio.com/)
 
 [golang](https://golang.org/dl/)
 
-適当にfeatured の項目からDLします
+適当に featured の項目から DL します
 
-### VisualStudioCode設定
+### VisualStudioCode 設定
+
 ![s1](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/go_screenshot01.png "screenshot")
 
-Codeを開いたあと左の下の拡張機能のタブからgoで検索してインストールします。
+Code を開いたあと左の下の拡張機能のタブから go で検索してインストールします。
 
 ### ディレクトリ構成
 
 [https://golang.org/doc/code.html](https://golang.org/doc/code.html)
 
-ここにしたがって、プロジェクトのroot直下に
+ここにしたがって、プロジェクトの root 直下に
 
 ```
 bin/
@@ -36,15 +38,15 @@ src/
 
 のディレクトリを作ります。
 
-### GOPATHなど
-srcの下にディレクトリを切ってhoge.goを置きます。
+### GOPATH など
 
-すると上からにゅるっとGOPATH設定してね、と出てきます
+src の下にディレクトリを切って hoge.go を置きます。
+
+すると上からにゅるっと GOPATH 設定してね、と出てきます
 
 ![s1](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/go_screenshot02.png "screenshot")
 
-
-`Set GOPATH in workspacesettings`をクリックすると、settings.jsonが開けません、と出るので作成をクリックするとsetting.jsonができるので、ここにrootにするディレクトリのパスを以下のように書きます。
+`Set GOPATH in workspacesettings`をクリックすると、settings.json が開けません、と出るので作成をクリックすると setting.json ができるので、ここに root にするディレクトリのパスを以下のように書きます。
 
 ```
 {
@@ -52,14 +54,13 @@ srcの下にディレクトリを切ってhoge.goを置きます。
 }
 ```
 
-でcode再起動
+で code 再起動
 
 すると今度は
 
 ![s1](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/go_screenshot03.png "screenshot")
 
-
-こんな感じにgolintがないですよ、と表示が出るのでinstall ALL します。すると出力を見ると
+こんな感じに golint がないですよ、と表示が出るので install ALL します。すると出力を見ると
 
 ```
 Installing 10 tools
@@ -93,26 +94,26 @@ All tools successfully installed. You're ready to Go :).
 
 ## 機能
 
-普通のIDEレベルの機能が入ってくれます。
+普通の IDE レベルの機能が入ってくれます。
 
-* 保存時に毎回formatをかける(lint)
-* 変数名を書き換えできる
-* メソッドにマウスオーバーで詳細確認できる
-* 定義にジャンプ･参照表示ができる
-* 常にコンパイルエラーがあったら表示する
-* importを自動追加
+- 保存時に毎回 format をかける(lint)
+- 変数名を書き換えできる
+- メソッドにマウスオーバーで詳細確認できる
+- 定義にジャンプ･参照表示ができる
+- 常にコンパイルエラーがあったら表示する
+- import を自動追加
 
 などなど。
 
-
 ## まとめ
 
-基本的に上からにゅるっと出て来るinfoの言いなりになってるだけで開発環境できちゃうので楽チンでした。
-VisualStudioCode自体も細かくアップデートされているのでどんどん便利になってますね。
+基本的に上からにゅるっと出て来る info の言いなりになってるだけで開発環境できちゃうので楽チンでした。
+VisualStudioCode 自体も細かくアップデートされているのでどんどん便利になってますね。
 
-結局プロコン優勝して高級焼肉ゲット済み。たいしたコード書いてないんですが、C#とくらべても10倍弱のスピードでました。
+結局プロコン優勝して高級焼肉ゲット済み。たいしたコード書いてないんですが、C#とくらべても 10 倍弱のスピードでました。
 
 ## 参考
+
 プラグインの本体
 
 https://github.com/Microsoft/vscode-go

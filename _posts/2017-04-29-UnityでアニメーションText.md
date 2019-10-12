@@ -1,9 +1,9 @@
 ---
 tags: Unity DOTween
-
+title: UnityでアニメーションText
 ---
 
-UnityのTextの値を変化させるときにアニメーションさせたい、ってなったのでつくった。DOTweenつかうと簡単ですねー
+Unity の Text の値を変化させるときにアニメーションさせたい、ってなったのでつくった。DOTween つかうと簡単ですねー
 
 [gist](https://gist.github.com/taross-f/71bb39ce89840c3f1df3051446ee72f6)
 
@@ -44,6 +44,6 @@ public class AnimationText : MonoBehaviour
 
 ```
 
-これをTextにAddComponentしておいて呼べばOK。
+これを Text に AddComponent しておいて呼べば OK。
 
 数字同士の場合は間をカウントアップ/ダウンするようなアニメーションもできる

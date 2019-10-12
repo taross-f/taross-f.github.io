@@ -1,6 +1,6 @@
 ---
 tags: Python Docker
-title: DockerでUbuntu16.04のimageにpython3.7をaptで入れる
+title: DockerでUbuntu16.04のimageにPython3.7をaptで入れる
 ---
 
 表題の通りの小ネタメモです。
@@ -27,6 +27,5 @@ $ docker run  <image> python3.7 --version
 Python 3.7.4
 
 ```
-
 
 OK です!
