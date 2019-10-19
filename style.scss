@@ -414,10 +414,10 @@ iframe {
   }
 
   .pager .pagination li.pre span::after {
-    content: "　前の10件へ";
+    content: "　Prev 5";
   }
 
   .pager .pagination li.next span::before {
-    content: "次の10件へ　";
+    content: "Next 5　";
   }
 }

@@ -38,13 +38,15 @@ layout: default
       >
 
       {% else %}
-      <span>&laquo;</span>
+      <a href="#"><span>&laquo;</span></a>
       {% endif %}
     </li>
     {% for page in (1..paginator.total_pages) %}
     <li>
       {% if page == paginator.page %}
-      <span class="active">{{ page }}</span>
+      <a href="#"
+        ><span class="active">{{ page }}</span></a
+      >
       {% elsif page == 1 %}
       <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}"
         ><span>{{ page }}</span></a
@@ -64,7 +66,7 @@ layout: default
         ><span>&raquo;</span></a
       >
       {% else %}
-      <span>&raquo;</span>
+      <a href="#"><span>&raquo;</span></a>
       {% endif %}
     </li>
   </div>
