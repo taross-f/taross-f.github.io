@@ -367,45 +367,43 @@ iframe {
 
 .pager .pagination {
   text-align: center;
-}
-
-.pager .pagination li {
-  display: inline;
-  margin: 0 2px;
-  padding: 0;
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  position: relative;
-  border-radius: 10px;
-}
-
-.pager .pagination li a {
-  vertical-align: middle;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  display: table;
-  text-decoration: none;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-.pager .pagination li a span {
-  display: table-cell;
-  vertical-align: middle;
+  li {
+    display: inline;
+    margin: 0 2px;
+    padding: 0;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    border-radius: 50px;
+    a {
+      vertical-align: middle;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      display: table;
+      text-decoration: none;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
 }
 
 .pager .pagination li a:hover,
 .pager .pagination li a.active {
   color: #fff;
   background: $Beko-Rebranding-Concept-3-hex;
+  border-radius: 50px;
 }
 
 @media only screen and (max-width: 767px) {
