@@ -1,5 +1,5 @@
 ---
-tags: Python cv
+tags: Python ComputerVision
 title: facenet動かしてみた
 ---
 

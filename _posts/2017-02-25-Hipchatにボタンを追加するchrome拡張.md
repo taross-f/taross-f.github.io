@@ -1,6 +1,6 @@
 ---
 excerpt_separator: <!--more-->
-tags: hipchat chrome
+tags: Hipchat GoogleChrome
 title: Hipchatにボタンを追加するGoogleChrome拡張
 ---
 

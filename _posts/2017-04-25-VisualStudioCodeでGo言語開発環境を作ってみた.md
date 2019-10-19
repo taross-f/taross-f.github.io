@@ -1,5 +1,5 @@
 ---
-tags: vscode golang
+tags: VSCode Golang
 title: VisualStudioCodeでGo言語開発環境を作ってみた
 ---
 

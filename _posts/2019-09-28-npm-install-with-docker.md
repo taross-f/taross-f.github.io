@@ -1,11 +1,11 @@
 ---
-tags: docker
+tags: Docker
 title: Dockerイメージでnpm installしたときdocker-composeのvolumesで上書きしない
 ---
 
 `docker run` で動くけど `docker-compose run` で動かないときはこれがあやしい、という小ネタです
 
-具体的な例でいうと、Dockerfile で `RUN npm install` したイメージを docker-compose で使うとき、volumes で開発ディレクトリをマウントするんだけど、その下にDockerImage内の `node_modules/` ディレクトリを残したい、というときのやり方です
+具体的な例でいうと、Dockerfile で `RUN npm install` したイメージを docker-compose で使うとき、volumes で開発ディレクトリをマウントするんだけど、その下に DockerImage 内の `node_modules/` ディレクトリを残したい、というときのやり方です
 
 ## 対応
 

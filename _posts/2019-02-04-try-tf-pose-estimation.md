@@ -1,9 +1,9 @@
 ---
-tags: Python cv
+tags: Python ComputerVision
 title: tf-pose-estimation動かしてみた
 ---
 
-今自分のいる会社が人体認識顔識別な技術を使っていて、最近のOSSで自分でも試せそうなものないかなと思って調べてみた。
+今自分のいる会社が人体認識顔識別な技術を使っていて、最近の OSS で自分でも試せそうなものないかなと思って調べてみた。
 
 # tf-pose-estimation
 
@@ -12,12 +12,14 @@ title: tf-pose-estimation動かしてみた
 人体認識とかスケルトン取れたりするみたい
 
 # 環境
-* PC: MacBook Pro (2016)
-* OS: mac OS Mojave
-* CPU: 2 GHz Intel Core i5
-* Memory: 8 GB 1867 MHz LPDDR3
+
+- PC: MacBook Pro (2016)
+- OS: mac OS Mojave
+- CPU: 2 GHz Intel Core i5
+- Memory: 8 GB 1867 MHz LPDDR3
 
 # インストール
+
 さくっと動かすだけなので環境分離とか一切してないです。何番煎じかわからないけど。
 
 ```sh
@@ -43,8 +45,9 @@ $ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0
 ```
 
 # まとめ
+
 動いた!  
-この最低スペックのmacbook proでもwebcamで動かして1.5FPSくらい  
+この最低スペックの macbook pro でも webcam で動かして 1.5FPS くらい  
 テストで動かしてもスケルトンだったり顔の要素が表示されて面白い  
 [次は顔認識系を試します](https://blog.taross-f.dev/try-facenet/)
 

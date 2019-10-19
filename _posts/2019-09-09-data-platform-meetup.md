@@ -1,5 +1,5 @@
 ---
-tags: meetup
+tags: Meetup
 title: Data Platform Meetup に行ってきた
 ---
 

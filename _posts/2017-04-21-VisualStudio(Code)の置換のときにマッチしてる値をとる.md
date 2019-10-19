@@ -1,5 +1,5 @@
 ---
-tags: vscode
+tags: VSCode
 title: VisualStudio(Code)の置換のときにマッチしてる値をとる
 ---
 

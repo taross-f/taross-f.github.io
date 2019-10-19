@@ -1,5 +1,5 @@
 ---
-tags: life poem
+tags: Life Poem
 title: ゲーム会社からスタートアップに転職して1年経った
 ---
 
@@ -54,5 +54,5 @@ Python, C# Unity あたりはある程度のパフォーマンスは出せるの
 
 ## おまけ
 
-なぜか `gloops やばい` のキーワードでSEO1位になっている1年前の退職エントリはこちら。
-[株式会社gloopsを退職した](https://blog.taross-f.dev/%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEgloops%E3%82%92%E9%80%80%E8%81%B7%E3%81%97%E3%81%9F/)
+なぜか `gloops やばい` のキーワードで SEO1 位になっている 1 年前の退職エントリはこちら。
+[株式会社 gloops を退職した](https://blog.taross-f.dev/%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEgloops%E3%82%92%E9%80%80%E8%81%B7%E3%81%97%E3%81%9F/)

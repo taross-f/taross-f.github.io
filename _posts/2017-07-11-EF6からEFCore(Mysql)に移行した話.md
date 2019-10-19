@@ -1,5 +1,5 @@
 ---
-tags: entityframeworkcore mysql
+tags: EntityFrameworkCore MySQL
 excerpt_separator: <!--more-->
 title: EF6からEFCore(MySQL)に移行した話
 ---

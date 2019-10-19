@@ -1,5 +1,5 @@
 ---
-tag: jekyll
+tag: Jekyll
 title: Jekyll NowにSNSボタン追加した
 ---
 

@@ -1,6 +1,6 @@
 ---
-tags: mysql entityframework
-title: EntityFrameworkのPOCOをMysqlのテーブルから生成する
+tags: MySQL EntityFramework
+title: EntityFrameworkのPOCOをMySQLのテーブルから生成する
 ---
 
 要件として Mysql+EntityFramework で既存のテーブルから POCO(Plain Old CLR Object) を Generate したくなった。

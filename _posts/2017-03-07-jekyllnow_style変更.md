@@ -1,5 +1,5 @@
 ---
-tags: jekyll
+tags: Jekyll
 title: Jekyll Now style変更
 ---
 

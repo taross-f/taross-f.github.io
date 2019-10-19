@@ -1,6 +1,6 @@
 ---
-tags: googleappscript
-title: GoogleAppScriptでslackのprivateChannelのメンバー一覧
+tags: GoogleAppsScript
+title: GoogleAppsScriptでSlackのPrivateChannelのメンバー一覧
 ---
 
 GAS で private channel のメンバー一覧取りたいってときありますよね。抽選したりとか。

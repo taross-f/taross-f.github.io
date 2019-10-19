@@ -1,5 +1,5 @@
 ---
-tags: jekyll
+tags: Jekyll
 title: Jekyll Nowでtwitter_cardが表示されない
 ---
 

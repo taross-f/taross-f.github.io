@@ -1,5 +1,5 @@
 ---
-tags: mac windows utility
+tags: Nac Windows
 title: HJKLでカーソル移動(Mac,Windows)
 ---
 
