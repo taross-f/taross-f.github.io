@@ -83,12 +83,12 @@ a {
 
 ul,
 ol {
-  margin: 15px 0;
+  margin: 14px 0;
   padding-left: 30px;
 }
 
 ul {
-  list-style-type: disc;
+  list-style-type: none;
 }
 
 ol {
@@ -244,6 +244,7 @@ th {
     border-radius: 3px; /*角の丸み*/
   }
 }
+
 .meta {
   overflow: hidden;
 }
