@@ -236,13 +236,12 @@ th {
     font-size: 10px;
   }
   a {
-    padding: 0.5em 1em;
+    padding: 0em 0.4em;
     margin: 2em 0;
-    font-weight: bold;
-    color: $Beko-Rebranding-Concept-3-hex; /*文字色*/
-    background: #fff;
-    border: solid 3px $Beko-Rebranding-Concept-3-hex; /*線*/
-    border-radius: 10px; /*角の丸み*/
+    color: $white; /*文字色*/
+    background: $Beko-Rebranding-Concept-3-hex;
+    border: solid 1px $Beko-Rebranding-Concept-3-hex; /*線*/
+    border-radius: 3px; /*角の丸み*/
   }
 }
 .meta {
