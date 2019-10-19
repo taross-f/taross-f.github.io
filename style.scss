@@ -231,9 +231,13 @@ th {
 }
 .tag {
   font-size: 16px;
+  float: left;
   @include mobile {
     font-size: 10px;
   }
+}
+.meta {
+  overflow: hidden;
 }
 
 nav {
