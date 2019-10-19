@@ -36,7 +36,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: $helveticaNeue;
+  font-family: $google;
   color: $darkerGray;
   font-weight: bold;
 
@@ -134,12 +134,10 @@ th {
 }
 
 .date {
-  font-style: italic;
   color: $gray;
   float: right;
   font-family: $google;
-  font-size: 18px;
-  font-weight: 300;
+  font-size: 16px;
 }
 
 // Specify the color of the selection
@@ -232,7 +230,7 @@ th {
   }
 }
 .tag {
-  font-size: 12px;
+  font-size: 16px;
   @include mobile {
     font-size: 10px;
   }
