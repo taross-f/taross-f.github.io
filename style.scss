@@ -235,6 +235,15 @@ th {
   @include mobile {
     font-size: 10px;
   }
+  a {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: $Beko-Rebranding-Concept-3-hex; /*文字色*/
+    background: #fff;
+    border: solid 3px $Beko-Rebranding-Concept-3-hex; /*線*/
+    border-radius: 10px; /*角の丸み*/
+  }
 }
 .meta {
   overflow: hidden;
