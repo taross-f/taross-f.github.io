@@ -144,12 +144,12 @@ th {
 
 // Specify the color of the selection
 ::-moz-selection {
-  color: $black;
-  background: $lightGray;
+  color: #fff;
+  background: $Beko-Rebranding-Concept-3-hex;
 }
 ::selection {
-  color: $black;
-  background: $lightGray;
+  color: #fff;
+  background: $Beko-Rebranding-Concept-3-hex;
 }
 
 // Nicolas Gallagher's micro clearfix hack
