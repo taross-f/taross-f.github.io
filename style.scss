@@ -18,7 +18,7 @@ html {
 }
 
 body {
-	background: $white;
+  background: $white;
   font: 18px/1.4 $helvetica;
   color: $darkGray;
 }
@@ -30,7 +30,12 @@ body {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $helveticaNeue;
   color: $darkerGray;
   font-weight: bold;
@@ -69,13 +74,15 @@ p {
 a {
   color: $blue;
   text-decoration: none;
-	cursor: pointer;
-  &:hover, &:active {
+  cursor: pointer;
+  &:hover,
+  &:active {
     color: $blue;
   }
 }
 
-ul, ol {
+ul,
+ol {
   margin: 15px 0;
   padding-left: 30px;
 }
@@ -88,19 +95,25 @@ ol {
   list-style-type: decimal;
 }
 
-ol ul, ul ol, ul ul, ol ol {
+ol ul,
+ul ol,
+ul ul,
+ol ol {
   margin: 0;
 }
 
-ul ul, ol ul {
+ul ul,
+ol ul {
   list-style-type: circle;
 }
 
-em, i {
+em,
+i {
   font-style: italic;
 }
 
-strong, b {
+strong,
+b {
   font-weight: bold;
 }
 
@@ -108,7 +121,10 @@ img {
   max-width: 100%;
 }
 
-table, tr, td, th {
+table,
+tr,
+td,
+th {
   border: 2px $lightGray solid;
 }
 
@@ -124,7 +140,6 @@ table, tr, td, th {
   font-family: $helveticaNeue;
   font-size: 18px;
   font-weight: 300;
-
 }
 
 // Specify the color of the selection
@@ -141,12 +156,12 @@ table, tr, td, th {
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .clearfix:before,
 .clearfix:after {
-    content: " ";
-    display: table;
+  content: " ";
+  display: table;
 }
 
 .clearfix:after {
-    clear: both;
+  clear: both;
 }
 
 /*********************/
@@ -266,7 +281,7 @@ nav {
 
 .post {
   blockquote {
-    margin: 1.8em .8em;
+    margin: 1.8em 0.8em;
     border-left: 2px solid $gray;
     padding: 0.1em 1em;
     color: $gray;
@@ -296,9 +311,6 @@ footer {
   text-align: center;
 }
 
-.pagination {
-  text-align: center;
-}
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
@@ -327,7 +339,7 @@ footer {
   margin: 0px;
   margin-bottom: 10px;
   margin-right: 3px;
-  border: 1px solid #D3D6D2;
+  border: 1px solid #d3d6d2;
   padding: 5px 10px 5px 10px;
 }
 .share-button:hover {
@@ -337,4 +349,75 @@ footer {
 
 iframe {
   vertical-align: bottom;
+}
+
+.pager .pagination {
+  text-align: center;
+}
+
+.pager .pagination li {
+  display: inline;
+  margin: 0 2px;
+  padding: 0;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  position: relative;
+  border-radius: 10px;
+}
+
+.pager .pagination li a {
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: table;
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.pager .pagination li a span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.pager .pagination li a:hover,
+.pager .pagination li a.active {
+  color: #fff;
+  background: $Beko-Rebranding-Concept-3-hex;
+}
+
+@media only screen and (max-width: 767px) {
+  .pager .pagination li {
+    display: none;
+  }
+
+  .pager .pagination li.pre,
+  .pager .pagination li.next {
+    display: inline-block;
+    width: 40%;
+    height: 50px;
+    text-align: center;
+  }
+
+  .pager .pagination li.pre a,
+  .pager .pagination li.next a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pager .pagination li.pre span::after {
+    content: "　前の10件へ";
+  }
+
+  .pager .pagination li.next span::before {
+    content: "次の10件へ　";
+  }
 }
