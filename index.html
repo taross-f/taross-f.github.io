@@ -34,7 +34,7 @@ layout: default
 
       <a
         href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}"
-        >&laquo;</a
+        ><span>&laquo;</span></a
       >
 
       {% else %}
@@ -44,15 +44,15 @@ layout: default
     {% for page in (1..paginator.total_pages) %}
     <li>
       {% if page == paginator.page %}
-      <em>{{ page }}</em>
+      <span class="active">{{ page }}</span>
       {% elsif page == 1 %}
-      <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}">{{
-        page
-      }}</a>
+      <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}"
+        ><span>{{ page }}</span></a
+      >
       {% else %}
       <a
         href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}"
-        >{{ page }}</a
+        ><span>{{ page }}</span></a
       >
       {% endif %}
     </li>
@@ -61,7 +61,7 @@ layout: default
       {% if paginator.next_page %}
       <a
         href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}"
-        >&raquo;</a
+        ><span>&raquo;</span></a
       >
       {% else %}
       <span>&raquo;</span>
