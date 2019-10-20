@@ -12,8 +12,8 @@
         <a href="{{ post.url }}">
           {{ post.title }}
         </a>
-        <small class="date">{{ post.date | date_to_string }}</small>
       </h6>
+      <small class="date">{{ post.date | date_to_string }}</small>
     </li>
     {% assign max_related_counter = max_related_counter | plus: 1 %} {% if
     max_related_counter >= max_related %} {% break %} {% endif %} {% endif %} {%
