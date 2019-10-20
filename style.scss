@@ -195,8 +195,8 @@ th {
   margin-right: 15px;
 
   @include mobile {
-    float: none;
-    display: block;
+    // float: none;
+    // display: block;
     margin: 0 auto;
   }
 
@@ -209,8 +209,8 @@ th {
   float: left;
 
   @include mobile {
-    float: none;
-    display: block;
+    // float: none;
+    // display: block;
     margin: 0 auto;
   }
 }
