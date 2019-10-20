@@ -88,18 +88,16 @@ a {
   }
 }
 
-ul,
-ol {
+ul {
   margin: 14px 0;
+  list-style-type: none;
   padding-left: 5px;
 }
 
-ul {
-  list-style-type: none;
-}
-
 ol {
+  margin: 14px 0;
   list-style-type: decimal;
+  padding-left: 20px;
 }
 
 ol ul,
@@ -319,6 +317,7 @@ nav {
 
 .entry {
   margin: 20px 0;
+  line-height: 1.8;
 }
 
 .wrapper-footer {
