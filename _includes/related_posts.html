@@ -12,7 +12,7 @@
         <a href="{{ post.url }}">
           {{ post.title }}
         </a>
-        <small class="date">{{ post.date | date: "Posted on %Y.%m.%d" }}</small>
+        <small class="date">{{ post.date | date: "%Y.%m.%d" }}</small>
       </h6>
     </li>
     {% assign max_related_counter = max_related_counter | plus: 1 %} {% if
