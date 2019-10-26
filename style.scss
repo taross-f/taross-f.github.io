@@ -55,9 +55,14 @@ article h1 {
   padding: 8px;
 }
 
+h1 {
+  font-size: 24px;
+  border-bottom: solid 1px #eee;
+}
+
 h2 {
   font-size: 21px;
-  border-bottom: solid 2px #eee;
+  border-bottom: solid 1px #eee;
 }
 
 h3 {
