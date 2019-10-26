@@ -35,9 +35,8 @@ SIer → 株式会社 gloops のエンジニアリングマネージャー → T
 ### 副業
 
 - 2019.6 -
-  - 株式会社パプレア
-    - 新規事業のプロトタイピング/開発を行う
-    - 使用技術: Python PHP Laravel AWS
+  - 新規事業のプロトタイピング/開発を行う
+  - 使用技術: Python PHP Laravel AWS
 
 [職務経歴](https://gist.github.com/taross-f/e3043275d6a71f410867fcc1aa51ced1)
 
