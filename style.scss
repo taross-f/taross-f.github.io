@@ -289,12 +289,12 @@ nav {
 
 .posts > .post {
   padding-bottom: 2em;
-  border-bottom: 1px solid $lightGray;
+  border-bottom: 2px solid $gray;
 }
 
 .posts > .post:last-child {
   padding-bottom: 1em;
-  border-bottom: 2px solid $lightGray;
+  border-bottom: 2px solid $gray;
 }
 
 .post {
@@ -377,6 +377,7 @@ iframe {
 }
 
 .pager .pagination {
+  margin: 10px 0;
   text-align: center;
   li {
     display: inline;
