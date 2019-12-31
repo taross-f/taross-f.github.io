@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
+title: Profile
 permalink: /about/
 ---
 
@@ -8,7 +8,7 @@ permalink: /about/
 
 埼玉県在住。1 児の父。
 
-SI としてキャリアをスタートしソーシャルゲーム会社のエンジニア/マネージャを経て、現在はデータスタートアップにてエンジニア/マネージャとして働いている
+SI としてキャリアをスタートしソーシャルゲーム会社のエンジニア/マネージャーを経て、現在はデータスタートアップにてエンジニア/マネージャーとして働いている
 
 興味 → Python OpenVINO AWS ProjectManagement C# Unity Golang MachineLearning 筋トレ
 
