@@ -59,13 +59,17 @@ default
 
 `{"Parameters": {"message": "hello hello hello how low"}}`
 
-`Parameters` の中に渡す必要があります。
+`Parameters` の中に渡す必要があります。Keyは大文字始まりでもOKです。
+
+![cloudwatch](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/2020-02-15%2013.51.33.png)
 
 これで Trigger を適切に設定して起動してあげると、完了後ログは以下のようになります。
 
 ```
 hello hello hello how low
 ```
+
+![how_low](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/2020-02-15%2013.51.19.png)
 
 パラメータ無事うけとれました
 
