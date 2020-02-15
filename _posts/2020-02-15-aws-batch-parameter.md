@@ -17,13 +17,18 @@ Lambda とかだと直感的に渡した JSON が起動する Function の `even
 
 簡単のため、ただ echo するだけのジョブ定義を作ってみます。
 
+
 コマンドに `echo helloworld` といれます。
 
+![echo_helloworld](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/2020-02-15%2013.00.31.png)
+
 ジョブ定義からジョブの送信して完了後ログを確認すると
+
 
 ```
 helloworld
 ```
+![hello_world_log](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/2020-02-15%2013.03.01.png)
 
 となっていることが確認できます。とりあえず起動自体は OK ですね。
 
@@ -32,6 +37,9 @@ helloworld
 次にジョブ定義を Parameter 参照する形に変更します
 
 パラメータに `message : default` の項目を追加しつつ、コマンドを `echo Ref::message` とします。`Ref::XXX` で起動時にパラメータを `XXX` で渡すと置換して実行してくれます
+
+![param](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/2020-02-15%2013.08.24.png)
+
 
 そのままジョブ定義からジョブの送信して完了後ログを確認すると
 
