@@ -9,34 +9,36 @@ title: 作業環境2020
 
 コロナの影響で勤務先も3月くらいからいきなりのフルリモート化に伴い家で作業するように。当時の家が専用の作業スペースがなかったので、ダイニングテーブルかソファで作業していました。ソファの作業は1時間で尻の限界を迎えるので、ちょこちょこ移動してました(引っ越したらいい椅子を買おうと決意したきっかけ)
 
-<a href="https://www.amazon.co.jp/gp/product/B0734Y924L/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=0e4f5db3e8059d8ecdb0ae44493f1995&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0734Y924L&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B0734Y924L" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0734Y924L&linkId=a6e898cd4f1303532e755d4349375c0b"></iframe>
 
-<a href="https://www.amazon.co.jp/dp/B0876DKMBZ/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=84cd6d5b4f654b74ac8b412d26d15aa5&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0876DKMBZ&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B0876DKMBZ" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0876DKMBZ&linkId=d00b6497a302a5bc99e93052eec1cc4d"></iframe>
 
 このクッションに板がくっついたようなやつを膝に乗せたりダイニングテーブルに載せたりしてつかってました。(使っているのは1つ目の画像のやつですが、販売終了している模様…)高さが出るのでよかったですが、排熱がいまいち
 
 # 6月以降
 
-家ができたので引っ越しました。作業スペースとしてスタディカウンターをリビングに用意したので、そこで基本作業してます。ただ間取りを決めた当時ここまでリモートに寄るとは考えていなくて、半年ずれていたらきっと書斎的スペースを用意したと思います。
-時系列にそって紹介します
+家ができたので引っ越しました。作業スペースとしてスタディカウンターをリビングに用意したので、そこで基本作業してます。ただ間取りを決めた当時ここまでリモートに寄るとは考えていなくて、家建てるのがうしろに半年ずれていたら、きっと書斎的スペースを用意したと思います。ミーティングのときだけ別部屋に移動したりしてます、これはこれでありかもしれません
+
+時系列にそって紹介していきます
 
 
 ## スタンド
 
 まずはちゃんとしたスタンドを用意しました。高さはもとのクッションデスクの高さを基準にえらびました。これに直接手を載せてつかっていました
 
-<a href="https://www.amazon.co.jp/gp/product/B073Z82HDY/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=1574354487be6e0526e2b7d7ae82c997&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B073Z82HDY&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B073Z82HDY" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B073Z82HDY&linkId=b2f3663ebe9f3a244a3b134ca2616244"></iframe>
 
 ## 椅子
 
 ハーマンミラーのセイルチェアを導入しました。リビングに置くこともあってあまりオフィスっぽくしたくなかったので見た目重視でしたが座り心地もとてもよいです。ただ手すりに体重かけるときしむようになってしまったので、なんらかメンテナンスをしようと思います
 
 
-<a href="https://www.amazon.co.jp/dp/B0846HM9WF/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=7f6add8fdb627afb5ccccf71e65c0ffa&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0846HM9WF&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B0846HM9WF" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0846HM9WF&linkId=22b86f049132f7684d04c74c410bd18b"></iframe>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B003LN9JSM&linkId=bbdbf662e71a30d3dd063ae2e5f055f2"></iframe>
 
 キャスターがそのままだとフローリングに傷つくみたいだったので、ウレタンキャスターをつけました。いまのところ特に傷はなさそう
 
-<a href="https://www.amazon.co.jp/gp/product/B003LN9JSM/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=88562a9a19bf18eb8991fa93298a83da&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B003LN9JSM&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B003LN9JSM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 購入が9月くらいだったんですが、椅子もキャスターも品薄で焦りました。結局注文したらすぐ来たんですが
 
@@ -52,10 +54,9 @@ title: 作業環境2020
 
 なにも考えずにデスクつくったので奥行きが足りなくて不便なのと、トラックボールも複数指とか使えなくていまいちでした。なので以下を導入しました
 
-<a href="https://www.amazon.co.jp/gp/product/B082TSZ27D/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=4656ffc3425944e92f0613736f4f6eb5&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B082TSZ27D&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B082TSZ27D" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B082TSZ27D&linkId=dc9c85070b72804968678104babbce1b"></iframe>
 
-<a href="https://www.amazon.co.jp/gp/product/B07DPGK3B3/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=a8feaf768d68ee19ea2d58eeec559fcc&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07DPGK3B3&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B07DPGK3B3" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07DPGK3B3&linkId=c05d7d8e652e207a1949e91b319614e1"></iframe>
 
 スペース的にはこんな感じにおさまりました
 
