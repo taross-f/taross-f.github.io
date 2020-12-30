@@ -88,7 +88,7 @@ title: 作業環境をととのえた2020
 
 # まとめ
 
-現時点ではこんな感じになりました。ケーブルはまだぐちゃぐちゃだったりでまだまだ先は長いですね
+現時点ではこんな感じになりました。ケーブルはまだぐちゃぐちゃだったりでまだまだ先は長いですね。費用は約20万円でした
 
 ![見た目](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/desk_5.jpg "見た目")
 
