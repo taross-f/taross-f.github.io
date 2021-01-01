@@ -9,11 +9,10 @@ title: 作業環境2020
 
 コロナの影響で勤務先も3月くらいからいきなりのフルリモート化に伴い家で作業するように。当時の家が専用の作業スペースがなかったので、ダイニングテーブルかソファで作業していました。ソファの作業は1時間で尻の限界を迎えるので、ちょこちょこ移動してました(引っ越したらいい椅子を買おうと決意したきっかけ)
 
-[BRUNO ビーズ クッション テーブル PC スマホ ソファ カーキ](https://amzn.to/2LclU4g)
+- [BRUNO ビーズ クッション テーブル PC スマホ ソファ カーキ](https://amzn.to/2LclU4g)
+- [膝上テーブル クッションテーブル ラップデスク 枕 竹製 ベッド ソファー スマホ PC作業 勉強 読書 持ち運び便利 38*28cm](https://amzn.to/3o6emPk)
 
 <a href="https://www.amazon.co.jp/gp/product/B0734Y924L/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=98e1091105989eafd2d096e5d5168c5b&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0734Y924L&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B0734Y924L" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-
-[膝上テーブル クッションテーブル ラップデスク 枕 竹製 ベッド ソファー スマホ PC作業 勉強 読書 持ち運び便利 38*28cm](https://amzn.to/3o6emPk)
 
 <a href="https://www.amazon.co.jp/dp/B082PS7QHC/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=db0e2acd5f6c10a254c6c1fbf7038605&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B082PS7QHC&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B082PS7QHC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
@@ -30,14 +29,19 @@ title: 作業環境2020
 
 まずはちゃんとしたスタンドを用意しました。高さはもとのクッションデスクの高さを基準にえらびました。これに直接手を載せてつかっていました
 
+[Bestand ノートパソコンスタンド PCスタンド 滑り止めパッド付き](https://amzn.to/3o4AF85)
+
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B073Z82HDY&linkId=b2f3663ebe9f3a244a3b134ca2616244"></iframe>
 
 ## 椅子
 
 ハーマンミラーのセイルチェアを導入しました。リビングに置くこともあってあまりオフィスっぽくしたくなかったので見た目重視でしたが座り心地もとてもよいです。ただ手すりに体重かけるときしむようになってしまったので、なんらかメンテナンスをしようと思います
 
+- [Herman Miller (ハーマンミラー) セイルチェア](https://amzn.to/3b0m5dY)
+- [SANWA SUPPLY SNC-CAST3 大型ウレタンチェアキャスター](https://amzn.to/3o6f2nQ)
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0846HM9WF&linkId=22b86f049132f7684d04c74c410bd18b"></iframe>
+
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B003LN9JSM&linkId=bbdbf662e71a30d3dd063ae2e5f055f2"></iframe>
 
@@ -56,9 +60,13 @@ title: 作業環境2020
 
 ![見た目](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/desk_2.jpg "見た目")
 
-なにも考えずにデスクつくったので奥行きが足りなくて不便なのと、トラックボールも複数指とか使えなくていまいちでした。なので以下を導入しました
+なにも考えずにデスクつくったので奥行きが足りなくて不便なのと、トラックボールも複数指とか使えなくていまいちでした。なので以下を導入しました(JISキー配列派)
+
+- [HHKB Professional HYBRID Type-S 日本語配列／墨](https://amzn.to/2JyOUTq)
+- [Apple Magic Trackpad 2](https://www.amazon.co.jp/gp/product/B07DPGK3B3/)
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B082TSZ27D&linkId=dc9c85070b72804968678104babbce1b"></iframe>
+
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07DPGK3B3&linkId=c05d7d8e652e207a1949e91b319614e1"></iframe>
 
@@ -69,6 +77,11 @@ title: 作業環境2020
 ## ディスプレイ
 
 ↑の状態で結構気に入ってたんですが、自分の都合で会社もまたほぼフルリモートになったタイミングで、家で作業する時間長いしディスプレイあってもいいよね、という気持ちがむくむくとわいてきました。でいろいろ調べて以下を導入しました
+
+- [Dell 4Kモニター 27インチ U2720QM](https://amzn.to/34ZDq2Y)
+- [Eono(イオーノ) PC モニターアーム 液晶ディスプレイスタンド](https://amzn.to/3rNriMm)
+- [BECROWM ノートpc スタンド縦置き](https://amzn.to/3n4v7Jl)
+- [ウェブカメラ iRozce Webカメラ フルHD1080P](https://amzn.to/34ZEqUM)
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B085TWLMF9&linkId=d44b14c4519cfbc405a22f8d26f983a0"></iframe>
 
