@@ -9,9 +9,13 @@ title: 作業環境2020
 
 コロナの影響で勤務先も3月くらいからいきなりのフルリモート化に伴い家で作業するように。当時の家が専用の作業スペースがなかったので、ダイニングテーブルかソファで作業していました。ソファの作業は1時間で尻の限界を迎えるので、ちょこちょこ移動してました(引っ越したらいい椅子を買おうと決意したきっかけ)
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0734Y924L&linkId=a6e898cd4f1303532e755d4349375c0b"></iframe>
+[BRUNO ビーズ クッション テーブル PC スマホ ソファ カーキ](https://amzn.to/2LclU4g)
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0876DKMBZ&linkId=d00b6497a302a5bc99e93052eec1cc4d"></iframe>
+<a href="https://www.amazon.co.jp/gp/product/B0734Y924L/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=98e1091105989eafd2d096e5d5168c5b&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0734Y924L&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B0734Y924L" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
+[膝上テーブル クッションテーブル ラップデスク 枕 竹製 ベッド ソファー スマホ PC作業 勉強 読書 持ち運び便利 38*28cm](https://amzn.to/3o6emPk)
+
+<a href="https://www.amazon.co.jp/dp/B082PS7QHC/ref=as_li_ss_il?&linkCode=li2&tag=tarossf-22&linkId=db0e2acd5f6c10a254c6c1fbf7038605&language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B082PS7QHC&Format=_SL160_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=tarossf-22&language=ja_JP" ></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=tarossf-22&language=ja_JP&l=li2&o=9&a=B082PS7QHC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 このクッションに板がくっついたようなやつを膝に乗せたりダイニングテーブルに載せたりしてつかってました。(使っているのは1つ目の画像のやつですが、販売終了している模様…)高さが出るのでよかったですが、排熱がいまいち
 
