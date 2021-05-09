@@ -4,7 +4,7 @@ title: Profile
 permalink: /about/
 ---
 
-古屋 太郎 | Furuya Taro
+古屋 太郎 / Furuya Taro
 
 埼玉県在住。2児の父。
 
