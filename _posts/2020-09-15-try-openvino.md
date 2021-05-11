@@ -1,6 +1,6 @@
 ---
-tags: OpenVINO Python
-title: OpenVINO 2020.4 動かしてみた
+tags: OpenVINO Python Docker
+title: Docker on MacでOpenVINO動かしてみた
 ---
 
 [OpenVINO](https://docs.openvinotoolkit.org/) を Mac 上で気軽に動かしたい気持ちになったので書きます
