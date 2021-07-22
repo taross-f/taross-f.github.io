@@ -19,8 +19,8 @@ Slack関連のTOKENやら設定が必要です
 
 SlackBotを作成して、`chat:write.public` scopeをつけたトークンを発行して、 `SLACK_TOKEN` の環境変数に設定します。通知を飛ばしたいChannel名を #なしで `SLACK_CHANNEL` の環境変数に設定します
 
-そこまで終わればdecoratorで start, success, error の引数にdictで https://api.slack.com/reference/messaging/attachments を渡します。使うイメージとしてはバッチの大元のメソッドをデコレートしておくとその通知が楽にできる感じです
-Legacyって書いてあるんですが使ってます。layout block ほど凝ったことをやる想定じゃなかったので…
+そこまで終わればあとはdecoratorで start, success, error の引数にdictで [attachments](https://api.slack.com/reference/messaging/attachments) を渡します。そのままSlackのAPIに渡されます。使うイメージとしてはバッチの大元のメソッドをデコレートしておくとその通知が楽にできる感じです
+Legacyと書かれてるんですが、layout block ほど凝ったことをやる想定じゃなかったので…
 
 不要な引数は渡さなければ無視されます。なので例えばエラーのときだけ教えてほしい、とかsuccessとerrorだけほしい、とかも対応可能です
 
