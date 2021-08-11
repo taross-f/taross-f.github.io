@@ -30,7 +30,7 @@ permalink: /about/
   - ソーバル株式会社 エンジニア
     - 主に SES で様々な現場で業務を行う
     
-### 副業
+### パートタイム
 
 - 2019.6 - 2021.7
   - 株式会社パプレア
@@ -40,6 +40,7 @@ permalink: /about/
 [職務経歴](https://gist.github.com/taross-f/e3043275d6a71f410867fcc1aa51ced1)
 
 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="e7e5eac6-43c2-4992-aa14-6a2af37e6136" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+<div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="43049902-ff70-4dd0-99b7-c91308a2c436" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 
 ### Contact
 
