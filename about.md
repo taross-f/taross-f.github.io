@@ -10,7 +10,7 @@ permalink: /about/
 
 2009年よりSIとしてキャリアをスタートしてから、ソーシャルゲーム会社やテレビデータスタートアップを経て、現在はAIベンチャーにてプロダクト開発を行っている
 
-得意なこと → Python OpenVINO AWS ProjectManagement Angular C# 
+得意なこと → Python AWS ProjectManagement Angular 
 
 [Twitter](https://twitter.com/taross__f)  
 [Github](https://github.com/taross-f)
@@ -18,7 +18,7 @@ permalink: /about/
 
 # 経歴
 - 2021.9 -
-  - 株式会社 BEDORE エンジニア   
+  - 株式会社 BEDORE SWE   
 - 2018.8 - 2021.8
   - TVISION INSIGHTS 株式会社 リードエンジニア / エンジニアリングマネージャー
     - IoT、画像処理からインフラ、サーバーやフロントエンド開発を行う。
