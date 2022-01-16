@@ -1,6 +1,6 @@
 ---
 tags: VSCode Docker
-title: docker-composeからdevcontainerをつくる
+title: docker-compose.ymlからdevcontainerをつくる
 ---
 
 devcontainer設定しようと思って、昔やったのにやりかたわからん、対応内容結構めんどくさかったのでGistに書いておくかーって思ったらすでに自分のGistに書いてあったので、blogにも書くことにします
