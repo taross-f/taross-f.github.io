@@ -40,6 +40,7 @@ permalink: /about/
 
 [職務経歴](https://gist.github.com/taross-f/e3043275d6a71f410867fcc1aa51ced1)
 
+<div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="6e657a54-165c-4ff8-9b39-873441ff8b1f" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="1a3dd763-c988-441a-839c-34010e6fdd33" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="e7e5eac6-43c2-4992-aa14-6a2af37e6136" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="43049902-ff70-4dd0-99b7-c91308a2c436" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
