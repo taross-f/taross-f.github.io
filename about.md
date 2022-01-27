@@ -8,9 +8,9 @@ permalink: /about/
 
 埼玉県在住。2児の父。
 
-2009年よりSIとしてキャリアをスタートしてから、ソーシャルゲーム会社やテレビデータスタートアップを経て、現在はAIベンチャーにてプロダクト開発を行っている
+2009年よりSIとしてキャリアをスタートしてから、ソーシャルゲーム会社やテレビデータスタートアップを経て、現在はAIベンチャーにてチャットボットプロダクト開発を行っている
 
-得意なこと → Python AWS ProjectManagement Angular 
+得意なこと → Python Golang AWS Azure ProjectManagement Angular React
 
 [Twitter](https://twitter.com/taross__f)  
 [Github](https://github.com/taross-f)
@@ -19,9 +19,10 @@ permalink: /about/
 # 経歴
 - 2021.9 -
   - 株式会社 BEDORE SWE   
+    - 大手企業の社内向けチャットボットプロダクト開発運用を行う  
 - 2018.8 - 2021.8
   - TVISION INSIGHTS 株式会社 リードエンジニア / エンジニアリングマネージャー
-    - IoT、画像処理からインフラ、サーバーやフロントエンド開発を行う。
+    - IoT、画像処理からインフラ、サーバーやフロントエンド開発を行う
     - 使用技術: Python Django Angular AWS
 - 2012.4 - 2018.7
   - 株式会社 gloops サーバーエンジニア / クライアントエンジニア / エンジニアリングマネージャー
