@@ -8,7 +8,8 @@ Terraformの実行環境をDockerで構築しつつtfsecとtflintも動かせる
 
 # コード
 
-```
+Dockerfile
+```Dockerfile
 FROM hashicorp/terraform
 RUN apk update
 RUN apk add curl sudo unzip make
