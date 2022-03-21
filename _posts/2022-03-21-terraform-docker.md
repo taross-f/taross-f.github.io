@@ -4,7 +4,7 @@ title: tfsec tflint入りのTerraform実行環境をDockerで作る
 ---
 
 
-Terraformの実行環境をDockerで構築しつつtfsecとtflintも動かせるようにしたくなってつくりました。これにterraformのコードをvolumeでマウントして実行すると良さげです
+Terraformの実行環境をDockerで構築しつつtfsecとtflintも動かせるようにしたくなってつくりました。これにTerraformのコードをvolumeでマウントして実行すると良さげです
 
 # コード
 
