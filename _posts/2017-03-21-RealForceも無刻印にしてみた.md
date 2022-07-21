@@ -44,3 +44,8 @@ US キーボードしかキートップ販売がない。(僕のリアフォは 
 あとこれは予想してなかったけど、キートップ変わったことで音が変わったきがして、しかもいい感じになった気がする。
 
 今回リアフォ買って 3 年たったくらいなので、もう 3 年くらいしたら今度は白買って白黒にしてみようと思った。
+
+## 2022/07/22 追記
+ちょっと前にJISキートップ出てるのでこちらを素直に使うのが良さそう
+
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B00FQ5RKIY&linkId=26ace3d6b66bc6c0413670329c5efe6a"></iframe>
