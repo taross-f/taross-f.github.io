@@ -8,9 +8,9 @@ permalink: /about/
 
 埼玉県在住。2児の父。
 
-2009年よりSIとしてキャリアをスタートしてから、ソーシャルゲーム会社やテレビデータスタートアップを経て、現在はAIベンチャーにてチャットボットプロダクト開発を行っている
+2009年よりSIとしてキャリアをスタートし、ソーシャルゲーム開発やテレビデータスタートアップを経て、現在はAIベンチャーにてチャットボットプロダクト開発を行っている
 
-得意なこと → Python Golang AWS Azure ProjectManagement Angular React
+得意なこと → Python Golang AWS Azure Angular React Terraform 
 
 [Twitter](https://twitter.com/taross__f)  
 [Github](https://github.com/taross-f)
@@ -18,9 +18,10 @@ permalink: /about/
 
 # 経歴
 - 2021.9 -
-  - 株式会社 BEDORE SWE   
-    - 大手企業の社内向けチャットボットプロダクト開発運用を行う  
-- 2018.8 - 2021.8
+  - 株式会社 PKSHA Workplace ソフトウェアエンジニア / エンジニアリングマネージャー   
+    - 大手企業の社内向けチャットボットプロダクト開発運用やチームマネジメントを行う  
+    - 使用技術: Golang gRPC React Redux-ToolKit Azure Terraform
+- 2018.8 - 
   - TVISION INSIGHTS 株式会社 リードエンジニア / エンジニアリングマネージャー
     - IoT、画像処理からインフラ、サーバーやフロントエンド開発を行う
     - 使用技術: Python Django Angular AWS
@@ -30,13 +31,12 @@ permalink: /about/
     - 使用技術: C# Unity AWS
 - 2009.4 - 2012.3
   - ソーバル株式会社 エンジニア
-    - 主に SES で様々な現場で業務を行う
     
 ### パートタイム
 
 - 2019.6 - 2021.7
   - 株式会社パプレア
-    - 新規事業のPoCから本開発を行う
+    - AI画像認識を用いたHR領域の新規事業のPoCから本開発を行う
     - 使用技術: Python FastAPI OpenVINO PHP Laravel Nuxtjs AWS
 
 [職務経歴](https://gist.github.com/taross-f/e3043275d6a71f410867fcc1aa51ced1)
