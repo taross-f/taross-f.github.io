@@ -3,8 +3,6 @@ tags: Meetup
 title: Microsoft Build Japan2023に登壇した
 --- 
 
-# Microsoft Build Japan2023
-
 <img src="https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/_DRC5231.jpg" width="400">
 
 少し前ですが所属するチームでMicrosoft Teams上でのアプリケーションを開発していることもあって、Microsoftの方からお声がけを頂き、2023年6月27日、Microsoft Build Japanで登壇しました。上記はめちゃくちゃそれっぽく撮影いただいた写真です。タイトルは、"Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践"でした。プレゼンテーションの内容については、以下のリンクからご覧いただけます。
