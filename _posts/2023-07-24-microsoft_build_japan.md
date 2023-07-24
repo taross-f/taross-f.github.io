@@ -5,7 +5,7 @@ title: Microsoft Build Japan2023に登壇した
 
 <img src="https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/_DRC5231.jpg" width="400">
 
-少し前ですが所属するチームでMicrosoft Teams上でのアプリケーションを開発していることもあって、Microsoftの方からお声がけを頂き、2023年6月27日、Microsoft Build Japanで登壇しました。上記はめちゃくちゃそれっぽく撮影いただいた写真です。タイトルは、"Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践"でした。プレゼンテーションの内容については、以下のリンクからご覧いただけます。
+少し前ですが所属するチームでMicrosoft Teams上でのアプリケーションを開発していることもあってMicrosoftの方からお声がけを頂き、2023年6月27日Microsoft Build Japanで登壇しました。上記はめちゃくちゃそれっぽく撮影いただいた写真です。タイトルは、"Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践"でした。プレゼンテーションの内容については、以下のリンクからご覧いただけます。
 
 [登壇資料](https://speakerdeck.com/pkshadeck/azure-openai-servicewohuo-yong-sita-ai-saaspurodakutokai-fa-noshi-jian)
 
@@ -13,7 +13,7 @@ title: Microsoft Build Japan2023に登壇した
 
 なお、久しぶりのリアル登壇であり、ピンマイクをつけての発表は初めての経験でした。その新鮮さと直前の機材トラブルからか逆に緊張がほぐれてたすかりました
 
-現在、私たちはLLMをパーツとして組み込むプロダクト開発を進めています。この分野に興味がある方は、下記リンクから詳細をご覧いただけます。
+現在私たちはLLM含めざまざまなアルゴリズムを組み込むプロダクト開発を進めています。この分野に興味がある方は、下記リンクから詳細をご覧いただけます。カジュアル面談もできますのでぜひご連絡ください
 
 [AI Helpdesk LP](https://aisaas.pkshatech.com/aihelpdesk/)
 [リクルーティング情報](https://www.pkshatech.com/recruitment/)
