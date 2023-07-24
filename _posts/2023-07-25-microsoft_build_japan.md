@@ -1,5 +1,5 @@
 ---
-tag: presentation
+tag: presentation microsoft
 title: Microsoft Build Japan2023に登壇した
 --- 
 
