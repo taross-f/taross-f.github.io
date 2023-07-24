@@ -1,5 +1,5 @@
 ---
-tags: presentation microsoft
+tags: Meetup
 title: Microsoft Build Japan2023に登壇した
 --- 
 
