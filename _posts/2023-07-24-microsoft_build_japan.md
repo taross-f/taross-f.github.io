@@ -16,7 +16,4 @@ title: Microsoft Build Japan2023に登壇した
 現在、私たちはLLMをパーツとして組み込むプロダクト開発を進めています。この分野に興味がある方は、下記リンクから詳細をご覧いただけます。
 
 [AI Helpdesk LP](https://aisaas.pkshatech.com/aihelpdesk/)
-
 [リクルーティング情報](https://www.pkshatech.com/recruitment/)
-
-という会社をしつつ終わります。
