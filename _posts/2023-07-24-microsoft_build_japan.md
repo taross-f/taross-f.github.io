@@ -7,7 +7,7 @@ title: Microsoft Build Japan2023に登壇した
 
 少し前ですが所属するチームでMicrosoft Teams上でのアプリケーションを開発していることもあってMicrosoftの方からお声がけを頂き、2023年6月27日Microsoft Build Japanで登壇しました。上記はめちゃくちゃそれっぽく撮影いただいた写真です。タイトルは、"Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践"でした。プレゼンテーションの内容については、以下のリンクからご覧いただけます。
 
-[登壇資料](https://speakerdeck.com/pkshadeck/azure-openai-servicewohuo-yong-sita-ai-saaspurodakutokai-fa-noshi-jian)
+<iframe class="speakerdeck-iframe" frameborder="0" src="https://speakerdeck.com/player/c054d6e9d5dc4b619b538607c091e7c3" title="Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践" allowfullscreen="true" style="border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;" data-ratio="1.7777777777777777"></iframe>
 
 私の所属するチームでは、Azure OpenAI ServiceをAI SaaSプロダクトに組み込んでいます。登壇では、そのLLMのプロダクトへの実装に当たって考慮すべきポイントや注意すべき点について話しました。アンケートの内容も悪くなかったようですし、反響もすこしはいただけたのでよかったかなと思います
 
