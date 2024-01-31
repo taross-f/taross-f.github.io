@@ -26,12 +26,9 @@ US キーボードしかキートップ販売がない。(僕のリアフォは 
 
 で、結局 HHKB の無刻印キートップをつける作戦に。
 
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=tarossf-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=B00FQ5JPTQ&linkId=97759ccac0beedc453a8f4ec83a3ec4f&bc1=000000&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-    </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=tarossf-22&m=amazon&o=9&p=8&l=as1&IS2=1&detail=1&asins=B000EQHU6M&linkId=fa17cc6071d46d95a08501fc4f9824db&bc1=000000&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-    </iframe>
+[PFU キートップセット墨/無刻印 (HHKB Professionaシリーズ英語配列モデル) PD-KB400KTBN](https://amzn.to/3HHxD4S)
 
-### 見た目
+## 見た目
 
 ![無刻印Realforce](https://raw.githubusercontent.com/taross-f/taross-f.github.io/master/images/IMG_4450.JPG "無刻印Realforce")
 
@@ -48,4 +45,4 @@ US キーボードしかキートップ販売がない。(僕のリアフォは 
 ## 2022/07/22 追記
 ちょっと前にJISキートップ出てるのでこちらを素直に使うのが良さそう
 
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=tarossf-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B00FQ5RKIY&linkId=26ace3d6b66bc6c0413670329c5efe6a"></iframe>
+[PFU キートップセット（墨）日本語配列／無刻印 PD-KB420KTBN](https://amzn.to/49cW8mk)
