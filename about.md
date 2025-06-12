@@ -6,9 +6,9 @@ permalink: /about/
 
 古屋 太郎 / Furuya Taro
 
-埼玉県在住。2児の父。
+埼玉県在住。3児の父。
 
-2009年よりSIとしてキャリアをスタートし、ソーシャルゲーム開発やテレビデータスタートアップを経て、現在はAIベンチャーにてチャットボットプロダクト開発を行っている
+2009年よりSIとしてキャリアをスタートし、ソーシャルゲーム開発やテレビデータスタートアップを経て、現在はAI企業にてAI SaaSプロダクト開発を行っている
 
 得意なこと → Python Golang AWS Azure Angular React Terraform 
 
@@ -17,11 +17,14 @@ permalink: /about/
 
 
 # 経歴
-- 2021.9 -
+- 2024.12 -
+  - 株式会社 PKSHA Communication 執行役員   
+    - AI SaaSプロダクト開発のSWE全体を統括
+- 2021.9 - 2024.11
   - 株式会社 PKSHA Workplace ソフトウェアエンジニア / エンジニアリングマネージャー   
     - 大手企業の社内向けチャットボットプロダクト開発運用やチームマネジメントを行う  
     - 使用技術: Golang gRPC React Redux-ToolKit Azure Terraform
-- 2018.8 - 
+- 2018.8 - 2023.12
   - TVISION INSIGHTS 株式会社 リードエンジニア / エンジニアリングマネージャー
     - IoT、画像処理からインフラ、サーバーやフロントエンド開発を行う
     - 使用技術: Python Django Angular AWS
