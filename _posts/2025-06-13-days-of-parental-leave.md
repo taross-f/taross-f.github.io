@@ -1,4 +1,5 @@
 ---
+layout: post
 tags: Life Poem
 title: エンジニアの育休中の生活
 ---
