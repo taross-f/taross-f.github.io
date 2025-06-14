@@ -1,0 +1,263 @@
+---
+layout: page
+title: 文字数カウンター
+permalink: /character-counter/
+---
+
+<div class="character-counter">
+  <div class="input-section">
+    <textarea id="textInput" placeholder="ここにテキストを入力してください..." rows="15"></textarea>
+  </div>
+  
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">文字数</span>
+        <span class="stat-value" id="charCount">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">改行・空白除く</span>
+        <span class="stat-value" id="charCountNoSpaces">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">バイト数</span>
+        <span class="stat-value" id="byteCount">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">行数</span>
+        <span class="stat-value" id="lineCount">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">単語数</span>
+        <span class="stat-value" id="wordCount">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">段落数</span>
+        <span class="stat-value" id="paragraphCount">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">読み時間 (分)</span>
+        <span class="stat-value" id="readingTime">0</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-label">ユニーク文字数</span>
+        <span class="stat-value" id="uniqueCharCount">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="actions-section">
+    <button id="clearBtn" class="btn">クリア</button>
+    <button id="copyBtn" class="btn">テキストをコピー</button>
+  </div>
+</div>
+
+<style>
+.character-counter {
+  max-width: none;
+  margin: 0;
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+#textInput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+#textInput:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.stat-item:hover {
+  background: #e9ecef;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.actions-section {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background: #005a9e;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-item {
+    padding: 12px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .actions-section {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const textInput = document.getElementById('textInput');
+  const charCount = document.getElementById('charCount');
+  const charCountNoSpaces = document.getElementById('charCountNoSpaces');
+  const byteCount = document.getElementById('byteCount');
+  const lineCount = document.getElementById('lineCount');
+  const wordCount = document.getElementById('wordCount');
+  const paragraphCount = document.getElementById('paragraphCount');
+  const readingTime = document.getElementById('readingTime');
+  const uniqueCharCount = document.getElementById('uniqueCharCount');
+  const clearBtn = document.getElementById('clearBtn');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function updateCounts() {
+    const text = textInput.value;
+    
+    // 文字数
+    charCount.textContent = text.length;
+    
+    // 改行・空白除く文字数
+    const textNoSpaces = text.replace(/[\s\n\r\t]/g, '');
+    charCountNoSpaces.textContent = textNoSpaces.length;
+    
+    // バイト数 (UTF-8)
+    const byteSize = new Blob([text]).size;
+    byteCount.textContent = byteSize;
+    
+    // 行数
+    const lines = text.split('\n').length;
+    lineCount.textContent = lines;
+    
+    // 単語数 (日本語対応: 英単語 + ひらがな・カタカナ・漢字の文字数)
+    const englishWords = (text.match(/\b[a-zA-Z]+\b/g) || []).length;
+    const japaneseChars = (text.match(/[ひらがなカタカナ漢字]/g) || []).length;
+    const totalWords = englishWords + japaneseChars;
+    wordCount.textContent = totalWords;
+    
+    // 段落数
+    const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+    paragraphCount.textContent = text.trim().length > 0 ? paragraphs : 0;
+    
+    // 読み時間推定 (日本語: 500-600字/分, 英語: 200-250単語/分)
+    const readingSpeed = 550; // 日本語基準
+    const minutes = Math.ceil(totalWords / readingSpeed);
+    readingTime.textContent = text.trim().length > 0 ? minutes : 0;
+    
+    // ユニーク文字数
+    const uniqueChars = new Set(text).size;
+    uniqueCharCount.textContent = uniqueChars;
+  }
+
+  // リアルタイム更新
+  textInput.addEventListener('input', updateCounts);
+  textInput.addEventListener('paste', function() {
+    setTimeout(updateCounts, 10);
+  });
+
+  // クリアボタン
+  clearBtn.addEventListener('click', function() {
+    textInput.value = '';
+    updateCounts();
+    textInput.focus();
+  });
+
+  // コピーボタン
+  copyBtn.addEventListener('click', function() {
+    textInput.select();
+    textInput.setSelectionRange(0, 99999); // モバイル対応
+    
+    try {
+      document.execCommand('copy');
+      copyBtn.textContent = 'コピーしました!';
+      setTimeout(function() {
+        copyBtn.textContent = 'テキストをコピー';
+      }, 2000);
+    } catch (err) {
+      console.error('コピーに失敗しました:', err);
+    }
+  });
+
+  // 初期化
+  updateCounts();
+})();
+</script>
