@@ -391,7 +391,13 @@ permalink: /qr-generator/
 </style>
 
 <script>
-(function() {
+function initQRGenerator() {
+  // QRCodeライブラリの読み込み確認
+  if (typeof QRCode === 'undefined') {
+    console.error('QRCode library is not loaded');
+    document.getElementById('qrDisplay').innerHTML = '<p style="color: red;">QRCodeライブラリの読み込みに失敗しました。ページを再読み込みしてください。</p>';
+    return;
+  }
   const tabs = {
     text: document.getElementById('textTab'),
     url: document.getElementById('urlTab'),
@@ -621,5 +627,14 @@ permalink: /qr-generator/
 
   // 初期化
   switchTab('text');
-})();
+}
+
+// ページ読み込み後とライブラリ読み込み後に初期化
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initQRGenerator, 100);
+  });
+} else {
+  setTimeout(initQRGenerator, 100);
+}
 </script>
