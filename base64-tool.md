@@ -1,0 +1,275 @@
+---
+layout: page
+title: Base64エンコーダー/デコーダー
+permalink: /base64-tool/
+---
+
+<div class="base64-tool">
+  <div class="tool-section">
+    <h3>📤 エンコード（テキスト → Base64）</h3>
+    <textarea id="textInput" placeholder="エンコードするテキストを入力してください..." rows="8"></textarea>
+    <div class="button-group">
+      <button id="encodeBtn" class="btn btn-primary">エンコード</button>
+      <button id="clearTextBtn" class="btn">クリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📥 デコード（Base64 → テキスト）</h3>
+    <textarea id="base64Input" placeholder="デコードするBase64文字列を入力してください..." rows="8"></textarea>
+    <div class="button-group">
+      <button id="decodeBtn" class="btn btn-primary">デコード</button>
+      <button id="clearBase64Btn" class="btn">クリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📋 結果</h3>
+    <textarea id="resultOutput" placeholder="結果がここに表示されます..." rows="8" readonly></textarea>
+    <div class="button-group">
+      <button id="copyResultBtn" class="btn">結果をコピー</button>
+      <button id="clearResultBtn" class="btn">結果をクリア</button>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 Base64について</h4>
+    <p>Base64は、バイナリデータをテキスト形式で表現するためのエンコード方式です。主に以下の用途で使用されます：</p>
+    <ul>
+      <li>メールの添付ファイル</li>
+      <li>Web APIでの画像データ転送</li>
+      <li>設定ファイルでのバイナリデータ保存</li>
+      <li>URLに含めるデータのエンコード</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.base64-tool {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const textInput = document.getElementById('textInput');
+  const base64Input = document.getElementById('base64Input');
+  const resultOutput = document.getElementById('resultOutput');
+  const encodeBtn = document.getElementById('encodeBtn');
+  const decodeBtn = document.getElementById('decodeBtn');
+  const copyResultBtn = document.getElementById('copyResultBtn');
+  const clearTextBtn = document.getElementById('clearTextBtn');
+  const clearBase64Btn = document.getElementById('clearBase64Btn');
+  const clearResultBtn = document.getElementById('clearResultBtn');
+
+  function showMessage(element, message, type = 'success') {
+    // 既存のメッセージを削除
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.remove();
+      }
+    }, 3000);
+  }
+
+  // エンコード
+  encodeBtn.addEventListener('click', function() {
+    const text = textInput.value;
+    if (!text.trim()) {
+      showMessage(resultOutput, 'エンコードするテキストを入力してください', 'error');
+      return;
+    }
+    
+    try {
+      const encoded = btoa(unescape(encodeURIComponent(text)));
+      resultOutput.value = encoded;
+      showMessage(resultOutput, 'エンコードが完了しました');
+    } catch (error) {
+      showMessage(resultOutput, 'エンコードに失敗しました: ' + error.message, 'error');
+    }
+  });
+
+  // デコード
+  decodeBtn.addEventListener('click', function() {
+    const base64 = base64Input.value.trim();
+    if (!base64) {
+      showMessage(resultOutput, 'デコードするBase64文字列を入力してください', 'error');
+      return;
+    }
+    
+    try {
+      const decoded = decodeURIComponent(escape(atob(base64)));
+      resultOutput.value = decoded;
+      showMessage(resultOutput, 'デコードが完了しました');
+    } catch (error) {
+      showMessage(resultOutput, 'デコードに失敗しました。正しいBase64文字列か確認してください', 'error');
+    }
+  });
+
+  // コピー
+  copyResultBtn.addEventListener('click', function() {
+    if (!resultOutput.value) {
+      showMessage(resultOutput, 'コピーする結果がありません', 'error');
+      return;
+    }
+    
+    resultOutput.select();
+    resultOutput.setSelectionRange(0, 99999);
+    
+    try {
+      document.execCommand('copy');
+      showMessage(resultOutput, '結果をクリップボードにコピーしました');
+    } catch (err) {
+      showMessage(resultOutput, 'コピーに失敗しました', 'error');
+    }
+  });
+
+  // クリア機能
+  clearTextBtn.addEventListener('click', function() {
+    textInput.value = '';
+    textInput.focus();
+  });
+  
+  clearBase64Btn.addEventListener('click', function() {
+    base64Input.value = '';
+    base64Input.focus();
+  });
+  
+  clearResultBtn.addEventListener('click', function() {
+    resultOutput.value = '';
+  });
+
+  // Enterキーでエンコード/デコード
+  textInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      encodeBtn.click();
+    }
+  });
+  
+  base64Input.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      decodeBtn.click();
+    }
+  });
+})();
+</script>

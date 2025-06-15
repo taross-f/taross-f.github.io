@@ -1,0 +1,474 @@
+---
+layout: page
+title: JSON整形ツール
+permalink: /json-formatter/
+---
+
+<div class="json-formatter">
+  <div class="tool-section">
+    <h3>📝 JSON入力</h3>
+    <textarea id="jsonInput" placeholder='{"name": "example", "data": [1, 2, 3]}' rows="12"></textarea>
+    <div class="button-group">
+      <button id="formatBtn" class="btn btn-primary">整形</button>
+      <button id="minifyBtn" class="btn btn-secondary">圧縮</button>
+      <button id="validateBtn" class="btn btn-info">検証</button>
+      <button id="clearInputBtn" class="btn">クリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📋 整形結果</h3>
+    <textarea id="jsonOutput" placeholder="整形されたJSONがここに表示されます..." rows="12" readonly></textarea>
+    <div class="button-group">
+      <button id="copyOutputBtn" class="btn">結果をコピー</button>
+      <button id="clearOutputBtn" class="btn">結果をクリア</button>
+    </div>
+  </div>
+  
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">文字数（元）</span>
+        <span class="stat-value" id="originalSize">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">文字数（整形後）</span>
+        <span class="stat-value" id="formattedSize">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">圧縮率</span>
+        <span class="stat-value" id="compressionRatio">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">ネストレベル</span>
+        <span class="stat-value" id="nestingLevel">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>🔍 JSONパス検索</h3>
+    <input type="text" id="jsonPathInput" placeholder="例: $.data[0], $.name など" />
+    <button id="searchPathBtn" class="btn btn-info">検索</button>
+    <div id="pathResult"></div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 JSONについて</h4>
+    <p>JSON（JavaScript Object Notation）は、軽量なデータ交換フォーマットです。主な用途：</p>
+    <ul>
+      <li>Web APIでのデータ交換</li>
+      <li>設定ファイルの保存</li>
+      <li>データベースでの構造化データ保存</li>
+      <li>JavaScriptでのオブジェクト表現</li>
+    </ul>
+    <p><strong>ショートカット:</strong> Ctrl+Enter で整形、Ctrl+Shift+Enter で圧縮</p>
+  </div>
+</div>
+
+<style>
+.json-formatter {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.tool-section input[type="text"] {
+  width: calc(100% - 80px);
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn-secondary {
+  background: #6c757d;
+}
+
+.btn-info {
+  background: #17a2b8;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.stats-section {
+  margin-bottom: 30px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  background: #e7f3ff;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #b3d9ff;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #007acc;
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+#pathResult {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .tool-section input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
+<script>
+(function() {
+  const jsonInput = document.getElementById('jsonInput');
+  const jsonOutput = document.getElementById('jsonOutput');
+  const jsonPathInput = document.getElementById('jsonPathInput');
+  const pathResult = document.getElementById('pathResult');
+  const formatBtn = document.getElementById('formatBtn');
+  const minifyBtn = document.getElementById('minifyBtn');
+  const validateBtn = document.getElementById('validateBtn');
+  const copyOutputBtn = document.getElementById('copyOutputBtn');
+  const clearInputBtn = document.getElementById('clearInputBtn');
+  const clearOutputBtn = document.getElementById('clearOutputBtn');
+  const searchPathBtn = document.getElementById('searchPathBtn');
+  const originalSize = document.getElementById('originalSize');
+  const formattedSize = document.getElementById('formattedSize');
+  const compressionRatio = document.getElementById('compressionRatio');
+  const nestingLevel = document.getElementById('nestingLevel');
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.remove();
+      }
+    }, 3000);
+  }
+
+  function updateStats(original, formatted) {
+    originalSize.textContent = original.length;
+    formattedSize.textContent = formatted.length;
+    
+    const ratio = original.length > 0 ? 
+      Math.round((1 - formatted.length / original.length) * 100) : 0;
+    compressionRatio.textContent = ratio + '%';
+    
+    try {
+      const obj = JSON.parse(original);
+      nestingLevel.textContent = getMaxDepth(obj);
+    } catch (e) {
+      nestingLevel.textContent = '0';
+    }
+  }
+
+  function getMaxDepth(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+      return 0;
+    }
+    
+    let maxDepth = 0;
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const depth = getMaxDepth(obj[key]);
+        maxDepth = Math.max(maxDepth, depth);
+      }
+    }
+    return maxDepth + 1;
+  }
+
+  function formatJSON() {
+    const input = jsonInput.value.trim();
+    if (!input) {
+      showMessage(jsonOutput, '整形するJSONを入力してください', 'error');
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(input);
+      const formatted = JSON.stringify(parsed, null, 2);
+      jsonOutput.value = formatted;
+      updateStats(input, formatted);
+      showMessage(jsonOutput, 'JSONの整形が完了しました');
+    } catch (error) {
+      showMessage(jsonOutput, 'JSON構文エラー: ' + error.message, 'error');
+    }
+  }
+
+  function minifyJSON() {
+    const input = jsonInput.value.trim();
+    if (!input) {
+      showMessage(jsonOutput, '圧縮するJSONを入力してください', 'error');
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(input);
+      const minified = JSON.stringify(parsed);
+      jsonOutput.value = minified;
+      updateStats(input, minified);
+      showMessage(jsonOutput, 'JSONの圧縮が完了しました');
+    } catch (error) {
+      showMessage(jsonOutput, 'JSON構文エラー: ' + error.message, 'error');
+    }
+  }
+
+  function validateJSON() {
+    const input = jsonInput.value.trim();
+    if (!input) {
+      showMessage(jsonOutput, '検証するJSONを入力してください', 'error');
+      return;
+    }
+
+    try {
+      JSON.parse(input);
+      showMessage(jsonOutput, '✅ JSONは有効です');
+    } catch (error) {
+      showMessage(jsonOutput, '❌ JSON構文エラー: ' + error.message, 'error');
+    }
+  }
+
+  function searchJSONPath() {
+    const input = jsonInput.value.trim();
+    const path = jsonPathInput.value.trim();
+    
+    if (!input || !path) {
+      pathResult.textContent = 'JSONとパスの両方を入力してください';
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(input);
+      const result = evaluateJSONPath(parsed, path);
+      pathResult.textContent = JSON.stringify(result, null, 2);
+    } catch (error) {
+      pathResult.textContent = 'エラー: ' + error.message;
+    }
+  }
+
+  function evaluateJSONPath(obj, path) {
+    // 簡単なJSONPath実装（$.key, $.array[0] など）
+    if (path.startsWith('$.')) {
+      path = path.substring(2);
+    }
+    
+    const parts = path.split(/[.\[\]]/).filter(p => p !== '');
+    let current = obj;
+    
+    for (let part of parts) {
+      if (part === '') continue;
+      
+      if (Array.isArray(current) && !isNaN(part)) {
+        current = current[parseInt(part)];
+      } else if (typeof current === 'object' && current !== null) {
+        current = current[part];
+      } else {
+        throw new Error('パスが見つかりません: ' + part);
+      }
+      
+      if (current === undefined) {
+        throw new Error('パスが見つかりません');
+      }
+    }
+    
+    return current;
+  }
+
+  // イベントリスナー
+  formatBtn.addEventListener('click', formatJSON);
+  minifyBtn.addEventListener('click', minifyJSON);
+  validateBtn.addEventListener('click', validateJSON);
+  searchPathBtn.addEventListener('click', searchJSONPath);
+
+  copyOutputBtn.addEventListener('click', function() {
+    if (!jsonOutput.value) {
+      showMessage(jsonOutput, 'コピーする結果がありません', 'error');
+      return;
+    }
+    
+    jsonOutput.select();
+    jsonOutput.setSelectionRange(0, 99999);
+    
+    try {
+      document.execCommand('copy');
+      showMessage(jsonOutput, '結果をクリップボードにコピーしました');
+    } catch (err) {
+      showMessage(jsonOutput, 'コピーに失敗しました', 'error');
+    }
+  });
+
+  clearInputBtn.addEventListener('click', function() {
+    jsonInput.value = '';
+    jsonInput.focus();
+  });
+
+  clearOutputBtn.addEventListener('click', function() {
+    jsonOutput.value = '';
+    updateStats('', '');
+  });
+
+  // キーボードショートカット
+  jsonInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        minifyJSON();
+      } else {
+        formatJSON();
+      }
+    }
+  });
+
+  jsonPathInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      searchJSONPath();
+    }
+  });
+
+  // 初期化
+  updateStats('', '');
+})();
+</script>

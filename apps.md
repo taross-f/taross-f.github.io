@@ -4,14 +4,18 @@ title: Apps
 permalink: /apps/
 ---
 
+
 ## 📝 テキストツール
 
 ### [文字数カウンター](/character-counter/)
-テキストのさまざまな情報をリアルタイムで確認できるツールです。
 
+### [Base64エンコーダー/デコーダー](/base64-tool/)
 
----
+### [JSON整形ツール](/json-formatter/)
 
+## 🎨 デザインツール
 
-ご要望やアイデアがございましたら、[Twitter](https://twitter.com/taross__f)や[GitHub](https://github.com/taross-f)でお気軽にお知らせください。
+### [カラーパレット生成ツール](/color-palette/)
+
+### [QRコード生成ツール](/qr-generator/)
 
