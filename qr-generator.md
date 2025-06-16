@@ -134,7 +134,81 @@ permalink: /qr-generator/
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+// フォールバック用のライブラリ読み込み
+if (typeof QRCode === 'undefined') {
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  script.onload = function() {
+    // qrcode-generatorライブラリ用のアダプター
+    if (typeof qrcode !== 'undefined' && typeof QRCode === 'undefined') {
+      window.QRCode = {
+        toCanvas: function(canvas, text, options, callback) {
+          try {
+            const qr = qrcode(options.errorCorrectionLevel === 'L' ? 1 : options.errorCorrectionLevel === 'M' ? 0 : options.errorCorrectionLevel === 'Q' ? 3 : 2, 'L');
+            qr.addData(text);
+            qr.make();
+            
+            const size = options.width || 256;
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+            
+            const cellSize = size / qr.getModuleCount();
+            
+            ctx.fillStyle = options.color?.light || '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+            
+            ctx.fillStyle = options.color?.dark || '#000000';
+            for (let row = 0; row < qr.getModuleCount(); row++) {
+              for (let col = 0; col < qr.getModuleCount(); col++) {
+                if (qr.isDark(row, col)) {
+                  ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                }
+              }
+            }
+            
+            callback(null);
+          } catch (error) {
+            callback(error);
+          }
+        },
+        toString: function(text, options, callback) {
+          try {
+            const qr = qrcode(0, 'L');
+            qr.addData(text);
+            qr.make();
+            
+            const size = options.width || 256;
+            const cellSize = 4;
+            const moduleCount = qr.getModuleCount();
+            const svgSize = moduleCount * cellSize;
+            
+            let svg = `<svg width="${svgSize}" height="${svgSize}" xmlns="http://www.w3.org/2000/svg">`;
+            svg += `<rect width="100%" height="100%" fill="${options.color?.light || '#ffffff'}"/>`;
+            
+            for (let row = 0; row < moduleCount; row++) {
+              for (let col = 0; col < moduleCount; col++) {
+                if (qr.isDark(row, col)) {
+                  svg += `<rect x="${col * cellSize}" y="${row * cellSize}" width="${cellSize}" height="${cellSize}" fill="${options.color?.dark || '#000000'}"/>`;
+                }
+              }
+            }
+            svg += '</svg>';
+            
+            callback(null, svg);
+          } catch (error) {
+            callback(error);
+          }
+        }
+      };
+    }
+    setTimeout(initQRGenerator, 100);
+  };
+  document.head.appendChild(script);
+}
+</script>
 
 <style>
 .qr-generator {
@@ -632,9 +706,25 @@ function initQRGenerator() {
 // ページ読み込み後とライブラリ読み込み後に初期化
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(initQRGenerator, 100);
+    if (typeof QRCode !== 'undefined') {
+      setTimeout(initQRGenerator, 100);
+    } else {
+      setTimeout(function() {
+        if (typeof QRCode !== 'undefined') {
+          initQRGenerator();
+        }
+      }, 500);
+    }
   });
 } else {
-  setTimeout(initQRGenerator, 100);
+  if (typeof QRCode !== 'undefined') {
+    setTimeout(initQRGenerator, 100);
+  } else {
+    setTimeout(function() {
+      if (typeof QRCode !== 'undefined') {
+        initQRGenerator();
+      }
+    }, 500);
+  }
 }
 </script>
