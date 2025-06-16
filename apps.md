@@ -15,6 +15,10 @@ permalink: /apps/
 
 ### [JWT解析ツール](/jwt-analyzer/)
 
+## 🔧 開発者ツール
+
+### [CSS圧縮ツール](/css-compressor/)
+
 ## 🎨 デザインツール
 
 ### [カラーパレット生成ツール](/color-palette/)

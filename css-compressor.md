@@ -1,0 +1,481 @@
+---
+layout: page
+title: CSS圧縮ツール
+permalink: /css-compressor/
+---
+
+<div class="css-compressor">
+  <div class="tool-section">
+    <h3>📝 CSS入力</h3>
+    <textarea id="cssInput" placeholder="圧縮するCSSコードを入力してください...
+
+例:
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+}" rows="15"></textarea>
+    <div class="button-group">
+      <button id="compressBtn" class="btn btn-primary">CSS圧縮</button>
+      <button id="clearInputBtn" class="btn">入力をクリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>⚙️ 圧縮オプション</h3>
+    <div class="options-grid">
+      <div class="option-item">
+        <label for="compressionLevel">圧縮レベル:</label>
+        <select id="compressionLevel">
+          <option value="1">レベル1 (基本)</option>
+          <option value="2" selected>レベル2 (推奨)</option>
+        </select>
+      </div>
+      <div class="option-item">
+        <label>
+          <input type="checkbox" id="keepBreaks"> 改行を保持
+        </label>
+      </div>
+      <div class="option-item">
+        <label>
+          <input type="checkbox" id="removeComments" checked> コメントを削除
+        </label>
+      </div>
+      <div class="option-item">
+        <label>
+          <input type="checkbox" id="removeEmpty" checked> 空のルールを削除
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📊 圧縮統計</h3>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">元のサイズ</span>
+        <span class="stat-value" id="originalSize">0 B</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">圧縮後サイズ</span>
+        <span class="stat-value" id="compressedSize">0 B</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">削減サイズ</span>
+        <span class="stat-value" id="savedSize">0 B</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">圧縮率</span>
+        <span class="stat-value" id="compressionRatio">0%</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📤 圧縮結果</h3>
+    <textarea id="cssOutput" placeholder="圧縮されたCSSがここに表示されます..." rows="15" readonly></textarea>
+    <div class="button-group">
+      <button id="copyResultBtn" class="btn">結果をコピー</button>
+      <button id="clearResultBtn" class="btn">結果をクリア</button>
+      <button id="downloadBtn" class="btn">CSSファイルでダウンロード</button>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 CSS圧縮について</h4>
+    <p>CSS圧縮は、スタイルシートのファイルサイズを小さくしてWebサイトの読み込み速度を向上させる技術です。</p>
+    <div class="css-info">
+      <p><strong>圧縮内容:</strong></p>
+      <ul>
+        <li><strong>空白・改行削除:</strong> 不要な空白文字を除去</li>
+        <li><strong>コメント削除:</strong> 開発用コメントを除去</li>
+        <li><strong>プロパティ最適化:</strong> 冗長なルールの統合</li>
+        <li><strong>値の短縮:</strong> 色コードや単位の最適化</li>
+      </ul>
+      <p><strong>メリット:</strong> ファイルサイズ削減、ページ読み込み速度向上、帯域幅の節約</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/clean-css@5.3.3/dist/clean-css.min.js"></script>
+<script>
+// clean-cssライブラリの読み込み確認とフォールバック
+function initCSSCompressor() {
+  if (typeof CleanCSS === 'undefined') {
+    console.error('CleanCSS library is not loaded');
+    document.getElementById('cssOutput').value = 'CleanCSSライブラリの読み込みに失敗しました。ページを再読み込みしてください。';
+    return;
+  }
+
+  const cssInput = document.getElementById('cssInput');
+  const cssOutput = document.getElementById('cssOutput');
+  const compressBtn = document.getElementById('compressBtn');
+  const copyResultBtn = document.getElementById('copyResultBtn');
+  const clearInputBtn = document.getElementById('clearInputBtn');
+  const clearResultBtn = document.getElementById('clearResultBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  
+  const compressionLevel = document.getElementById('compressionLevel');
+  const keepBreaks = document.getElementById('keepBreaks');
+  const removeComments = document.getElementById('removeComments');
+  const removeEmpty = document.getElementById('removeEmpty');
+  
+  const originalSize = document.getElementById('originalSize');
+  const compressedSize = document.getElementById('compressedSize');
+  const savedSize = document.getElementById('savedSize');
+  const compressionRatio = document.getElementById('compressionRatio');
+
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function updateStats(originalText, compressedText) {
+    const originalBytes = new Blob([originalText]).size;
+    const compressedBytes = new Blob([compressedText]).size;
+    const savedBytes = originalBytes - compressedBytes;
+    const ratio = originalBytes > 0 ? Math.round((savedBytes / originalBytes) * 100) : 0;
+    
+    originalSize.textContent = formatBytes(originalBytes);
+    compressedSize.textContent = formatBytes(compressedBytes);
+    savedSize.textContent = formatBytes(savedBytes);
+    compressionRatio.textContent = ratio + '%';
+  }
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.remove();
+      }
+    }, 3000);
+  }
+
+  function compressCSS() {
+    const inputCSS = cssInput.value.trim();
+    if (!inputCSS) {
+      showMessage(cssOutput, '圧縮するCSSコードを入力してください', 'error');
+      return;
+    }
+    
+    try {
+      const level = parseInt(compressionLevel.value);
+      const options = {
+        level: level,
+        format: keepBreaks.checked ? 'beautify' : false,
+        inline: ['none'],
+        rebase: false
+      };
+
+      // clean-cssインスタンスを作成
+      const cleanCSS = new CleanCSS(options);
+      const result = cleanCSS.minify(inputCSS);
+      
+      if (result.errors && result.errors.length > 0) {
+        showMessage(cssOutput, 'CSS圧縮中にエラーが発生しました: ' + result.errors.join(', '), 'error');
+        return;
+      }
+      
+      if (result.warnings && result.warnings.length > 0) {
+        console.warn('CSS圧縮警告:', result.warnings);
+      }
+      
+      cssOutput.value = result.styles;
+      updateStats(inputCSS, result.styles);
+      showMessage(cssOutput, 'CSS圧縮が完了しました');
+      
+    } catch (error) {
+      showMessage(cssOutput, 'CSS圧縮に失敗しました: ' + error.message, 'error');
+      console.error('CSS compression error:', error);
+    }
+  }
+
+  function copyCSSResult() {
+    if (!cssOutput.value) {
+      showMessage(cssOutput, 'コピーする結果がありません', 'error');
+      return;
+    }
+    
+    cssOutput.select();
+    cssOutput.setSelectionRange(0, 99999);
+    
+    try {
+      document.execCommand('copy');
+      showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+    } catch (err) {
+      // モダンブラウザ対応
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(cssOutput.value).then(() => {
+          showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+        }).catch(() => {
+          showMessage(cssOutput, 'コピーに失敗しました', 'error');
+        });
+      } else {
+        showMessage(cssOutput, 'コピーに失敗しました', 'error');
+      }
+    }
+  }
+
+  function downloadCSS() {
+    if (!cssOutput.value) {
+      showMessage(cssOutput, 'ダウンロードする結果がありません', 'error');
+      return;
+    }
+    
+    const blob = new Blob([cssOutput.value], { type: 'text/css' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `compressed_${Date.now()}.css`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showMessage(cssOutput, 'CSSファイルをダウンロードしました');
+  }
+
+  // イベントリスナー
+  compressBtn.addEventListener('click', compressCSS);
+  copyResultBtn.addEventListener('click', copyCSSResult);
+  downloadBtn.addEventListener('click', downloadCSS);
+  
+  clearInputBtn.addEventListener('click', function() {
+    cssInput.value = '';
+    updateStats('', '');
+    cssInput.focus();
+  });
+  
+  clearResultBtn.addEventListener('click', function() {
+    cssOutput.value = '';
+    updateStats('', '');
+  });
+
+  // Ctrl+Enterで圧縮実行
+  cssInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      compressCSS();
+    }
+  });
+
+  // 初期統計表示
+  updateStats('', '');
+}
+
+// ライブラリ読み込み後の初期化
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initCSSCompressor, 100);
+  });
+} else {
+  setTimeout(initCSSCompressor, 100);
+}
+</script>
+
+<style>
+.css-compressor {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 0;
+}
+
+.option-item label {
+  display: block;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.option-item select {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+}
+
+.option-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.stat-item:hover {
+  background: #f8f9fa;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.css-info ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.css-info li {
+  margin: 5px 0;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.error {
+  color: #721c24;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .options-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
