@@ -1,0 +1,547 @@
+---
+layout: page
+title: UUID生成ツール
+permalink: /uuid-generator/
+---
+
+<div class="uuid-generator">
+  <div class="tool-section">
+    <h3>🎲 UUID生成設定</h3>
+    <div class="settings-grid">
+      <div class="setting-item">
+        <label for="uuidVersion">UUIDバージョン:</label>
+        <select id="uuidVersion">
+          <option value="4" selected>UUID v4 (ランダム)</option>
+          <option value="1">UUID v1 (時刻ベース)</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label for="uuidCount">生成数:</label>
+        <input type="number" id="uuidCount" min="1" max="50" value="1">
+      </div>
+      <div class="setting-item">
+        <label for="uuidCase">文字ケース:</label>
+        <select id="uuidCase">
+          <option value="lower" selected>小文字</option>
+          <option value="upper">大文字</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>
+          <input type="checkbox" id="includeHyphens" checked> ハイフンを含める
+        </label>
+      </div>
+    </div>
+    <div class="button-group">
+      <button id="generateBtn" class="btn btn-primary">UUID生成</button>
+      <button id="clearBtn" class="btn">クリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📋 生成されたUUID</h3>
+    <textarea id="uuidOutput" placeholder="生成されたUUIDがここに表示されます..." rows="12" readonly></textarea>
+    <div class="button-group">
+      <button id="copyAllBtn" class="btn">すべてコピー</button>
+      <button id="copyLastBtn" class="btn">最新のUUIDをコピー</button>
+      <button id="validateBtn" class="btn">UUID検証</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>🔍 UUID検証</h3>
+    <textarea id="validateInput" placeholder="検証するUUIDを入力してください..." rows="3"></textarea>
+    <div id="validationResult" class="validation-result"></div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>📊 統計情報</h3>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">生成済み総数</span>
+        <span class="stat-value" id="totalGenerated">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">現在の表示数</span>
+        <span class="stat-value" id="currentCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">最後の生成時刻</span>
+        <span class="stat-value" id="lastGenerated">-</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 UUIDについて</h4>
+    <p>UUID（Universally Unique Identifier）は、情報を一意に識別するための128ビットの数値です。</p>
+    <div class="uuid-info">
+      <p><strong>UUIDバージョン:</strong></p>
+      <ul>
+        <li><strong>UUID v1 (時刻ベース):</strong> タイムスタンプとMACアドレスから生成。時系列順序が保持される</li>
+        <li><strong>UUID v4 (ランダム):</strong> 暗号学的に安全な乱数から生成。最も一般的</li>
+      </ul>
+      <p><strong>用途例:</strong> データベースの主キー、セッションID、ファイル名、API識別子など</p>
+      <p><strong>形式:</strong> 8-4-4-4-12の形式で36文字（ハイフン含む）または32文字（ハイフンなし）</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function initUUIDGenerator() {
+  const uuidVersion = document.getElementById('uuidVersion');
+  const uuidCount = document.getElementById('uuidCount');
+  const uuidCase = document.getElementById('uuidCase');
+  const includeHyphens = document.getElementById('includeHyphens');
+  const uuidOutput = document.getElementById('uuidOutput');
+  const validateInput = document.getElementById('validateInput');
+  const validationResult = document.getElementById('validationResult');
+  
+  const generateBtn = document.getElementById('generateBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const copyAllBtn = document.getElementById('copyAllBtn');
+  const copyLastBtn = document.getElementById('copyLastBtn');
+  const validateBtn = document.getElementById('validateBtn');
+  
+  const totalGenerated = document.getElementById('totalGenerated');
+  const currentCount = document.getElementById('currentCount');
+  const lastGenerated = document.getElementById('lastGenerated');
+  
+  let generatedUUIDs = [];
+  let totalGeneratedCount = 0;
+
+  // UUID v4生成（ランダム）
+  function generateUUIDv4() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    
+    // バージョンとバリアントビットを設定
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+    
+    const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+    return formatUUID(hex);
+  }
+
+  // UUID v1生成（時刻ベース）
+  function generateUUIDv1() {
+    // 現在時刻（100ナノ秒単位、1582年10月15日からの経過時間）
+    const now = Date.now();
+    const timestamp = (now * 10000) + 0x01b21dd213814000;
+    
+    // タイムスタンプを分割
+    const timeLow = timestamp & 0xffffffff;
+    const timeMid = (timestamp >>> 32) & 0xffff;
+    const timeHi = ((timestamp >>> 48) & 0x0fff) | 0x1000; // version 1
+    
+    // クロックシーケンス（ランダム）
+    const clockSeq = crypto.getRandomValues(new Uint16Array(1))[0] & 0x3fff | 0x8000;
+    
+    // ノード（MACアドレスの代わりにランダム値を使用、プライバシー保護）
+    const node = crypto.getRandomValues(new Uint8Array(6));
+    node[0] |= 0x01; // マルチキャストビットを設定（ランダム生成を示す）
+    
+    // UUIDを構築
+    const hex = [
+      timeLow.toString(16).padStart(8, '0'),
+      timeMid.toString(16).padStart(4, '0'),
+      timeHi.toString(16).padStart(4, '0'),
+      clockSeq.toString(16).padStart(4, '0'),
+      Array.from(node, byte => byte.toString(16).padStart(2, '0')).join('')
+    ].join('');
+    
+    return formatUUID(hex);
+  }
+
+  // UUID形式設定
+  function formatUUID(hex) {
+    let uuid = hex;
+    
+    if (includeHyphens.checked) {
+      uuid = [
+        hex.substr(0, 8),
+        hex.substr(8, 4),
+        hex.substr(12, 4),
+        hex.substr(16, 4),
+        hex.substr(20, 12)
+      ].join('-');
+    }
+    
+    return uuidCase.value === 'upper' ? uuid.toUpperCase() : uuid.toLowerCase();
+  }
+
+  // UUID検証
+  function validateUUID(uuid) {
+    // ハイフンを除去
+    const cleaned = uuid.replace(/-/g, '');
+    
+    // 基本形式チェック
+    if (!/^[0-9a-fA-F]{32}$/.test(cleaned)) {
+      return { valid: false, message: '無効な形式です。32文字の16進数である必要があります。' };
+    }
+    
+    // バージョン取得
+    const version = parseInt(cleaned[12], 16);
+    if (version < 1 || version > 5) {
+      return { valid: false, message: '無効なUUIDバージョンです。' };
+    }
+    
+    // バリアント確認
+    const variant = parseInt(cleaned[16], 16);
+    if ((variant & 0x8) === 0) {
+      return { valid: false, message: '無効なUUIDバリアントです。' };
+    }
+    
+    return { 
+      valid: true, 
+      message: `有効なUUID v${version}です。`,
+      version: version,
+      format: uuid.includes('-') ? 'ハイフンあり' : 'ハイフンなし'
+    };
+  }
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success, .info');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.remove();
+      }
+    }, 3000);
+  }
+
+  function updateStats() {
+    totalGenerated.textContent = totalGeneratedCount;
+    currentCount.textContent = generatedUUIDs.length;
+    lastGenerated.textContent = generatedUUIDs.length > 0 ? 
+      new Date().toLocaleTimeString('ja-JP') : '-';
+  }
+
+  // UUID生成
+  function generateUUIDs() {
+    const version = uuidVersion.value;
+    const count = Math.min(Math.max(parseInt(uuidCount.value) || 1, 1), 50);
+    
+    const newUUIDs = [];
+    for (let i = 0; i < count; i++) {
+      const uuid = version === '1' ? generateUUIDv1() : generateUUIDv4();
+      newUUIDs.push(uuid);
+    }
+    
+    generatedUUIDs = newUUIDs;
+    totalGeneratedCount += count;
+    
+    uuidOutput.value = generatedUUIDs.join('\n');
+    updateStats();
+    showMessage(uuidOutput, `${count}個のUUID v${version}を生成しました`);
+  }
+
+  // コピー機能
+  function copyToClipboard(text, successMessage) {
+    if (!text) {
+      showMessage(uuidOutput, 'コピーするUUIDがありません', 'error');
+      return;
+    }
+    
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        showMessage(uuidOutput, successMessage);
+      }).catch(() => {
+        showMessage(uuidOutput, 'コピーに失敗しました', 'error');
+      });
+    } else {
+      // フォールバック
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showMessage(uuidOutput, successMessage);
+      } catch (err) {
+        showMessage(uuidOutput, 'コピーに失敗しました', 'error');
+      }
+      document.body.removeChild(textArea);
+    }
+  }
+
+  // UUID検証
+  function performValidation() {
+    const input = validateInput.value.trim();
+    if (!input) {
+      validationResult.innerHTML = '<div class="error">検証するUUIDを入力してください</div>';
+      return;
+    }
+    
+    const result = validateUUID(input);
+    const className = result.valid ? 'success' : 'error';
+    let message = result.message;
+    
+    if (result.valid) {
+      message += `<br><small>バージョン: ${result.version}, 形式: ${result.format}</small>`;
+    }
+    
+    validationResult.innerHTML = `<div class="${className}">${message}</div>`;
+  }
+
+  // イベントリスナー
+  generateBtn.addEventListener('click', generateUUIDs);
+  
+  clearBtn.addEventListener('click', function() {
+    generatedUUIDs = [];
+    uuidOutput.value = '';
+    validateInput.value = '';
+    validationResult.innerHTML = '';
+    updateStats();
+  });
+  
+  copyAllBtn.addEventListener('click', function() {
+    copyToClipboard(uuidOutput.value, 'すべてのUUIDをコピーしました');
+  });
+  
+  copyLastBtn.addEventListener('click', function() {
+    const lastUUID = generatedUUIDs[generatedUUIDs.length - 1];
+    copyToClipboard(lastUUID, '最新のUUIDをコピーしました');
+  });
+  
+  validateBtn.addEventListener('click', performValidation);
+  
+  // リアルタイム検証
+  validateInput.addEventListener('input', function() {
+    if (this.value.trim()) {
+      performValidation();
+    } else {
+      validationResult.innerHTML = '';
+    }
+  });
+  
+  // Enterキーで生成
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      generateUUIDs();
+    }
+  });
+
+  // 初期化
+  updateStats();
+}
+
+// ページ読み込み後に初期化
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initUUIDGenerator);
+} else {
+  initUUIDGenerator();
+}
+</script>
+
+<style>
+.uuid-generator {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  display: block;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.setting-item select,
+.setting-item input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+}
+
+.setting-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.stat-item:hover {
+  background: #f8f9fa;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.validation-result {
+  margin-top: 10px;
+  min-height: 20px;
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.uuid-info ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.uuid-info li {
+  margin: 5px 0;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.error {
+  color: #721c24;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.info {
+  color: #0c5460;
+  background: #d1ecf1;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .settings-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
