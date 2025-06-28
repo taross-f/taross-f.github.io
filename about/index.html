@@ -17,12 +17,7 @@ permalink: /about/
     <div class="hero-content">
       <div class="profile-avatar">
         <div class="avatar-ring"></div>
-        <div class="avatar-placeholder">
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </div>
+        <img src="/images/icon.jpeg" alt="古屋太郎" class="avatar-image">
       </div>
       <h1 class="hero-title">古屋 太郎</h1>
       <p class="hero-subtitle">Furuya Taro</p>
@@ -405,15 +400,14 @@ permalink: /about/
   animation: pulse 2s ease-in-out infinite;
 }
 
-.avatar-placeholder {
+.avatar-image {
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(10px);
+  object-fit: cover;
+  object-position: center;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes pulse {
