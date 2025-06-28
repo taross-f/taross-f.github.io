@@ -4,15 +4,279 @@ title: Tags
 permalink: /tags/
 ---
 
-{% for tag in site.tags %}
-<article>
-  <h2 id="tag_{{ tag[0] }}">{{ tag[0] }}</h2>
-  <ul>
-    {% for post in tag[1] %}
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-    </li>
+<div class="tags-page">
+  <div class="tags-header">
+    <h1>🏷️ タグ一覧</h1>
+    <p>記事をタグ別に整理しています</p>
+  </div>
+
+  <div class="tag-cloud">
+    {% assign sorted_tags = site.tags | sort %}
+    {% for tag in sorted_tags %}
+      <a href="#tag_{{ tag[0] }}" class="tag-bubble" data-count="{{ tag[1] | size }}">
+        <span class="tag-name">{{ tag[0] }}</span>
+        <span class="tag-count">{{ tag[1] | size }}</span>
+      </a>
     {% endfor %}
-  </ul>
-</article>
-{% endfor %}
+  </div>
+
+  <div class="tags-content">
+    {% assign sorted_tags = site.tags | sort %}
+    {% for tag in sorted_tags %}
+    <div class="tag-section" id="tag_{{ tag[0] }}">
+      <div class="tag-section-header">
+        <h2 class="tag-title">
+          <span class="tag-icon">🏷️</span>
+          {{ tag[0] }}
+          <span class="post-count">({{ tag[1] | size }}記事)</span>
+        </h2>
+      </div>
+      <div class="posts-grid">
+        {% for post in tag[1] %}
+        <article class="post-card">
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%Y.%m.%d" }}</time>
+          </div>
+          <h3 class="post-title">
+            <a href="{{ post.url }}">{{ post.title }}</a>
+          </h3>
+          {% if post.excerpt %}
+          <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 100 }}</p>
+          {% endif %}
+          <div class="post-tags">
+            {% for tag_name in post.tags %}
+            <span class="mini-tag">{{ tag_name }}</span>
+            {% endfor %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.tags-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.tags-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.tags-header h1 {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.tags-header p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.tag-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tag-bubble:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tag-name {
+  font-size: 1rem;
+}
+
+.tag-count {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tag-bubble:hover .tag-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.tags-content {
+  margin-top: 3rem;
+}
+
+.tag-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+
+.tag-section-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #e2e8f0;
+}
+
+.tag-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin: 0;
+  font-weight: 600;
+}
+
+.tag-icon {
+  font-size: 1.5rem;
+}
+
+.post-count {
+  font-size: 1rem;
+  color: #718096;
+  font-weight: 400;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.post-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  height: fit-content;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.post-meta {
+  margin-bottom: 1rem;
+}
+
+.post-date {
+  color: #718096;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.post-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.post-title a {
+  color: #2d3748;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.post-title a:hover {
+  color: #667eea;
+}
+
+.post-excerpt {
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mini-tag {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tags-page {
+    padding: 1rem;
+  }
+  
+  .tags-header h1 {
+    font-size: 2rem;
+  }
+  
+  .tag-cloud {
+    padding: 1rem;
+  }
+  
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .post-card {
+    padding: 1.5rem;
+  }
+  
+  .tag-title {
+    font-size: 1.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-bubble {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .tag-name {
+    font-size: 0.9rem;
+  }
+}
+</style>
