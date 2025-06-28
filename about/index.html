@@ -564,10 +564,11 @@ section {
   top: 0.5rem;
   width: 1rem;
   height: 1rem;
-  background: #667eea;
-  border: 3px solid white;
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px #667eea;
+  background: #667eea !important;
+  border: 3px solid white !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 3px #667eea !important;
+  z-index: 10;
 }
 
 .timeline-item.current .timeline-marker {
@@ -577,8 +578,10 @@ section {
 }
 
 .timeline-item.highlight .timeline-marker {
-  background: #ffc107;
-  box-shadow: 0 0 0 3px #ffc107;
+  background: #ffc107 !important;
+  box-shadow: 0 0 0 3px #ffc107 !important;
+  border: 3px solid white !important;
+  border-radius: 50% !important;
 }
 
 @keyframes pulse-green {
