@@ -27,8 +27,8 @@ permalink: /about/
         <span class="badge badge-role">🚀 AI Executive</span>
       </div>
       <p class="hero-description">
-        2009年からエンジニアキャリアをスタート。ソーシャルゲーム、IoT・画像処理、そしてAI領域で
-        <strong>15年以上</strong>のフルスタック開発とマネジメント経験を持つ
+        技術と人をつなぐエンジニアリングリーダー。ゲーム・IoT・AIの最前線で
+        <strong>数々のイノベーション</strong>を牽引し、エンジニア組織の成長と技術的卓越性を追求
       </p>
       <div class="social-links">
         <a href="https://twitter.com/taross__f" class="social-link twitter" target="_blank">
@@ -244,26 +244,6 @@ permalink: /about/
       <h2>📊 GitHub & Certifications</h2>
     </div>
     <div class="stats-grid">
-      <div class="github-stats">
-        <h3>🐙 GitHub Activity</h3>
-        <div class="stat-items">
-          <div class="stat-item">
-            <span class="stat-number">41</span>
-            <span class="stat-label">Repositories</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">427</span>
-            <span class="stat-label">Stars</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">3x</span>
-            <span class="stat-label">Pull Shark</span>
-          </div>
-        </div>
-        <div class="github-link">
-          <a href="https://github.com/taross-f" target="_blank">View GitHub Profile →</a>
-        </div>
-      </div>
       <div class="certifications">
         <h3>🏆 AWS Certifications</h3>
         <div class="cert-badges">
@@ -313,7 +293,7 @@ permalink: /about/
 /* Hero Section */
 .hero-section {
   position: relative;
-  min-height: 100vh;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -384,9 +364,9 @@ permalink: /about/
 
 .profile-avatar {
   position: relative;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 2rem;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
 }
 
 .avatar-ring {
@@ -416,9 +396,9 @@ permalink: /about/
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.3rem;
   background: linear-gradient(45deg, #fff, #f0f8ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -426,9 +406,9 @@ permalink: /about/
 }
 
 .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   opacity: 1;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.95);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -436,9 +416,9 @@ permalink: /about/
 
 .hero-badges {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -455,15 +435,15 @@ permalink: /about/
 }
 
 .hero-description {
-  font-size: 1.2rem;
-  margin-bottom: 3rem;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
   opacity: 1;
-  max-width: 600px;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   color: rgba(255, 255, 255, 0.95);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .social-links {
@@ -617,7 +597,7 @@ section {
 
 .timeline-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
@@ -734,9 +714,8 @@ section {
 
 /* Stats Section */
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3rem;
+  display: flex;
+  justify-content: center;
 }
 
 .github-stats, .certifications {
@@ -785,11 +764,12 @@ section {
 
 /* Contact Section */
 .contact-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #2d3748;
   text-align: center;
   border-radius: 30px;
   margin: 3rem 2rem;
+  border: 2px solid #e2e8f0;
 }
 
 .contact-methods {
@@ -805,23 +785,26 @@ section {
   align-items: center;
   gap: 1rem;
   padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   border-radius: 20px;
-  color: white;
+  color: #2d3748;
   text-decoration: none;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .contact-method:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #667eea;
   transform: translateY(-2px);
   color: white;
+  border-color: #667eea;
 }
 
 .contact-method.primary {
-  background: rgba(255, 255, 255, 0.2);
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
 }
 
 .contact-icon {
@@ -874,7 +857,12 @@ section {
   .timeline-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.8rem;
+  }
+  
+  .timeline-header h3 {
+    font-size: 1.1rem;
+    line-height: 1.4;
   }
   
   .contact-methods {
