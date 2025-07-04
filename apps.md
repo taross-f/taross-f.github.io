@@ -27,3 +27,5 @@ permalink: /apps/
 
 ### [QRコード生成ツール](/qr-generator/)
 
+### [引用画像生成ツール](/quote-generator/)
+

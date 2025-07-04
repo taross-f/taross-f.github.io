@@ -1,0 +1,574 @@
+---
+layout: page
+title: 引用画像生成ツール
+permalink: /quote-generator/
+---
+
+<div class="quote-generator">
+  <div class="tool-section">
+    <h3>📝 引用文の入力</h3>
+    <textarea id="quoteInput" placeholder="引用文を入力してください..." rows="4"></textarea>
+    
+    <div class="input-group">
+      <label for="titleInput">タイトル（任意）</label>
+      <input type="text" id="titleInput" placeholder="引用元のタイトルを入力してください">
+    </div>
+    
+    <div class="input-group">
+      <label for="authorInput">著者（任意）</label>
+      <input type="text" id="authorInput" placeholder="著者名を入力してください">
+    </div>
+    
+    <div class="button-group">
+      <button id="generateBtn" class="btn btn-primary">画像生成</button>
+      <button id="clearBtn" class="btn">クリア</button>
+    </div>
+  </div>
+  
+  <div class="tool-section">
+    <h3>🖼️ 生成結果</h3>
+    <div id="imageContainer">
+      <div id="placeholder" class="placeholder">
+        <p>画像がここに表示されます</p>
+      </div>
+      <svg id="quoteSvg" style="display: none;"></svg>
+    </div>
+    
+    <div class="button-group">
+      <button id="downloadBtn" class="btn" disabled>PNG形式でダウンロード</button>
+      <button id="downloadSvgBtn" class="btn" disabled>SVG形式でダウンロード</button>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 引用画像生成ツールについて</h4>
+    <p>このツールは、美しい引用画像を生成するためのものです。電子書籍リーダーのような洗練されたデザインで、以下の機能を提供します：</p>
+    <ul>
+      <li>複数行の引用文をサポート</li>
+      <li>タイトルと著者の表示</li>
+      <li>レスポンシブデザイン</li>
+      <li>高品質なPNG・SVG形式での出力</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.quote-generator {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#imageContainer {
+  min-height: 200px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  background: white;
+}
+
+.placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+#quoteSvg {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const quoteInput = document.getElementById('quoteInput');
+  const titleInput = document.getElementById('titleInput');
+  const authorInput = document.getElementById('authorInput');
+  const generateBtn = document.getElementById('generateBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+  const imageContainer = document.getElementById('imageContainer');
+  const placeholder = document.getElementById('placeholder');
+  const quoteSvg = document.getElementById('quoteSvg');
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.remove();
+      }
+    }, 3000);
+  }
+
+  function wrapText(text, maxWidth, fontSize, fontFamily = 'serif') {
+    const lines = [];
+    let currentLine = '';
+    
+    // Create temporary canvas to measure text
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    
+    // Check if text contains Japanese characters
+    const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(text);
+    
+    if (hasJapanese) {
+      // For Japanese text, wrap by character
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const testLine = currentLine + char;
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        
+        if (testWidth > maxWidth && currentLine.length > 0) {
+          lines.push(currentLine);
+          currentLine = char;
+        } else {
+          currentLine = testLine;
+        }
+      }
+    } else {
+      // For English text, wrap by word
+      const words = text.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        const testLine = currentLine + words[i] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        
+        if (testWidth > maxWidth && i > 0) {
+          lines.push(currentLine.trim());
+          currentLine = words[i] + ' ';
+        } else {
+          currentLine = testLine;
+        }
+      }
+    }
+    
+    if (currentLine.length > 0) {
+      lines.push(currentLine.trim());
+    }
+    
+    return lines;
+  }
+
+  function generateQuoteImage() {
+    const quote = quoteInput.value.trim();
+    const title = titleInput.value.trim();
+    const author = authorInput.value.trim();
+    
+    if (!quote) {
+      showMessage(imageContainer, '引用文を入力してください', 'error');
+      return;
+    }
+    
+    // SVG dimensions
+    const width = 600;
+    const padding = 40;
+    const contentWidth = width - (padding * 2);
+    
+    // Font settings
+    const quoteFontSize = 24;
+    const titleFontSize = 18;
+    const authorFontSize = 16;
+    const lineHeight = 1.6;
+    
+    // Wrap text for center alignment (use full content width)
+    const quoteLines = wrapText(quote, contentWidth, quoteFontSize, 'serif');
+    const titleLines = title ? wrapText(title, contentWidth, titleFontSize, 'sans-serif') : [];
+    const authorLines = author ? wrapText(author, contentWidth, authorFontSize, 'sans-serif') : [];
+    
+    // Calculate height
+    let height = padding * 2; // Top and bottom padding
+    height += 20; // Top accent bar
+    height += 60; // Large quote mark space
+    height += (quoteLines.length * quoteFontSize * lineHeight) + 20; // Quote text
+    
+    if (titleLines.length > 0) {
+      height += 30; // Spacing before title
+      height += (titleLines.length * titleFontSize * lineHeight) + 10;
+    }
+    
+    if (authorLines.length > 0) {
+      height += 20; // Spacing before author
+      height += (authorLines.length * authorFontSize * lineHeight) + 10;
+    }
+    
+    height += 40; // Bottom spacing
+    height += 30; // Space for website URL
+    height += 20; // Bottom accent bar
+    
+    // Create SVG
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    
+    // Background
+    const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    background.setAttribute('width', width);
+    background.setAttribute('height', height);
+    background.setAttribute('fill', '#f8f6f0');
+    svg.appendChild(background);
+    
+    // Top accent bar
+    const topBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    topBar.setAttribute('x', padding);
+    topBar.setAttribute('y', padding);
+    topBar.setAttribute('width', contentWidth);
+    topBar.setAttribute('height', 6);
+    topBar.setAttribute('fill', '#d4af37');
+    svg.appendChild(topBar);
+    
+    let currentY = padding + 40;
+    
+    // Large quote mark at top center
+    const quoteMarkTop = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    quoteMarkTop.setAttribute('x', width / 2);
+    quoteMarkTop.setAttribute('y', currentY + 50);
+    quoteMarkTop.setAttribute('font-family', 'serif');
+    quoteMarkTop.setAttribute('font-size', '80');
+    quoteMarkTop.setAttribute('fill', '#bdc3c7');
+    quoteMarkTop.setAttribute('text-anchor', 'middle');
+    quoteMarkTop.textContent = '"';
+    svg.appendChild(quoteMarkTop);
+    
+    currentY += 80;
+    
+    // Quote text (center aligned)
+    quoteLines.forEach((line, index) => {
+      const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textElement.setAttribute('x', width / 2);
+      textElement.setAttribute('y', currentY);
+      textElement.setAttribute('font-family', 'serif');
+      textElement.setAttribute('font-size', quoteFontSize);
+      textElement.setAttribute('fill', '#2c3e50');
+      textElement.setAttribute('font-style', 'italic');
+      textElement.setAttribute('text-anchor', 'middle');
+      textElement.textContent = line;
+      svg.appendChild(textElement);
+      
+      currentY += quoteFontSize * lineHeight;
+    });
+    
+    currentY += 20;
+    
+    // Divider line (center aligned)
+    if (titleLines.length > 0 || authorLines.length > 0) {
+      const divider = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      divider.setAttribute('x1', width / 2 - 75);
+      divider.setAttribute('y1', currentY);
+      divider.setAttribute('x2', width / 2 + 75);
+      divider.setAttribute('y2', currentY);
+      divider.setAttribute('stroke', '#bdc3c7');
+      divider.setAttribute('stroke-width', '1');
+      svg.appendChild(divider);
+      
+      currentY += 30;
+    }
+    
+    // Title text (center aligned)
+    if (titleLines.length > 0) {
+      titleLines.forEach((line, index) => {
+        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textElement.setAttribute('x', width / 2);
+        textElement.setAttribute('y', currentY);
+        textElement.setAttribute('font-family', 'sans-serif');
+        textElement.setAttribute('font-size', titleFontSize);
+        textElement.setAttribute('fill', '#34495e');
+        textElement.setAttribute('font-weight', 'bold');
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.textContent = line;
+        svg.appendChild(textElement);
+        
+        currentY += titleFontSize * lineHeight;
+      });
+      
+      currentY += 10;
+    }
+    
+    // Author text (center aligned)
+    if (authorLines.length > 0) {
+      currentY += 10;
+      authorLines.forEach((line, index) => {
+        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textElement.setAttribute('x', width / 2);
+        textElement.setAttribute('y', currentY);
+        textElement.setAttribute('font-family', 'sans-serif');
+        textElement.setAttribute('font-size', authorFontSize);
+        textElement.setAttribute('fill', '#7f8c8d');
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.textContent = line;
+        svg.appendChild(textElement);
+        
+        currentY += authorFontSize * lineHeight;
+      });
+    }
+    
+    // Website URL (like Kindle quotes)
+    const websiteUrl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    websiteUrl.setAttribute('x', width - padding);
+    websiteUrl.setAttribute('y', height - padding - 30);
+    websiteUrl.setAttribute('font-family', 'sans-serif');
+    websiteUrl.setAttribute('font-size', '9');
+    websiteUrl.setAttribute('fill', '#adb5bd');
+    websiteUrl.setAttribute('text-anchor', 'end');
+    websiteUrl.setAttribute('opacity', '0.7');
+    websiteUrl.textContent = 'https://taross-f.dev';
+    svg.appendChild(websiteUrl);
+    
+    // Bottom accent bar
+    const bottomBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bottomBar.setAttribute('x', padding);
+    bottomBar.setAttribute('y', height - padding - 6);
+    bottomBar.setAttribute('width', contentWidth);
+    bottomBar.setAttribute('height', 6);
+    bottomBar.setAttribute('fill', '#d4af37');
+    svg.appendChild(bottomBar);
+    
+    // Display the SVG
+    quoteSvg.innerHTML = svg.innerHTML;
+    quoteSvg.setAttribute('width', width);
+    quoteSvg.setAttribute('height', height);
+    quoteSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    
+    placeholder.style.display = 'none';
+    quoteSvg.style.display = 'block';
+    
+    // Enable download buttons
+    downloadBtn.disabled = false;
+    downloadSvgBtn.disabled = false;
+    
+    showMessage(imageContainer, '画像を生成しました');
+  }
+
+  function downloadAsPNG() {
+    const svgData = new XMLSerializer().serializeToString(quoteSvg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    // Set canvas size (2x for better quality)
+    const scale = 2;
+    canvas.width = quoteSvg.getAttribute('width') * scale;
+    canvas.height = quoteSvg.getAttribute('height') * scale;
+    ctx.scale(scale, scale);
+    
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      
+      canvas.toBlob(function(blob) {
+        const link = document.createElement('a');
+        link.download = `quote-${Date.now()}.png`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }, 'image/png');
+    };
+    
+    img.src = url;
+  }
+
+  function downloadAsSVG() {
+    const svgData = new XMLSerializer().serializeToString(quoteSvg);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    
+    const link = document.createElement('a');
+    link.download = `quote-${Date.now()}.svg`;
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function clearAll() {
+    quoteInput.value = '';
+    titleInput.value = '';
+    authorInput.value = '';
+    
+    placeholder.style.display = 'block';
+    quoteSvg.style.display = 'none';
+    
+    downloadBtn.disabled = true;
+    downloadSvgBtn.disabled = true;
+    
+    quoteInput.focus();
+  }
+
+  // Event listeners
+  generateBtn.addEventListener('click', generateQuoteImage);
+  clearBtn.addEventListener('click', clearAll);
+  downloadBtn.addEventListener('click', downloadAsPNG);
+  downloadSvgBtn.addEventListener('click', downloadAsSVG);
+  
+  // Keyboard shortcuts
+  quoteInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      generateBtn.click();
+    }
+  });
+  
+  titleInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      generateBtn.click();
+    }
+  });
+  
+  authorInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      generateBtn.click();
+    }
+  });
+})();
+</script>
