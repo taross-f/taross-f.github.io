@@ -628,6 +628,7 @@ function initQRGenerator() {
           downloadBtn.style.display = 'inline-block';
           copySVGBtn.style.display = 'inline-block';
           showMessage(qrDisplay, 'QRコードを生成しました');
+          trackToolEvent('qr-generator', 'generate', data.length);
         }
       });
       
@@ -644,6 +645,7 @@ function initQRGenerator() {
     link.href = currentQRData.canvas.toDataURL();
     link.click();
     showMessage(qrDisplay, 'QRコードをダウンロードしました');
+    trackToolEvent('qr-generator', 'download_png');
   }
 
   function copyQRSVG() {
@@ -663,6 +665,7 @@ function initQRGenerator() {
       } else {
         navigator.clipboard.writeText(svg).then(() => {
           showMessage(qrDisplay, 'SVG形式でクリップボードにコピーしました');
+          trackToolEvent('qr-generator', 'copy_svg');
         });
       }
     });
@@ -680,6 +683,7 @@ function initQRGenerator() {
     downloadBtn.style.display = 'none';
     copySVGBtn.style.display = 'none';
     currentQRData = null;
+    trackToolEvent('qr-generator', 'clear_all');
   }
 
   // イベントリスナー

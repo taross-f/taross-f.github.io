@@ -333,6 +333,7 @@ permalink: /json-formatter/
       jsonOutput.value = formatted;
       updateStats(input, formatted);
       showMessage(jsonOutput, 'JSONの整形が完了しました');
+      trackToolEvent('json-formatter', 'format', input.length);
     } catch (error) {
       showMessage(jsonOutput, 'JSON構文エラー: ' + error.message, 'error');
     }
@@ -351,6 +352,7 @@ permalink: /json-formatter/
       jsonOutput.value = minified;
       updateStats(input, minified);
       showMessage(jsonOutput, 'JSONの圧縮が完了しました');
+      trackToolEvent('json-formatter', 'minify', input.length);
     } catch (error) {
       showMessage(jsonOutput, 'JSON構文エラー: ' + error.message, 'error');
     }
@@ -366,6 +368,7 @@ permalink: /json-formatter/
     try {
       JSON.parse(input);
       showMessage(jsonOutput, '✅ JSONは有効です');
+      trackToolEvent('json-formatter', 'validate', input.length);
     } catch (error) {
       showMessage(jsonOutput, '❌ JSON構文エラー: ' + error.message, 'error');
     }
@@ -435,6 +438,7 @@ permalink: /json-formatter/
     try {
       document.execCommand('copy');
       showMessage(jsonOutput, '結果をクリップボードにコピーしました');
+      trackToolEvent('json-formatter', 'copy_result');
     } catch (err) {
       showMessage(jsonOutput, 'コピーに失敗しました', 'error');
     }
@@ -443,11 +447,13 @@ permalink: /json-formatter/
   clearInputBtn.addEventListener('click', function() {
     jsonInput.value = '';
     jsonInput.focus();
+    trackToolEvent('json-formatter', 'clear_input');
   });
 
   clearOutputBtn.addEventListener('click', function() {
     jsonOutput.value = '';
     updateStats('', '');
+    trackToolEvent('json-formatter', 'clear_output');
   });
 
   // キーボードショートカット

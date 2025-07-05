@@ -201,6 +201,7 @@ function initCSSCompressor() {
       cssOutput.value = result.styles;
       updateStats(inputCSS, result.styles);
       showMessage(cssOutput, 'CSS圧縮が完了しました');
+      trackToolEvent('css-compressor', 'compress', inputCSS.length);
       
     } catch (error) {
       showMessage(cssOutput, 'CSS圧縮に失敗しました: ' + error.message, 'error');
@@ -220,11 +221,13 @@ function initCSSCompressor() {
     try {
       document.execCommand('copy');
       showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+      trackToolEvent('css-compressor', 'copy_result');
     } catch (err) {
       // モダンブラウザ対応
       if (navigator.clipboard) {
         navigator.clipboard.writeText(cssOutput.value).then(() => {
           showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+          trackToolEvent('css-compressor', 'copy_result');
         }).catch(() => {
           showMessage(cssOutput, 'コピーに失敗しました', 'error');
         });
@@ -251,6 +254,7 @@ function initCSSCompressor() {
     URL.revokeObjectURL(url);
     
     showMessage(cssOutput, 'CSSファイルをダウンロードしました');
+    trackToolEvent('css-compressor', 'download');
   }
 
   // イベントリスナー
@@ -262,11 +266,13 @@ function initCSSCompressor() {
     cssInput.value = '';
     updateStats('', '');
     cssInput.focus();
+    trackToolEvent('css-compressor', 'clear_input');
   });
   
   clearResultBtn.addEventListener('click', function() {
     cssOutput.value = '';
     updateStats('', '');
+    trackToolEvent('css-compressor', 'clear_result');
   });
 
   // Ctrl+Enterで圧縮実行

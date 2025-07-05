@@ -80,5 +80,41 @@
         </footer>
       </div>
     </div>
+
+    <script>
+      // Google Analytics イベントトラッキング用関数
+      function trackToolEvent(toolName, action, value) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', action, {
+            'event_category': 'tool_usage',
+            'event_label': toolName,
+            'value': value || 0
+          });
+        }
+      }
+
+      // ページ読み込み時にツールページを検出
+      window.addEventListener('DOMContentLoaded', function() {
+        const path = window.location.pathname;
+        const toolPages = [
+          'character-counter',
+          'base64-tool',
+          'json-formatter',
+          'jwt-analyzer',
+          'css-compressor',
+          'uuid-generator',
+          'color-palette',
+          'qr-generator',
+          'quote-generator'
+        ];
+
+        for (const tool of toolPages) {
+          if (path.includes(tool)) {
+            trackToolEvent(tool, 'page_view');
+            break;
+          }
+        }
+      });
+    </script>
   </body>
 </html>

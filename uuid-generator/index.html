@@ -242,6 +242,7 @@ function initUUIDGenerator() {
     uuidOutput.value = generatedUUIDs.join('\n');
     updateStats();
     showMessage(uuidOutput, `${count}個のUUID v${version}を生成しました`);
+    trackToolEvent('uuid-generator', 'generate', count);
   }
 
   // コピー機能
@@ -287,6 +288,9 @@ function initUUIDGenerator() {
     
     if (result.valid) {
       message += `<br><small>バージョン: ${result.version}, 形式: ${result.format}</small>`;
+      trackToolEvent('uuid-generator', 'validate_success');
+    } else {
+      trackToolEvent('uuid-generator', 'validate_error');
     }
     
     validationResult.innerHTML = `<div class="${className}">${message}</div>`;
@@ -301,15 +305,18 @@ function initUUIDGenerator() {
     validateInput.value = '';
     validationResult.innerHTML = '';
     updateStats();
+    trackToolEvent('uuid-generator', 'clear_all');
   });
   
   copyAllBtn.addEventListener('click', function() {
     copyToClipboard(uuidOutput.value, 'すべてのUUIDをコピーしました');
+    trackToolEvent('uuid-generator', 'copy_all');
   });
   
   copyLastBtn.addEventListener('click', function() {
     const lastUUID = generatedUUIDs[generatedUUIDs.length - 1];
     copyToClipboard(lastUUID, '最新のUUIDをコピーしました');
+    trackToolEvent('uuid-generator', 'copy_last');
   });
   
   validateBtn.addEventListener('click', performValidation);

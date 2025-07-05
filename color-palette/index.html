@@ -421,6 +421,7 @@ permalink: /color-palette/
   function copyColorCode(color) {
     navigator.clipboard.writeText(color).then(() => {
       showMessage(paletteContainer, `色コード ${color} をコピーしました`);
+      trackToolEvent('color-palette', 'copy_single');
     });
   }
 
@@ -457,31 +458,37 @@ permalink: /color-palette/
   document.getElementById('complementaryBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'complementary');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   document.getElementById('analogousBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'analogous');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   document.getElementById('triadicBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'triadic');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   document.getElementById('tetradicBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'tetradic');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   document.getElementById('monochromaticBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'monochromatic');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   document.getElementById('splitComplementaryBtn').addEventListener('click', () => {
     const colors = generatePalette(hexInput.value, 'splitComplementary');
     displayPalette(colors);
+    trackToolEvent('color-palette', 'generate', colors.length);
   });
 
   // エクスポート機能
@@ -490,6 +497,7 @@ permalink: /color-palette/
     const colorList = currentPalette.join('\n');
     navigator.clipboard.writeText(colorList).then(() => {
       showMessage(paletteContainer, '全色をコピーしました');
+      trackToolEvent('color-palette', 'copy_all');
     });
   });
 
@@ -501,6 +509,7 @@ permalink: /color-palette/
     });
     css += '}';
     exportResult.value = css;
+    trackToolEvent('color-palette', 'export_css');
   });
 
   document.getElementById('exportJSONBtn').addEventListener('click', () => {
@@ -516,12 +525,14 @@ permalink: /color-palette/
       };
     });
     exportResult.value = JSON.stringify(palette, null, 2);
+    trackToolEvent('color-palette', 'export_json');
   });
 
   document.getElementById('copyExportBtn').addEventListener('click', () => {
     if (!exportResult.value) return;
     navigator.clipboard.writeText(exportResult.value).then(() => {
       showMessage(exportResult, 'エクスポート結果をコピーしました');
+      trackToolEvent('color-palette', 'copy_export');
     });
   });
 })();

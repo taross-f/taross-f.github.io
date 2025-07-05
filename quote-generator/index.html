@@ -26,6 +26,83 @@ permalink: /quote-generator/
   </div>
   
   <div class="tool-section">
+    <h3>🎨 デザインテーマ</h3>
+    <div class="theme-selector">
+      <div class="theme-grid">
+        <div class="theme-item" data-theme="classic">
+          <div class="theme-label">
+            <input type="radio" name="theme" value="classic" id="classic" checked>
+            <label for="classic">クラシック</label>
+          </div>
+          <div class="theme-preview classic-preview">
+            <div class="preview-accent"></div>
+            <div class="preview-text">
+              <div class="preview-quote">"引用文のサンプル"</div>
+              <div class="preview-author">— 著者名</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="theme-item" data-theme="modern">
+          <div class="theme-label">
+            <input type="radio" name="theme" value="modern" id="modern">
+            <label for="modern">モダン</label>
+          </div>
+          <div class="theme-preview modern-preview">
+            <div class="preview-accent"></div>
+            <div class="preview-text">
+              <div class="preview-quote">"引用文のサンプル"</div>
+              <div class="preview-author">— 著者名</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="theme-item" data-theme="dark">
+          <div class="theme-label">
+            <input type="radio" name="theme" value="dark" id="dark">
+            <label for="dark">ダーク</label>
+          </div>
+          <div class="theme-preview dark-preview">
+            <div class="preview-accent"></div>
+            <div class="preview-text">
+              <div class="preview-quote">"引用文のサンプル"</div>
+              <div class="preview-author">— 著者名</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="theme-item" data-theme="nature">
+          <div class="theme-label">
+            <input type="radio" name="theme" value="nature" id="nature">
+            <label for="nature">ナチュラル</label>
+          </div>
+          <div class="theme-preview nature-preview">
+            <div class="preview-accent"></div>
+            <div class="preview-text">
+              <div class="preview-quote">"引用文のサンプル"</div>
+              <div class="preview-author">— 著者名</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="theme-item" data-theme="elegant">
+          <div class="theme-label">
+            <input type="radio" name="theme" value="elegant" id="elegant">
+            <label for="elegant">エレガント</label>
+          </div>
+          <div class="theme-preview elegant-preview">
+            <div class="preview-accent"></div>
+            <div class="preview-text">
+              <div class="preview-quote">"引用文のサンプル"</div>
+              <div class="preview-author">— 著者名</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tool-section">
     <h3>🖼️ 生成結果</h3>
     <div id="imageContainer">
       <div id="placeholder" class="placeholder">
@@ -206,6 +283,147 @@ permalink: /quote-generator/
   margin-top: 10px;
 }
 
+/* Theme selector styles */
+.theme-selector {
+  margin-top: 10px;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.theme-item {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.theme-item:hover {
+  transform: translateY(-2px);
+}
+
+.theme-preview {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ddd;
+  margin-top: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.theme-item input[type="radio"]:checked ~ .theme-preview {
+  border-color: #007acc;
+  box-shadow: 0 0 0 1px #007acc;
+}
+
+.preview-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.preview-text {
+  margin-top: 8px;
+}
+
+.preview-quote {
+  font-size: 11px;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  font-style: italic;
+}
+
+.preview-author {
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+/* Classic theme */
+.classic-preview {
+  background: #f8f6f0;
+  color: #2c3e50;
+  font-family: serif;
+}
+
+.classic-preview .preview-accent {
+  background: #d4af37;
+}
+
+/* Modern theme */
+.modern-preview {
+  background: #ffffff;
+  color: #333;
+  font-family: sans-serif;
+}
+
+.modern-preview .preview-accent {
+  background: #007acc;
+}
+
+/* Dark theme */
+.dark-preview {
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.dark-preview .preview-accent {
+  background: #00d4aa;
+}
+
+/* Nature theme */
+.nature-preview {
+  background: #f8fdf8;
+  color: #2d5a3d;
+  font-family: serif;
+}
+
+.nature-preview .preview-accent {
+  background: #4a7c59;
+}
+
+/* Elegant theme */
+.elegant-preview {
+  background: #faf8ff;
+  color: #4c1d95;
+  font-family: serif;
+}
+
+.elegant-preview .preview-accent {
+  background: #6b46c1;
+}
+
+.theme-label {
+  text-align: center;
+}
+
+.theme-label input[type="radio"] {
+  display: none;
+}
+
+.theme-label label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.theme-label input[type="radio"]:checked + label {
+  color: #007acc;
+  background: #e7f3ff;
+}
+
 @media (max-width: 768px) {
   .button-group {
     flex-direction: column;
@@ -213,6 +431,24 @@ permalink: /quote-generator/
   
   .btn {
     width: 100%;
+  }
+  
+  .theme-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .theme-preview {
+    height: 60px;
+    padding: 8px;
+  }
+  
+  .preview-quote {
+    font-size: 10px;
+  }
+  
+  .preview-author {
+    font-size: 8px;
   }
 }
 </style>
@@ -229,6 +465,60 @@ permalink: /quote-generator/
   const imageContainer = document.getElementById('imageContainer');
   const placeholder = document.getElementById('placeholder');
   const quoteSvg = document.getElementById('quoteSvg');
+
+  // Theme definitions
+  const themes = {
+    classic: {
+      background: '#f8f6f0',
+      textColor: '#2c3e50',
+      accentColor: '#d4af37',
+      fontFamily: 'serif',
+      quoteFontSize: 24,
+      titleFontSize: 18,
+      authorFontSize: 16
+    },
+    modern: {
+      background: '#ffffff',
+      textColor: '#333333',
+      accentColor: '#007acc',
+      fontFamily: 'sans-serif',
+      quoteFontSize: 24,
+      titleFontSize: 18,
+      authorFontSize: 16
+    },
+    dark: {
+      background: '#1a1a1a',
+      textColor: '#ffffff',
+      accentColor: '#00d4aa',
+      fontFamily: 'monospace',
+      quoteFontSize: 22,
+      titleFontSize: 17,
+      authorFontSize: 15
+    },
+    nature: {
+      background: '#f8fdf8',
+      textColor: '#2d5a3d',
+      accentColor: '#4a7c59',
+      fontFamily: 'serif',
+      quoteFontSize: 24,
+      titleFontSize: 18,
+      authorFontSize: 16
+    },
+    elegant: {
+      background: '#faf8ff',
+      textColor: '#4c1d95',
+      accentColor: '#6b46c1',
+      fontFamily: 'serif',
+      quoteFontSize: 25,
+      titleFontSize: 19,
+      authorFontSize: 17
+    }
+  };
+
+  function getCurrentTheme() {
+    const selectedTheme = document.querySelector('input[name="theme"]:checked');
+    return selectedTheme ? selectedTheme.value : 'classic';
+  }
 
   function showMessage(element, message, type = 'success') {
     const existingMsg = element.parentNode.querySelector('.error, .success');
@@ -309,21 +599,25 @@ permalink: /quote-generator/
       return;
     }
     
+    // Get current theme
+    const currentTheme = getCurrentTheme();
+    const theme = themes[currentTheme];
+    
     // SVG dimensions
     const width = 600;
     const padding = 40;
     const contentWidth = width - (padding * 2);
     
-    // Font settings
-    const quoteFontSize = 24;
-    const titleFontSize = 18;
-    const authorFontSize = 16;
+    // Font settings from theme
+    const quoteFontSize = theme.quoteFontSize;
+    const titleFontSize = theme.titleFontSize;
+    const authorFontSize = theme.authorFontSize;
     const lineHeight = 1.6;
     
-    // Wrap text for center alignment (use full content width)
-    const quoteLines = wrapText(quote, contentWidth, quoteFontSize, 'serif');
-    const titleLines = title ? wrapText(title, contentWidth, titleFontSize, 'sans-serif') : [];
-    const authorLines = author ? wrapText(author, contentWidth, authorFontSize, 'sans-serif') : [];
+    // Wrap text (reduce max width for better fit)
+    const quoteLines = wrapText(quote, contentWidth - 140, quoteFontSize, theme.fontFamily);
+    const titleLines = title ? wrapText(title, contentWidth - 50, titleFontSize, theme.fontFamily) : [];
+    const authorLines = author ? wrapText(author, contentWidth - 50, authorFontSize, theme.fontFamily) : [];
     
     // Calculate height
     let height = padding * 2; // Top and bottom padding
@@ -355,7 +649,7 @@ permalink: /quote-generator/
     const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     background.setAttribute('width', width);
     background.setAttribute('height', height);
-    background.setAttribute('fill', '#f8f6f0');
+    background.setAttribute('fill', theme.background);
     svg.appendChild(background);
     
     // Top accent bar
@@ -364,34 +658,33 @@ permalink: /quote-generator/
     topBar.setAttribute('y', padding);
     topBar.setAttribute('width', contentWidth);
     topBar.setAttribute('height', 6);
-    topBar.setAttribute('fill', '#d4af37');
+    topBar.setAttribute('fill', theme.accentColor);
     svg.appendChild(topBar);
     
     let currentY = padding + 40;
     
-    // Large quote mark at top center
-    const quoteMarkTop = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    quoteMarkTop.setAttribute('x', width / 2);
-    quoteMarkTop.setAttribute('y', currentY + 50);
-    quoteMarkTop.setAttribute('font-family', 'serif');
-    quoteMarkTop.setAttribute('font-size', '80');
-    quoteMarkTop.setAttribute('fill', '#bdc3c7');
-    quoteMarkTop.setAttribute('text-anchor', 'middle');
-    quoteMarkTop.textContent = '"';
-    svg.appendChild(quoteMarkTop);
+    // Large quote mark background
+    const quoteMarkBg = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    quoteMarkBg.setAttribute('x', padding + 20);
+    quoteMarkBg.setAttribute('y', currentY + 40);
+    quoteMarkBg.setAttribute('font-family', theme.fontFamily);
+    quoteMarkBg.setAttribute('font-size', '120');
+    quoteMarkBg.setAttribute('fill', theme.textColor);
+    quoteMarkBg.setAttribute('opacity', '0.2');
+    quoteMarkBg.textContent = '"';
+    svg.appendChild(quoteMarkBg);
     
-    currentY += 80;
+    currentY += 60;
     
-    // Quote text (center aligned)
+    // Quote text
     quoteLines.forEach((line, index) => {
       const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textElement.setAttribute('x', width / 2);
+      textElement.setAttribute('x', padding + 50);
       textElement.setAttribute('y', currentY);
-      textElement.setAttribute('font-family', 'serif');
+      textElement.setAttribute('font-family', theme.fontFamily);
       textElement.setAttribute('font-size', quoteFontSize);
-      textElement.setAttribute('fill', '#2c3e50');
+      textElement.setAttribute('fill', theme.textColor);
       textElement.setAttribute('font-style', 'italic');
-      textElement.setAttribute('text-anchor', 'middle');
       textElement.textContent = line;
       svg.appendChild(textElement);
       
@@ -400,31 +693,31 @@ permalink: /quote-generator/
     
     currentY += 20;
     
-    // Divider line (center aligned)
+    // Divider line
     if (titleLines.length > 0 || authorLines.length > 0) {
       const divider = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      divider.setAttribute('x1', width / 2 - 75);
+      divider.setAttribute('x1', padding + 50);
       divider.setAttribute('y1', currentY);
-      divider.setAttribute('x2', width / 2 + 75);
+      divider.setAttribute('x2', padding + 200);
       divider.setAttribute('y2', currentY);
-      divider.setAttribute('stroke', '#bdc3c7');
+      divider.setAttribute('stroke', theme.textColor);
+      divider.setAttribute('stroke-opacity', '0.3');
       divider.setAttribute('stroke-width', '1');
       svg.appendChild(divider);
       
       currentY += 30;
     }
     
-    // Title text (center aligned)
+    // Title text
     if (titleLines.length > 0) {
       titleLines.forEach((line, index) => {
         const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        textElement.setAttribute('x', width / 2);
+        textElement.setAttribute('x', padding + 50);
         textElement.setAttribute('y', currentY);
-        textElement.setAttribute('font-family', 'sans-serif');
+        textElement.setAttribute('font-family', theme.fontFamily);
         textElement.setAttribute('font-size', titleFontSize);
-        textElement.setAttribute('fill', '#34495e');
+        textElement.setAttribute('fill', theme.textColor);
         textElement.setAttribute('font-weight', 'bold');
-        textElement.setAttribute('text-anchor', 'middle');
         textElement.textContent = line;
         svg.appendChild(textElement);
         
@@ -434,17 +727,17 @@ permalink: /quote-generator/
       currentY += 10;
     }
     
-    // Author text (center aligned)
+    // Author text
     if (authorLines.length > 0) {
       currentY += 10;
       authorLines.forEach((line, index) => {
         const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        textElement.setAttribute('x', width / 2);
+        textElement.setAttribute('x', padding + 50);
         textElement.setAttribute('y', currentY);
-        textElement.setAttribute('font-family', 'sans-serif');
+        textElement.setAttribute('font-family', theme.fontFamily);
         textElement.setAttribute('font-size', authorFontSize);
-        textElement.setAttribute('fill', '#7f8c8d');
-        textElement.setAttribute('text-anchor', 'middle');
+        textElement.setAttribute('fill', theme.textColor);
+        textElement.setAttribute('opacity', '0.7');
         textElement.textContent = line;
         svg.appendChild(textElement);
         
@@ -452,25 +745,13 @@ permalink: /quote-generator/
       });
     }
     
-    // Website URL (like Kindle quotes)
-    const websiteUrl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    websiteUrl.setAttribute('x', width - padding);
-    websiteUrl.setAttribute('y', height - padding - 30);
-    websiteUrl.setAttribute('font-family', 'sans-serif');
-    websiteUrl.setAttribute('font-size', '9');
-    websiteUrl.setAttribute('fill', '#adb5bd');
-    websiteUrl.setAttribute('text-anchor', 'end');
-    websiteUrl.setAttribute('opacity', '0.7');
-    websiteUrl.textContent = 'https://taross-f.dev';
-    svg.appendChild(websiteUrl);
-    
     // Bottom accent bar
     const bottomBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     bottomBar.setAttribute('x', padding);
     bottomBar.setAttribute('y', height - padding - 6);
     bottomBar.setAttribute('width', contentWidth);
     bottomBar.setAttribute('height', 6);
-    bottomBar.setAttribute('fill', '#d4af37');
+    bottomBar.setAttribute('fill', theme.accentColor);
     svg.appendChild(bottomBar);
     
     // Display the SVG
@@ -487,6 +768,7 @@ permalink: /quote-generator/
     downloadSvgBtn.disabled = false;
     
     showMessage(imageContainer, '画像を生成しました');
+    trackToolEvent('quote-generator', 'generate', quote.length);
   }
 
   function downloadAsPNG() {
@@ -514,6 +796,7 @@ permalink: /quote-generator/
         link.href = URL.createObjectURL(blob);
         link.click();
         URL.revokeObjectURL(link.href);
+        trackToolEvent('quote-generator', 'download_png');
       }, 'image/png');
     };
     
@@ -530,6 +813,7 @@ permalink: /quote-generator/
     link.href = url;
     link.click();
     URL.revokeObjectURL(url);
+    trackToolEvent('quote-generator', 'download_svg');
   }
 
   function clearAll() {
@@ -544,6 +828,33 @@ permalink: /quote-generator/
     downloadSvgBtn.disabled = true;
     
     quoteInput.focus();
+    trackToolEvent('quote-generator', 'clear_all');
+  }
+
+  // Theme selection handlers
+  function addThemeEventListeners() {
+    const themeInputs = document.querySelectorAll('input[name="theme"]');
+    const themeItems = document.querySelectorAll('.theme-item');
+    
+    themeInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        // Auto-regenerate if quote exists
+        if (quoteInput.value.trim() && quoteSvg.style.display !== 'none') {
+          generateQuoteImage();
+        }
+      });
+    });
+    
+    // Make theme previews clickable
+    themeItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const radio = this.querySelector('input[type="radio"]');
+        if (radio && !radio.checked) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change'));
+        }
+      });
+    });
   }
 
   // Event listeners
@@ -551,6 +862,9 @@ permalink: /quote-generator/
   clearBtn.addEventListener('click', clearAll);
   downloadBtn.addEventListener('click', downloadAsPNG);
   downloadSvgBtn.addEventListener('click', downloadAsSVG);
+  
+  // Initialize theme event listeners
+  addThemeEventListeners();
   
   // Keyboard shortcuts
   quoteInput.addEventListener('keydown', function(e) {

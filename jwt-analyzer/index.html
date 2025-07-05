@@ -555,6 +555,7 @@ permalink: /jwt-analyzer/
 
       resultsContainer.style.display = 'block';
       showStatus('JWT の解析が完了しました', 'success');
+      trackToolEvent('jwt-analyzer', 'analyze', jwt.length);
 
     } catch (error) {
       showStatus(`解析エラー: ${error.message}`, 'error');
@@ -628,8 +629,10 @@ permalink: /jwt-analyzer/
 
       if (base64Signature === parts[2]) {
         showVerificationResult('✅ 署名検証に成功しました！', 'success');
+        trackToolEvent('jwt-analyzer', 'verify_success');
       } else {
         showVerificationResult('❌ 署名検証に失敗しました。秘密鍵が正しくない可能性があります。', 'error');
+        trackToolEvent('jwt-analyzer', 'verify_failure');
       }
 
     } catch (error) {
@@ -675,6 +678,7 @@ permalink: /jwt-analyzer/
     hideStatus();
     verificationResult.style.display = 'none';
     jwtInput.focus();
+    trackToolEvent('jwt-analyzer', 'clear_input');
   });
 
   sampleBtn.addEventListener('click', () => {
@@ -685,12 +689,14 @@ permalink: /jwt-analyzer/
   copyHeaderBtn.addEventListener('click', () => {
     if (currentJWT) {
       copyToClipboard(formatJSON(currentJWT.header), copyHeaderBtn, 'ヘッダーをコピー');
+      trackToolEvent('jwt-analyzer', 'copy_header');
     }
   });
 
   copyPayloadBtn.addEventListener('click', () => {
     if (currentJWT) {
       copyToClipboard(formatJSON(currentJWT.payload), copyPayloadBtn, 'ペイロードをコピー');
+      trackToolEvent('jwt-analyzer', 'copy_payload');
     }
   });
 
