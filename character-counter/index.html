@@ -229,9 +229,16 @@ permalink: /character-counter/
   }
 
   // リアルタイム更新
-  textInput.addEventListener('input', updateCounts);
+  textInput.addEventListener('input', function() {
+    updateCounts();
+    // 文字数変更時にイベント送信
+    trackToolEvent('character-counter', 'count_text', textInput.value.length);
+  });
   textInput.addEventListener('paste', function() {
-    setTimeout(updateCounts, 10);
+    setTimeout(function() {
+      updateCounts();
+      trackToolEvent('character-counter', 'paste_text', textInput.value.length);
+    }, 10);
   });
 
   // クリアボタン
@@ -239,6 +246,7 @@ permalink: /character-counter/
     textInput.value = '';
     updateCounts();
     textInput.focus();
+    trackToolEvent('character-counter', 'clear_text');
   });
 
   // コピーボタン
@@ -252,6 +260,7 @@ permalink: /character-counter/
       setTimeout(function() {
         copyBtn.textContent = 'テキストをコピー';
       }, 2000);
+      trackToolEvent('character-counter', 'copy_text', textInput.value.length);
     } catch (err) {
       console.error('コピーに失敗しました:', err);
     }

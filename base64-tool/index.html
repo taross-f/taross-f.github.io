@@ -204,6 +204,7 @@ permalink: /base64-tool/
       const encoded = btoa(unescape(encodeURIComponent(text)));
       resultOutput.value = encoded;
       showMessage(resultOutput, 'エンコードが完了しました');
+      trackToolEvent('base64-tool', 'encode', text.length);
     } catch (error) {
       showMessage(resultOutput, 'エンコードに失敗しました: ' + error.message, 'error');
     }
@@ -221,6 +222,7 @@ permalink: /base64-tool/
       const decoded = decodeURIComponent(escape(atob(base64)));
       resultOutput.value = decoded;
       showMessage(resultOutput, 'デコードが完了しました');
+      trackToolEvent('base64-tool', 'decode', base64.length);
     } catch (error) {
       showMessage(resultOutput, 'デコードに失敗しました。正しいBase64文字列か確認してください', 'error');
     }
@@ -239,6 +241,7 @@ permalink: /base64-tool/
     try {
       document.execCommand('copy');
       showMessage(resultOutput, '結果をクリップボードにコピーしました');
+      trackToolEvent('base64-tool', 'copy_result', resultOutput.value.length);
     } catch (err) {
       showMessage(resultOutput, 'コピーに失敗しました', 'error');
     }
@@ -248,15 +251,18 @@ permalink: /base64-tool/
   clearTextBtn.addEventListener('click', function() {
     textInput.value = '';
     textInput.focus();
+    trackToolEvent('base64-tool', 'clear_text');
   });
   
   clearBase64Btn.addEventListener('click', function() {
     base64Input.value = '';
     base64Input.focus();
+    trackToolEvent('base64-tool', 'clear_base64');
   });
   
   clearResultBtn.addEventListener('click', function() {
     resultOutput.value = '';
+    trackToolEvent('base64-tool', 'clear_result');
   });
 
   // Enterキーでエンコード/デコード
