@@ -103,13 +103,27 @@ body {
   </div>
 </div>
 
-<script src="https://unpkg.com/clean-css@5.3.3/dist/clean-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clean-css/5.3.3/clean-css.min.js"></script>
 <script>
 // clean-cssライブラリの読み込み確認とフォールバック
 function initCSSCompressor() {
   if (typeof CleanCSS === 'undefined') {
     console.error('CleanCSS library is not loaded');
     document.getElementById('cssOutput').value = 'CleanCSSライブラリの読み込みに失敗しました。ページを再読み込みしてください。';
+    
+    // フォールバック: 別のCDNから読み込みを試行
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/clean-css@5.3.3/dist/clean-css.min.js';
+    script.onload = function() {
+      if (typeof CleanCSS !== 'undefined') {
+        console.log('CleanCSS loaded from fallback CDN');
+        initCSSCompressor(); // 再度初期化を試行
+      }
+    };
+    script.onerror = function() {
+      console.error('Failed to load CleanCSS from all CDNs');
+    };
+    document.head.appendChild(script);
     return;
   }
 
@@ -352,12 +366,25 @@ function initCSSCompressor() {
 }
 
 // ライブラリ読み込み後の初期化
+function tryInitCSSCompressor(retries = 5) {
+  if (typeof CleanCSS !== 'undefined') {
+    initCSSCompressor();
+  } else if (retries > 0) {
+    setTimeout(() => tryInitCSSCompressor(retries - 1), 500);
+  } else {
+    console.error('Failed to initialize CSS compressor after multiple attempts');
+    if (document.getElementById('cssOutput')) {
+      document.getElementById('cssOutput').value = 'CleanCSSライブラリの読み込みに失敗しました。ページを再読み込みしてください。';
+    }
+  }
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(initCSSCompressor, 100);
+    tryInitCSSCompressor();
   });
 } else {
-  setTimeout(initCSSCompressor, 100);
+  tryInitCSSCompressor();
 }
 </script>
 
