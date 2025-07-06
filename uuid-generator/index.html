@@ -127,12 +127,13 @@ function initUUIDGenerator() {
   function generateUUIDv1() {
     // 現在時刻（100ナノ秒単位、1582年10月15日からの経過時間）
     const now = Date.now();
-    const timestamp = (now * 10000) + 0x01b21dd213814000;
+    // JavaScriptの数値精度の問題を回避するため、BigIntを使用
+    const timestampBigInt = BigInt(now) * 10000n + 0x01b21dd213814000n;
     
-    // タイムスタンプを分割
-    const timeLow = timestamp & 0xffffffff;
-    const timeMid = (timestamp >>> 32) & 0xffff;
-    const timeHi = ((timestamp >>> 48) & 0x0fff) | 0x1000; // version 1
+    // タイムスタンプを分割（BigIntを使用して正確に計算）
+    const timeLow = Number(timestampBigInt & 0xffffffffn);
+    const timeMid = Number((timestampBigInt >> 32n) & 0xffffn);
+    const timeHi = Number((timestampBigInt >> 48n) & 0x0fffn) | 0x1000; // version 1
     
     // クロックシーケンス（ランダム）
     const clockSeq = crypto.getRandomValues(new Uint16Array(1))[0] & 0x3fff | 0x8000;

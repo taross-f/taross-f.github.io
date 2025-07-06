@@ -178,12 +178,77 @@ function initCSSCompressor() {
     
     try {
       const level = parseInt(compressionLevel.value);
+      
+      // 基本オプションの設定
       const options = {
-        level: level,
-        format: keepBreaks.checked ? 'beautify' : false,
         inline: ['none'],
         rebase: false
       };
+
+      // フォーマットオプション
+      if (keepBreaks.checked) {
+        options.format = 'keep-breaks';
+      }
+
+      // レベル別オプション
+      if (level === 0) {
+        // レベル0: 最小限の圧縮
+        options.level = 0;
+      } else if (level === 1) {
+        // レベル1: 基本的な最適化
+        options.level = {
+          1: {
+            cleanupCharsets: true,
+            normalizeUrls: true,
+            optimizeBackground: true,
+            optimizeBorderRadius: true,
+            optimizeFilter: true,
+            optimizeFontWeight: true,
+            optimizeOutline: true,
+            removeEmpty: removeEmpty.checked,
+            removeNegativePaddings: true,
+            removeQuotes: true,
+            removeWhitespace: true,
+            replaceTimeUnits: true,
+            replaceZeroUnits: true,
+            specialComments: removeComments.checked ? 0 : 'all'
+          }
+        };
+      } else {
+        // レベル2: 高度な最適化
+        options.level = {
+          1: {
+            cleanupCharsets: true,
+            normalizeUrls: true,
+            optimizeBackground: true,
+            optimizeBorderRadius: true,
+            optimizeFilter: true,
+            optimizeFontWeight: true,
+            optimizeOutline: true,
+            removeEmpty: true,
+            removeNegativePaddings: true,
+            removeQuotes: true,
+            removeWhitespace: true,
+            replaceTimeUnits: true,
+            replaceZeroUnits: true,
+            specialComments: removeComments.checked ? 0 : 'all'
+          },
+          2: {
+            mergeAdjacentRules: true,
+            mergeIntoShorthands: true,
+            mergeMedia: true,
+            mergeNonAdjacentRules: true,
+            mergeSemantically: false,
+            overrideProperties: true,
+            removeEmpty: removeEmpty.checked,
+            reduceNonAdjacentRules: true,
+            removeDuplicateFontRules: true,
+            removeDuplicateMediaBlocks: true,
+            removeDuplicateRules: true,
+            removeUnusedAtRules: false
+          }
+        };
+      }
 
       // clean-cssインスタンスを作成
       const cleanCSS = new CleanCSS(options);
