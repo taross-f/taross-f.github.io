@@ -103,29 +103,9 @@ body {
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clean-css/5.3.3/clean-css.min.js"></script>
 <script>
-// clean-cssライブラリの読み込み確認とフォールバック
+// CSS圧縮の純粋なJavaScript実装
 function initCSSCompressor() {
-  if (typeof CleanCSS === 'undefined') {
-    console.error('CleanCSS library is not loaded');
-    document.getElementById('cssOutput').value = 'CleanCSSライブラリの読み込みに失敗しました。ページを再読み込みしてください。';
-    
-    // フォールバック: 別のCDNから読み込みを試行
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/clean-css@5.3.3/dist/clean-css.min.js';
-    script.onload = function() {
-      if (typeof CleanCSS !== 'undefined') {
-        console.log('CleanCSS loaded from fallback CDN');
-        initCSSCompressor(); // 再度初期化を試行
-      }
-    };
-    script.onerror = function() {
-      console.error('Failed to load CleanCSS from all CDNs');
-    };
-    document.head.appendChild(script);
-    return;
-  }
 
   const cssInput = document.getElementById('cssInput');
   const cssOutput = document.getElementById('cssOutput');
@@ -183,6 +163,63 @@ function initCSSCompressor() {
     }, 3000);
   }
 
+  // CSS圧縮のJavaScript実装
+  function minifyCSS(css, options = {}) {
+    const level = options.level || 2;
+    const keepBreaks = options.keepBreaks || false;
+    const removeComments = options.removeComments !== false;
+    const removeEmpty = options.removeEmpty !== false;
+    
+    let result = css;
+    
+    // コメント削除
+    if (removeComments) {
+      result = result.replace(/\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\//g, '');
+    }
+    
+    // 改行と余分な空白の処理
+    if (!keepBreaks) {
+      // 改行を削除
+      result = result.replace(/\r?\n/g, ' ');
+    }
+    
+    // 複数の空白を1つに
+    result = result.replace(/\s+/g, ' ');
+    
+    // セレクタ前後の空白を削除
+    result = result.replace(/\s*([{}:;,])\s*/g, '$1');
+    
+    // 0pxを0に変換
+    result = result.replace(/([^\d]|^)0(px|em|%|in|cm|mm|pc|pt|ex)/g, '$10');
+    
+    // レベル2の最適化
+    if (level >= 2) {
+      // 色の最適化
+      result = result.replace(/#([0-9a-f])\1([0-9a-f])\2([0-9a-f])\3/gi, '#$1$2$3');
+      
+      // font-weightの最適化
+      result = result.replace(/font-weight:\s*normal/g, 'font-weight:400');
+      result = result.replace(/font-weight:\s*bold/g, 'font-weight:700');
+      
+      // margin/paddingの短縮形
+      result = result.replace(/(margin|padding):([^;]+)([^;]+)\2\3;/g, '$1:$2;');
+      result = result.replace(/(margin|padding):([^;]+)([^;]+)\2;/g, '$1:$2$3;');
+    }
+    
+    // 空のルールを削除
+    if (removeEmpty) {
+      result = result.replace(/[^{}]+\{\s*\}/g, '');
+    }
+    
+    // 最後のセミコロンを削除
+    result = result.replace(/;\}/g, '}');
+    
+    // 先頭と末尾の空白を削除
+    result = result.trim();
+    
+    return result;
+  }
+  
   function compressCSS() {
     const inputCSS = cssInput.value.trim();
     if (!inputCSS) {
@@ -192,93 +229,17 @@ function initCSSCompressor() {
     
     try {
       const level = parseInt(compressionLevel.value);
-      
-      // 基本オプションの設定
       const options = {
-        inline: ['none'],
-        rebase: false
+        level: level,
+        keepBreaks: keepBreaks.checked,
+        removeComments: removeComments.checked,
+        removeEmpty: removeEmpty.checked
       };
-
-      // フォーマットオプション
-      if (keepBreaks.checked) {
-        options.format = 'keep-breaks';
-      }
-
-      // レベル別オプション
-      if (level === 0) {
-        // レベル0: 最小限の圧縮
-        options.level = 0;
-      } else if (level === 1) {
-        // レベル1: 基本的な最適化
-        options.level = {
-          1: {
-            cleanupCharsets: true,
-            normalizeUrls: true,
-            optimizeBackground: true,
-            optimizeBorderRadius: true,
-            optimizeFilter: true,
-            optimizeFontWeight: true,
-            optimizeOutline: true,
-            removeEmpty: removeEmpty.checked,
-            removeNegativePaddings: true,
-            removeQuotes: true,
-            removeWhitespace: true,
-            replaceTimeUnits: true,
-            replaceZeroUnits: true,
-            specialComments: removeComments.checked ? 0 : 'all'
-          }
-        };
-      } else {
-        // レベル2: 高度な最適化
-        options.level = {
-          1: {
-            cleanupCharsets: true,
-            normalizeUrls: true,
-            optimizeBackground: true,
-            optimizeBorderRadius: true,
-            optimizeFilter: true,
-            optimizeFontWeight: true,
-            optimizeOutline: true,
-            removeEmpty: true,
-            removeNegativePaddings: true,
-            removeQuotes: true,
-            removeWhitespace: true,
-            replaceTimeUnits: true,
-            replaceZeroUnits: true,
-            specialComments: removeComments.checked ? 0 : 'all'
-          },
-          2: {
-            mergeAdjacentRules: true,
-            mergeIntoShorthands: true,
-            mergeMedia: true,
-            mergeNonAdjacentRules: true,
-            mergeSemantically: false,
-            overrideProperties: true,
-            removeEmpty: removeEmpty.checked,
-            reduceNonAdjacentRules: true,
-            removeDuplicateFontRules: true,
-            removeDuplicateMediaBlocks: true,
-            removeDuplicateRules: true,
-            removeUnusedAtRules: false
-          }
-        };
-      }
-
-      // clean-cssインスタンスを作成
-      const cleanCSS = new CleanCSS(options);
-      const result = cleanCSS.minify(inputCSS);
       
-      if (result.errors && result.errors.length > 0) {
-        showMessage(cssOutput, 'CSS圧縮中にエラーが発生しました: ' + result.errors.join(', '), 'error');
-        return;
-      }
+      const compressedCSS = minifyCSS(inputCSS, options);
       
-      if (result.warnings && result.warnings.length > 0) {
-        console.warn('CSS圧縮警告:', result.warnings);
-      }
-      
-      cssOutput.value = result.styles;
-      updateStats(inputCSS, result.styles);
+      cssOutput.value = compressedCSS;
+      updateStats(inputCSS, compressedCSS);
       showMessage(cssOutput, 'CSS圧縮が完了しました');
       trackToolEvent('css-compressor', 'compress', inputCSS.length);
       
@@ -300,13 +261,13 @@ function initCSSCompressor() {
     try {
       document.execCommand('copy');
       showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
-      trackToolEvent('css-compressor', 'copy_result');
+      trackToolEvent('css-compressor', 'copy_result', cssOutput.value.length);
     } catch (err) {
       // モダンブラウザ対応
       if (navigator.clipboard) {
         navigator.clipboard.writeText(cssOutput.value).then(() => {
           showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
-          trackToolEvent('css-compressor', 'copy_result');
+          trackToolEvent('css-compressor', 'copy_result', cssOutput.value.length);
         }).catch(() => {
           showMessage(cssOutput, 'コピーに失敗しました', 'error');
         });
@@ -333,7 +294,7 @@ function initCSSCompressor() {
     URL.revokeObjectURL(url);
     
     showMessage(cssOutput, 'CSSファイルをダウンロードしました');
-    trackToolEvent('css-compressor', 'download');
+    trackToolEvent('css-compressor', 'download', cssOutput.value.length);
   }
 
   // イベントリスナー
@@ -344,13 +305,15 @@ function initCSSCompressor() {
   clearInputBtn.addEventListener('click', function() {
     cssInput.value = '';
     updateStats('', '');
-    cssInput.focus();
+    showMessage(cssInput, '入力をクリアしました');
     trackToolEvent('css-compressor', 'clear_input');
+    cssInput.focus();
   });
   
   clearResultBtn.addEventListener('click', function() {
     cssOutput.value = '';
     updateStats('', '');
+    showMessage(cssOutput, '結果をクリアしました');
     trackToolEvent('css-compressor', 'clear_result');
   });
 
@@ -361,30 +324,32 @@ function initCSSCompressor() {
     }
   });
 
+  // オプション変更時のトラッキング
+  compressionLevel.addEventListener('change', function() {
+    trackToolEvent('css-compressor', 'change_level', parseInt(this.value));
+  });
+  
+  keepBreaks.addEventListener('change', function() {
+    trackToolEvent('css-compressor', 'toggle_breaks', this.checked ? 1 : 0);
+  });
+  
+  removeComments.addEventListener('change', function() {
+    trackToolEvent('css-compressor', 'toggle_comments', this.checked ? 1 : 0);
+  });
+  
+  removeEmpty.addEventListener('change', function() {
+    trackToolEvent('css-compressor', 'toggle_empty', this.checked ? 1 : 0);
+  });
+
   // 初期統計表示
   updateStats('', '');
 }
 
-// ライブラリ読み込み後の初期化
-function tryInitCSSCompressor(retries = 5) {
-  if (typeof CleanCSS !== 'undefined') {
-    initCSSCompressor();
-  } else if (retries > 0) {
-    setTimeout(() => tryInitCSSCompressor(retries - 1), 500);
-  } else {
-    console.error('Failed to initialize CSS compressor after multiple attempts');
-    if (document.getElementById('cssOutput')) {
-      document.getElementById('cssOutput').value = 'CleanCSSライブラリの読み込みに失敗しました。ページを再読み込みしてください。';
-    }
-  }
-}
-
+// ページ読み込み後の初期化
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() {
-    tryInitCSSCompressor();
-  });
+  document.addEventListener('DOMContentLoaded', initCSSCompressor);
 } else {
-  tryInitCSSCompressor();
+  initCSSCompressor();
 }
 </script>
 
