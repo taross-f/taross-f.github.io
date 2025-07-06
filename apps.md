@@ -4,6 +4,37 @@ title: Apps
 permalink: /apps/
 ---
 
+<a href="https://github.com/taross-f/deco-slack" target="_blank">
+  <img
+    src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=deco-slack&theme=buefy&show_owner=true"
+    alt="deco-slack – GitHub repo card"
+    width="420"
+  />
+</a>
+
+<a href="https://github.com/taross-f/quotto" target="_blank">
+  <img
+    src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=quotto&theme=buefy&show_owner=true"
+    alt="quotto – GitHub repo card"
+    width="420"
+  />
+</a>
+
+<a href="https://github.com/taross-f/google_hjkl" target="_blank">
+  <img
+    src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=google_hjkl&theme=buefy&show_owner=true"
+    alt="google_hjkl – GitHub repo card"
+    width="420"
+  />
+</a>
+
+<a href="https://github.com/taross-f/yt2mp3" target="_blank">
+  <img
+    src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=yt2mp3&theme=buefy&show_owner=true"
+    alt="yt2mp3 – GitHub repo card"
+    width="420"
+  />
+</a>
 
 ## 📝 テキストツール
 
