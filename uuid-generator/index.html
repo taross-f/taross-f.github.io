@@ -6,83 +6,83 @@ permalink: /uuid-generator/
 
 <div class="uuid-generator">
   <div class="tool-section">
-    <h3>🎲 UUID生成設定</h3>
+    <h3 data-i18n="apps.uuid_generator.settings_section">🎲 UUID生成設定</h3>
     <div class="settings-grid">
       <div class="setting-item">
-        <label for="uuidVersion">UUIDバージョン:</label>
+        <label for="uuidVersion" data-i18n="apps.uuid_generator.version_label">UUIDバージョン:</label>
         <select id="uuidVersion">
-          <option value="4" selected>UUID v4 (ランダム)</option>
-          <option value="1">UUID v1 (時刻ベース)</option>
+          <option value="4" selected data-i18n="apps.uuid_generator.version_4">UUID v4 (ランダム)</option>
+          <option value="1" data-i18n="apps.uuid_generator.version_1">UUID v1 (時刻ベース)</option>
         </select>
       </div>
       <div class="setting-item">
-        <label for="uuidCount">生成数:</label>
+        <label for="uuidCount" data-i18n="apps.uuid_generator.count_label">生成数:</label>
         <input type="number" id="uuidCount" min="1" max="50" value="1">
       </div>
       <div class="setting-item">
-        <label for="uuidCase">文字ケース:</label>
+        <label for="uuidCase" data-i18n="apps.uuid_generator.case_label">文字ケース:</label>
         <select id="uuidCase">
-          <option value="lower" selected>小文字</option>
-          <option value="upper">大文字</option>
+          <option value="lower" selected data-i18n="apps.uuid_generator.case_lower">小文字</option>
+          <option value="upper" data-i18n="apps.uuid_generator.case_upper">大文字</option>
         </select>
       </div>
       <div class="setting-item">
         <label>
-          <input type="checkbox" id="includeHyphens" checked> ハイフンを含める
+          <input type="checkbox" id="includeHyphens" checked> <span data-i18n="apps.uuid_generator.include_hyphens">ハイフンを含める</span>
         </label>
       </div>
     </div>
     <div class="button-group">
-      <button id="generateBtn" class="btn btn-primary">UUID生成</button>
-      <button id="clearBtn" class="btn">クリア</button>
+      <button id="generateBtn" class="btn btn-primary" data-i18n="apps.uuid_generator.generate_btn">UUID生成</button>
+      <button id="clearBtn" class="btn" data-i18n="common.clear">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📋 生成されたUUID</h3>
-    <textarea id="uuidOutput" placeholder="生成されたUUIDがここに表示されます..." rows="12" readonly></textarea>
+    <h3 data-i18n="apps.uuid_generator.output_section">📋 生成されたUUID</h3>
+    <textarea id="uuidOutput" data-i18n-placeholder="apps.uuid_generator.output_placeholder" placeholder="生成されたUUIDがここに表示されます..." rows="12" readonly></textarea>
     <div class="button-group">
-      <button id="copyAllBtn" class="btn">すべてコピー</button>
-      <button id="copyLastBtn" class="btn">最新のUUIDをコピー</button>
-      <button id="validateBtn" class="btn">UUID検証</button>
+      <button id="copyAllBtn" class="btn" data-i18n="apps.uuid_generator.copy_all_btn">すべてコピー</button>
+      <button id="copyLastBtn" class="btn" data-i18n="apps.uuid_generator.copy_last_btn">最新のUUIDをコピー</button>
+      <button id="validateBtn" class="btn" data-i18n="apps.uuid_generator.validate_btn">UUID検証</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>🔍 UUID検証</h3>
-    <textarea id="validateInput" placeholder="検証するUUIDを入力してください..." rows="3"></textarea>
+    <h3 data-i18n="apps.uuid_generator.validation_section">🔍 UUID検証</h3>
+    <textarea id="validateInput" data-i18n-placeholder="apps.uuid_generator.validation_placeholder" placeholder="検証するUUIDを入力してください..." rows="3"></textarea>
     <div id="validationResult" class="validation-result"></div>
   </div>
   
   <div class="tool-section">
-    <h3>📊 統計情報</h3>
+    <h3 data-i18n="apps.uuid_generator.stats_section">📊 統計情報</h3>
     <div class="stats-grid">
       <div class="stat-item">
-        <span class="stat-label">生成済み総数</span>
+        <span class="stat-label" data-i18n="apps.uuid_generator.total_generated">生成済み総数</span>
         <span class="stat-value" id="totalGenerated">0</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">現在の表示数</span>
+        <span class="stat-label" data-i18n="apps.uuid_generator.current_count">現在の表示数</span>
         <span class="stat-value" id="currentCount">0</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">最後の生成時刻</span>
+        <span class="stat-label" data-i18n="apps.uuid_generator.last_generated">最後の生成時刻</span>
         <span class="stat-value" id="lastGenerated">-</span>
       </div>
     </div>
   </div>
   
   <div class="info-section">
-    <h4>💡 UUIDについて</h4>
-    <p>UUID（Universally Unique Identifier）は、情報を一意に識別するための128ビットの数値です。</p>
+    <h4 data-i18n="apps.uuid_generator.info_title">💡 UUIDについて</h4>
+    <p data-i18n="apps.uuid_generator.info_description">UUID（Universally Unique Identifier）は、情報を一意に識別するための128ビットの数値です。</p>
     <div class="uuid-info">
-      <p><strong>UUIDバージョン:</strong></p>
+      <p><strong data-i18n="apps.uuid_generator.uuid_versions">UUIDバージョン:</strong></p>
       <ul>
-        <li><strong>UUID v1 (時刻ベース):</strong> タイムスタンプとMACアドレスから生成。時系列順序が保持される</li>
-        <li><strong>UUID v4 (ランダム):</strong> 暗号学的に安全な乱数から生成。最も一般的</li>
+        <li><strong data-i18n="apps.uuid_generator.v1_name">UUID v1 (時刻ベース):</strong> <span data-i18n="apps.uuid_generator.v1_description">タイムスタンプとMACアドレスから生成。時系列順序が保持される</span></li>
+        <li><strong data-i18n="apps.uuid_generator.v4_name">UUID v4 (ランダム):</strong> <span data-i18n="apps.uuid_generator.v4_description">暗号学的に安全な乱数から生成。最も一般的</span></li>
       </ul>
-      <p><strong>用途例:</strong> データベースの主キー、セッションID、ファイル名、API識別子など</p>
-      <p><strong>形式:</strong> 8-4-4-4-12の形式で36文字（ハイフン含む）または32文字（ハイフンなし）</p>
+      <p><strong data-i18n="apps.uuid_generator.use_cases">用途例:</strong> <span data-i18n="apps.uuid_generator.use_cases_desc">データベースの主キー、セッションID、ファイル名、API識別子など</span></p>
+      <p><strong data-i18n="apps.uuid_generator.format">形式:</strong> <span data-i18n="apps.uuid_generator.format_desc">8-4-4-4-12の形式で36文字（ハイフン含む）または32文字（ハイフンなし）</span></p>
     </div>
   </div>
 </div>

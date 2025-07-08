@@ -6,8 +6,8 @@ permalink: /css-compressor/
 
 <div class="css-compressor">
   <div class="tool-section">
-    <h3>📝 CSS入力</h3>
-    <textarea id="cssInput" placeholder="圧縮するCSSコードを入力してください...
+    <h3 data-i18n="apps.css_compressor.input_section">📝 CSS入力</h3>
+    <textarea id="cssInput" data-i18n-placeholder="apps.css_compressor.input_placeholder" placeholder="圧縮するCSSコードを入力してください...
 
 例:
 body {
@@ -22,83 +22,83 @@ body {
   background-color: #ffffff;
 }" rows="15"></textarea>
     <div class="button-group">
-      <button id="compressBtn" class="btn btn-primary">CSS圧縮</button>
-      <button id="clearInputBtn" class="btn">入力をクリア</button>
+      <button id="compressBtn" class="btn btn-primary" data-i18n="apps.css_compressor.compress_btn">CSS圧縮</button>
+      <button id="clearInputBtn" class="btn" data-i18n="apps.css_compressor.clear_input_btn">入力をクリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>⚙️ 圧縮オプション</h3>
+    <h3 data-i18n="apps.css_compressor.options_section">⚙️ 圧縮オプション</h3>
     <div class="options-grid">
       <div class="option-item">
-        <label for="compressionLevel">圧縮レベル:</label>
+        <label for="compressionLevel" data-i18n="apps.css_compressor.compression_level">圧縮レベル:</label>
         <select id="compressionLevel">
-          <option value="1">レベル1 (基本)</option>
-          <option value="2" selected>レベル2 (推奨)</option>
+          <option value="1" data-i18n="apps.css_compressor.level_1">レベル1 (基本)</option>
+          <option value="2" selected data-i18n="apps.css_compressor.level_2">レベル2 (推奨)</option>
         </select>
       </div>
       <div class="option-item">
         <label>
-          <input type="checkbox" id="keepBreaks"> 改行を保持
+          <input type="checkbox" id="keepBreaks"> <span data-i18n="apps.css_compressor.keep_breaks">改行を保持</span>
         </label>
       </div>
       <div class="option-item">
         <label>
-          <input type="checkbox" id="removeComments" checked> コメントを削除
+          <input type="checkbox" id="removeComments" checked> <span data-i18n="apps.css_compressor.remove_comments">コメントを削除</span>
         </label>
       </div>
       <div class="option-item">
         <label>
-          <input type="checkbox" id="removeEmpty" checked> 空のルールを削除
+          <input type="checkbox" id="removeEmpty" checked> <span data-i18n="apps.css_compressor.remove_empty">空のルールを削除</span>
         </label>
       </div>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📊 圧縮統計</h3>
+    <h3 data-i18n="apps.css_compressor.stats_section">📊 圧縮統計</h3>
     <div class="stats-grid">
       <div class="stat-item">
-        <span class="stat-label">元のサイズ</span>
+        <span class="stat-label" data-i18n="apps.css_compressor.original_size">元のサイズ</span>
         <span class="stat-value" id="originalSize">0 B</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">圧縮後サイズ</span>
+        <span class="stat-label" data-i18n="apps.css_compressor.compressed_size">圧縮後サイズ</span>
         <span class="stat-value" id="compressedSize">0 B</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">削減サイズ</span>
+        <span class="stat-label" data-i18n="apps.css_compressor.saved_size">削減サイズ</span>
         <span class="stat-value" id="savedSize">0 B</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">圧縮率</span>
+        <span class="stat-label" data-i18n="apps.css_compressor.compression_ratio">圧縮率</span>
         <span class="stat-value" id="compressionRatio">0%</span>
       </div>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📤 圧縮結果</h3>
-    <textarea id="cssOutput" placeholder="圧縮されたCSSがここに表示されます..." rows="15" readonly></textarea>
+    <h3 data-i18n="apps.css_compressor.result_section">📤 圧縮結果</h3>
+    <textarea id="cssOutput" data-i18n-placeholder="apps.css_compressor.output_placeholder" placeholder="圧縮されたCSSがここに表示されます..." rows="15" readonly></textarea>
     <div class="button-group">
-      <button id="copyResultBtn" class="btn">結果をコピー</button>
-      <button id="clearResultBtn" class="btn">結果をクリア</button>
-      <button id="downloadBtn" class="btn">CSSファイルでダウンロード</button>
+      <button id="copyResultBtn" class="btn" data-i18n="common.copy_result">結果をコピー</button>
+      <button id="clearResultBtn" class="btn" data-i18n="common.clear_result">結果をクリア</button>
+      <button id="downloadBtn" class="btn" data-i18n="apps.css_compressor.download_btn">CSSファイルでダウンロード</button>
     </div>
   </div>
   
   <div class="info-section">
-    <h4>💡 CSS圧縮について</h4>
-    <p>CSS圧縮は、スタイルシートのファイルサイズを小さくしてWebサイトの読み込み速度を向上させる技術です。</p>
+    <h4 data-i18n="apps.css_compressor.info_title">💡 CSS圧縮について</h4>
+    <p data-i18n="apps.css_compressor.info_description">CSS圧縮は、スタイルシートのファイルサイズを小さくしてWebサイトの読み込み速度を向上させる技術です。</p>
     <div class="css-info">
-      <p><strong>圧縮内容:</strong></p>
+      <p><strong data-i18n="apps.css_compressor.compression_content">圧縮内容:</strong></p>
       <ul>
-        <li><strong>空白・改行削除:</strong> 不要な空白文字を除去</li>
-        <li><strong>コメント削除:</strong> 開発用コメントを除去</li>
-        <li><strong>プロパティ最適化:</strong> 冗長なルールの統合</li>
-        <li><strong>値の短縮:</strong> 色コードや単位の最適化</li>
+        <li><strong data-i18n="apps.css_compressor.whitespace_removal">空白・改行削除:</strong> <span data-i18n="apps.css_compressor.whitespace_removal_desc">不要な空白文字を除去</span></li>
+        <li><strong data-i18n="apps.css_compressor.comment_removal">コメント削除:</strong> <span data-i18n="apps.css_compressor.comment_removal_desc">開発用コメントを除去</span></li>
+        <li><strong data-i18n="apps.css_compressor.property_optimization">プロパティ最適化:</strong> <span data-i18n="apps.css_compressor.property_optimization_desc">冗長なルールの統合</span></li>
+        <li><strong data-i18n="apps.css_compressor.value_shortening">値の短縮:</strong> <span data-i18n="apps.css_compressor.value_shortening_desc">色コードや単位の最適化</span></li>
       </ul>
-      <p><strong>メリット:</strong> ファイルサイズ削減、ページ読み込み速度向上、帯域幅の節約</p>
+      <p><strong data-i18n="apps.css_compressor.benefits">メリット:</strong> <span data-i18n="apps.css_compressor.benefits_desc">ファイルサイズ削減、ページ読み込み速度向上、帯域幅の節約</span></p>
     </div>
   </div>
 </div>

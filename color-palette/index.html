@@ -6,54 +6,54 @@ permalink: /color-palette/
 
 <div class="color-palette-tool">
   <div class="tool-section">
-    <h3>🎨 基準色の選択</h3>
+    <h3 data-i18n="apps.color_palette.base_color_section">🎨 基準色の選択</h3>
     <div class="color-input-group">
-      <label for="colorPicker">カラーピッカー:</label>
+      <label for="colorPicker" data-i18n="apps.color_palette.color_picker_label">カラーピッカー:</label>
       <input type="color" id="colorPicker" value="#3498db">
-      <label for="hexInput">HEXコード:</label>
-      <input type="text" id="hexInput" value="#3498db" placeholder="#RRGGBB">
+      <label for="hexInput" data-i18n="apps.color_palette.hex_code_label">HEXコード:</label>
+      <input type="text" id="hexInput" value="#3498db" data-i18n-placeholder="apps.color_palette.hex_placeholder" placeholder="#RRGGBB">
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📊 配色パターン</h3>
+    <h3 data-i18n="apps.color_palette.patterns_section">📊 配色パターン</h3>
     <div class="pattern-buttons">
-      <button id="complementaryBtn" class="btn btn-primary">補色</button>
-      <button id="analogousBtn" class="btn btn-primary">類似色</button>
-      <button id="triadicBtn" class="btn btn-primary">トライアド</button>
-      <button id="tetradicBtn" class="btn btn-primary">テトラード</button>
-      <button id="monochromaticBtn" class="btn btn-primary">単色階調</button>
-      <button id="splitComplementaryBtn" class="btn btn-primary">分裂補色</button>
+      <button id="complementaryBtn" class="btn btn-primary" data-i18n="apps.color_palette.complementary">補色</button>
+      <button id="analogousBtn" class="btn btn-primary" data-i18n="apps.color_palette.analogous">類似色</button>
+      <button id="triadicBtn" class="btn btn-primary" data-i18n="apps.color_palette.triadic">トライアド</button>
+      <button id="tetradicBtn" class="btn btn-primary" data-i18n="apps.color_palette.tetradic">テトラード</button>
+      <button id="monochromaticBtn" class="btn btn-primary" data-i18n="apps.color_palette.monochromatic">単色階調</button>
+      <button id="splitComplementaryBtn" class="btn btn-primary" data-i18n="apps.color_palette.split_complementary">分裂補色</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>🎭 生成されたパレット</h3>
+    <h3 data-i18n="apps.color_palette.generated_palette_section">🎭 生成されたパレット</h3>
     <div id="paletteContainer" class="palette-container">
-      <p>配色パターンを選択してパレットを生成してください</p>
+      <p data-i18n="apps.color_palette.select_pattern_message">配色パターンを選択してパレットを生成してください</p>
     </div>
     <div class="palette-actions">
-      <button id="copyAllColorsBtn" class="btn">全色をコピー</button>
-      <button id="exportCSSBtn" class="btn">CSS変数で出力</button>
-      <button id="exportJSONBtn" class="btn">JSON形式で出力</button>
+      <button id="copyAllColorsBtn" class="btn" data-i18n="apps.color_palette.copy_all_colors">全色をコピー</button>
+      <button id="exportCSSBtn" class="btn" data-i18n="apps.color_palette.export_css">CSS変数で出力</button>
+      <button id="exportJSONBtn" class="btn" data-i18n="apps.color_palette.export_json">JSON形式で出力</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📋 エクスポート結果</h3>
-    <textarea id="exportResult" placeholder="エクスポート結果がここに表示されます..." rows="8" readonly></textarea>
-    <button id="copyExportBtn" class="btn">結果をコピー</button>
+    <h3 data-i18n="apps.color_palette.export_result_section">📋 エクスポート結果</h3>
+    <textarea id="exportResult" data-i18n-placeholder="apps.color_palette.export_result_placeholder" placeholder="エクスポート結果がここに表示されます..." rows="8" readonly></textarea>
+    <button id="copyExportBtn" class="btn" data-i18n="common.copy_result">結果をコピー</button>
   </div>
   
   <div class="info-section">
-    <h4>💡 配色について</h4>
+    <h4 data-i18n="apps.color_palette.info_title">💡 配色について</h4>
     <div class="color-theory">
-      <p><strong>補色:</strong> 色相環の反対側にある色。コントラストが強く、目立つ配色</p>
-      <p><strong>類似色:</strong> 色相環で隣り合う色。調和的で落ち着いた配色</p>
-      <p><strong>トライアド:</strong> 色相環を3等分した位置の色。バランスの良い配色</p>
-      <p><strong>テトラード:</strong> 色相環を4等分した位置の色。豊かで多様な配色</p>
-      <p><strong>単色階調:</strong> 同じ色相で明度・彩度を変えた配色</p>
-      <p><strong>分裂補色:</strong> 補色の両隣の色を使った配色</p>
+      <p><strong data-i18n="apps.color_palette.complementary_name">補色:</strong> <span data-i18n="apps.color_palette.complementary_desc">色相環の反対側にある色。コントラストが強く、目立つ配色</span></p>
+      <p><strong data-i18n="apps.color_palette.analogous_name">類似色:</strong> <span data-i18n="apps.color_palette.analogous_desc">色相環で隣り合う色。調和的で落ち着いた配色</span></p>
+      <p><strong data-i18n="apps.color_palette.triadic_name">トライアド:</strong> <span data-i18n="apps.color_palette.triadic_desc">色相環を3等分した位置の色。バランスの良い配色</span></p>
+      <p><strong data-i18n="apps.color_palette.tetradic_name">テトラード:</strong> <span data-i18n="apps.color_palette.tetradic_desc">色相環を4等分した位置の色。豊かで多様な配色</span></p>
+      <p><strong data-i18n="apps.color_palette.monochromatic_name">単色階調:</strong> <span data-i18n="apps.color_palette.monochromatic_desc">同じ色相で明度・彩度を変えた配色</span></p>
+      <p><strong data-i18n="apps.color_palette.split_complementary_name">分裂補色:</strong> <span data-i18n="apps.color_palette.split_complementary_desc">補色の両隣の色を使った配色</span></p>
     </div>
   </div>
 </div>

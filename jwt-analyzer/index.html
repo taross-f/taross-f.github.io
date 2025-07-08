@@ -6,38 +6,38 @@ permalink: /jwt-analyzer/
 
 <div class="jwt-analyzer">
   <div class="tool-section">
-    <h3>🔐 JWT入力</h3>
-    <textarea id="jwtInput" placeholder="JWT トークンを入力してください...
+    <h3 data-i18n="apps.jwt_analyzer.input_section">🔐 JWT入力</h3>
+    <textarea id="jwtInput" data-i18n-placeholder="apps.jwt_analyzer.input_placeholder" placeholder="JWT トークンを入力してください...
 例: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" rows="4"></textarea>
     <div class="button-group">
-      <button id="parseBtn" class="btn btn-primary">解析</button>
-      <button id="clearBtn" class="btn">クリア</button>
-      <button id="sampleBtn" class="btn">サンプルJWT</button>
+      <button id="parseBtn" class="btn btn-primary" data-i18n="apps.jwt_analyzer.decode_btn">解析</button>
+      <button id="clearBtn" class="btn" data-i18n="common.clear">クリア</button>
+      <button id="sampleBtn" class="btn">Sample JWT</button>
     </div>
     <div id="parseStatus" class="status-message"></div>
   </div>
   
   <div class="results-container" id="resultsContainer" style="display: none;">
     <div class="tool-section">
-      <h3>📋 ヘッダー</h3>
+      <h3 data-i18n="apps.jwt_analyzer.header_section">📋 ヘッダー</h3>
       <pre id="headerOutput" class="json-output"></pre>
       <div class="button-group">
-        <button id="copyHeaderBtn" class="btn btn-sm">ヘッダーをコピー</button>
+        <button id="copyHeaderBtn" class="btn btn-sm" data-i18n="apps.jwt_analyzer.copy_header">ヘッダーをコピー</button>
       </div>
       <div id="headerAnalysis" class="analysis-section"></div>
     </div>
     
     <div class="tool-section">
-      <h3>📄 ペイロード</h3>
+      <h3 data-i18n="apps.jwt_analyzer.payload_section">📄 ペイロード</h3>
       <pre id="payloadOutput" class="json-output"></pre>
       <div class="button-group">
-        <button id="copyPayloadBtn" class="btn btn-sm">ペイロードをコピー</button>
+        <button id="copyPayloadBtn" class="btn btn-sm" data-i18n="apps.jwt_analyzer.copy_payload">ペイロードをコピー</button>
       </div>
       <div id="payloadAnalysis" class="analysis-section"></div>
     </div>
     
     <div class="tool-section">
-      <h3>🔏 署名</h3>
+      <h3 data-i18n="apps.jwt_analyzer.signature_section">🔏 署名</h3>
       <div class="signature-section">
         <p><strong>署名:</strong> <code id="signatureOutput"></code></p>
         <div class="verification-section">
@@ -59,8 +59,8 @@ permalink: /jwt-analyzer/
   </div>
   
   <div class="info-section">
-    <h4>💡 JWTについて</h4>
-    <p>JWT (JSON Web Token) は、安全にパーティ間で情報を転送するためのオープンスタンダードです。主な用途：</p>
+    <h4 data-i18n="apps.jwt_analyzer.about_title">💡 JWTについて</h4>
+    <p data-i18n="apps.jwt_analyzer.about_text">JWT (JSON Web Token) は、安全にパーティ間で情報を転送するためのオープンスタンダードです。</p>
     <ul>
       <li><strong>認証:</strong> ユーザーがログイン後、リクエストに含めてサーバーに送信</li>
       <li><strong>情報交換:</strong> デジタル署名により改ざんを検出可能</li>

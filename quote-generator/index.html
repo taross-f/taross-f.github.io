@@ -6,33 +6,33 @@ permalink: /quote-generator/
 
 <div class="quote-generator">
   <div class="tool-section">
-    <h3>📝 引用文の入力</h3>
-    <textarea id="quoteInput" placeholder="引用文を入力してください..." rows="4"></textarea>
+    <h3 data-i18n="apps.quote_generator.input_section">📝 引用文の入力</h3>
+    <textarea id="quoteInput" data-i18n-placeholder="apps.quote_generator.quote_placeholder" placeholder="引用文を入力してください..." rows="4"></textarea>
     
     <div class="input-group">
-      <label for="titleInput">タイトル（任意）</label>
-      <input type="text" id="titleInput" placeholder="引用元のタイトルを入力してください">
+      <label for="titleInput" data-i18n="apps.quote_generator.title_label">タイトル（任意）</label>
+      <input type="text" id="titleInput" data-i18n-placeholder="apps.quote_generator.title_placeholder" placeholder="引用元のタイトルを入力してください">
     </div>
     
     <div class="input-group">
-      <label for="authorInput">著者（任意）</label>
-      <input type="text" id="authorInput" placeholder="著者名を入力してください">
+      <label for="authorInput" data-i18n="apps.quote_generator.author_label">著者（任意）</label>
+      <input type="text" id="authorInput" data-i18n-placeholder="apps.quote_generator.author_placeholder" placeholder="著者名を入力してください">
     </div>
     
     <div class="button-group">
-      <button id="generateBtn" class="btn btn-primary">画像生成</button>
-      <button id="clearBtn" class="btn">クリア</button>
+      <button id="generateBtn" class="btn btn-primary" data-i18n="apps.quote_generator.generate_btn">画像生成</button>
+      <button id="clearBtn" class="btn" data-i18n="apps.quote_generator.clear_btn">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>🎨 デザインテーマ</h3>
+    <h3 data-i18n="apps.quote_generator.theme_section">🎨 デザインテーマ</h3>
     <div class="theme-selector">
       <div class="theme-grid">
         <div class="theme-item" data-theme="classic">
           <div class="theme-label">
             <input type="radio" name="theme" value="classic" id="classic" checked>
-            <label for="classic">クラシック</label>
+            <label for="classic" data-i18n="apps.quote_generator.theme_classic">クラシック</label>
           </div>
           <div class="theme-preview classic-preview">
             <div class="preview-accent"></div>
@@ -46,7 +46,7 @@ permalink: /quote-generator/
         <div class="theme-item" data-theme="modern">
           <div class="theme-label">
             <input type="radio" name="theme" value="modern" id="modern">
-            <label for="modern">モダン</label>
+            <label for="modern" data-i18n="apps.quote_generator.theme_modern">モダン</label>
           </div>
           <div class="theme-preview modern-preview">
             <div class="preview-accent"></div>
@@ -60,7 +60,7 @@ permalink: /quote-generator/
         <div class="theme-item" data-theme="dark">
           <div class="theme-label">
             <input type="radio" name="theme" value="dark" id="dark">
-            <label for="dark">ダーク</label>
+            <label for="dark" data-i18n="apps.quote_generator.theme_dark">ダーク</label>
           </div>
           <div class="theme-preview dark-preview">
             <div class="preview-accent"></div>
@@ -74,7 +74,7 @@ permalink: /quote-generator/
         <div class="theme-item" data-theme="nature">
           <div class="theme-label">
             <input type="radio" name="theme" value="nature" id="nature">
-            <label for="nature">ナチュラル</label>
+            <label for="nature" data-i18n="apps.quote_generator.theme_nature">ナチュラル</label>
           </div>
           <div class="theme-preview nature-preview">
             <div class="preview-accent"></div>
@@ -88,7 +88,7 @@ permalink: /quote-generator/
         <div class="theme-item" data-theme="elegant">
           <div class="theme-label">
             <input type="radio" name="theme" value="elegant" id="elegant">
-            <label for="elegant">エレガント</label>
+            <label for="elegant" data-i18n="apps.quote_generator.theme_elegant">エレガント</label>
           </div>
           <div class="theme-preview elegant-preview">
             <div class="preview-accent"></div>
@@ -103,28 +103,28 @@ permalink: /quote-generator/
   </div>
   
   <div class="tool-section">
-    <h3>🖼️ 生成結果</h3>
+    <h3 data-i18n="apps.quote_generator.result_section">🖼️ 生成結果</h3>
     <div id="imageContainer">
       <div id="placeholder" class="placeholder">
-        <p>画像がここに表示されます</p>
+        <p data-i18n="apps.quote_generator.placeholder_text">画像がここに表示されます</p>
       </div>
       <svg id="quoteSvg" style="display: none;"></svg>
     </div>
     
     <div class="button-group">
-      <button id="downloadBtn" class="btn" disabled>PNG形式でダウンロード</button>
-      <button id="downloadSvgBtn" class="btn" disabled>SVG形式でダウンロード</button>
+      <button id="downloadBtn" class="btn" data-i18n="apps.quote_generator.download_png" disabled>PNG形式でダウンロード</button>
+      <button id="downloadSvgBtn" class="btn" data-i18n="apps.quote_generator.download_svg" disabled>SVG形式でダウンロード</button>
     </div>
   </div>
   
   <div class="info-section">
-    <h4>💡 引用画像生成ツールについて</h4>
-    <p>このツールは、美しい引用画像を生成するためのものです。電子書籍リーダーのような洗練されたデザインで、以下の機能を提供します：</p>
-    <ul>
-      <li>複数行の引用文をサポート</li>
-      <li>タイトルと著者の表示</li>
-      <li>レスポンシブデザイン</li>
-      <li>高品質なPNG・SVG形式での出力</li>
+    <h4 data-i18n="apps.quote_generator.about_title">💡 引用画像生成ツールについて</h4>
+    <p data-i18n="apps.quote_generator.about_text">このツールは、美しい引用画像を生成するためのものです。電子書籍リーダーのような洗練されたデザインで、以下の機能を提供します：</p>
+    <ul class="features-list">
+      <li data-i18n="apps.quote_generator.features.0">複数行の引用文をサポート</li>
+      <li data-i18n="apps.quote_generator.features.1">タイトルと著者の表示</li>
+      <li data-i18n="apps.quote_generator.features.2">レスポンシブデザイン</li>
+      <li data-i18n="apps.quote_generator.features.3">高品質なPNG・SVG形式での出力</li>
     </ul>
   </div>
 </div>

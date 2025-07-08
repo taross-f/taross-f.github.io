@@ -6,63 +6,63 @@ permalink: /json-formatter/
 
 <div class="json-formatter">
   <div class="tool-section">
-    <h3>📝 JSON入力</h3>
-    <textarea id="jsonInput" placeholder='{"name": "example", "data": [1, 2, 3]}' rows="12"></textarea>
+    <h3 data-i18n="apps.json_formatter.input_section">📝 JSON入力</h3>
+    <textarea id="jsonInput" data-i18n-placeholder="apps.json_formatter.input_placeholder" placeholder='{"name": "example", "data": [1, 2, 3]}' rows="12"></textarea>
     <div class="button-group">
-      <button id="formatBtn" class="btn btn-primary">整形</button>
-      <button id="minifyBtn" class="btn btn-secondary">圧縮</button>
-      <button id="validateBtn" class="btn btn-info">検証</button>
-      <button id="clearInputBtn" class="btn">クリア</button>
+      <button id="formatBtn" class="btn btn-primary" data-i18n="apps.json_formatter.format_btn">整形</button>
+      <button id="minifyBtn" class="btn btn-secondary" data-i18n="apps.json_formatter.minify_btn">圧縮</button>
+      <button id="validateBtn" class="btn btn-info" data-i18n="apps.json_formatter.validate_btn">検証</button>
+      <button id="clearInputBtn" class="btn" data-i18n="common.clear">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📋 整形結果</h3>
-    <textarea id="jsonOutput" placeholder="整形されたJSONがここに表示されます..." rows="12" readonly></textarea>
+    <h3 data-i18n="apps.json_formatter.output_section">📋 整形結果</h3>
+    <textarea id="jsonOutput" data-i18n-placeholder="apps.json_formatter.output_placeholder" placeholder="整形されたJSONがここに表示されます..." rows="12" readonly></textarea>
     <div class="button-group">
-      <button id="copyOutputBtn" class="btn">結果をコピー</button>
-      <button id="clearOutputBtn" class="btn">結果をクリア</button>
+      <button id="copyOutputBtn" class="btn" data-i18n="apps.json_formatter.copy_output">結果をコピー</button>
+      <button id="clearOutputBtn" class="btn" data-i18n="apps.json_formatter.clear_output">結果をクリア</button>
     </div>
   </div>
   
   <div class="stats-section">
     <div class="stats-grid">
       <div class="stat-item">
-        <span class="stat-label">文字数（元）</span>
+        <span class="stat-label" data-i18n="apps.json_formatter.original_size">文字数（元）</span>
         <span class="stat-value" id="originalSize">0</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">文字数（整形後）</span>
+        <span class="stat-label" data-i18n="apps.json_formatter.formatted_size">文字数（整形後）</span>
         <span class="stat-value" id="formattedSize">0</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">圧縮率</span>
+        <span class="stat-label" data-i18n="apps.json_formatter.compression_ratio">圧縮率</span>
         <span class="stat-value" id="compressionRatio">0%</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">ネストレベル</span>
+        <span class="stat-label" data-i18n="apps.json_formatter.nesting_level">ネストレベル</span>
         <span class="stat-value" id="nestingLevel">0</span>
       </div>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>🔍 JSONパス検索</h3>
-    <input type="text" id="jsonPathInput" placeholder="例: $.data[0], $.name など" />
-    <button id="searchPathBtn" class="btn btn-info">検索</button>
+    <h3 data-i18n="apps.json_formatter.search_section">🔍 JSONパス検索</h3>
+    <input type="text" id="jsonPathInput" data-i18n-placeholder="apps.json_formatter.search_placeholder" placeholder="例: $.data[0], $.name など" />
+    <button id="searchPathBtn" class="btn btn-info" data-i18n="apps.json_formatter.search_btn">検索</button>
     <div id="pathResult"></div>
   </div>
   
   <div class="info-section">
-    <h4>💡 JSONについて</h4>
-    <p>JSON（JavaScript Object Notation）は、軽量なデータ交換フォーマットです。主な用途：</p>
-    <ul>
-      <li>Web APIでのデータ交換</li>
-      <li>設定ファイルの保存</li>
-      <li>データベースでの構造化データ保存</li>
-      <li>JavaScriptでのオブジェクト表現</li>
+    <h4 data-i18n="apps.json_formatter.about_title">💡 JSONについて</h4>
+    <p data-i18n="apps.json_formatter.about_text">JSON（JavaScript Object Notation）は、軽量なデータ交換フォーマットです。主な用途：</p>
+    <ul class="use-cases-list">
+      <li data-i18n="apps.json_formatter.use_cases.0">Web APIでのデータ交換</li>
+      <li data-i18n="apps.json_formatter.use_cases.1">設定ファイルの保存</li>
+      <li data-i18n="apps.json_formatter.use_cases.2">データベースでの構造化データ保存</li>
+      <li data-i18n="apps.json_formatter.use_cases.3">JavaScriptでのオブジェクト表現</li>
     </ul>
-    <p><strong>ショートカット:</strong> Ctrl+Enter で整形、Ctrl+Shift+Enter で圧縮</p>
+    <p><strong data-i18n="apps.json_formatter.shortcuts">ショートカット: Ctrl+Enter で整形、Ctrl+Shift+Enter で圧縮</strong></p>
   </div>
 </div>
 

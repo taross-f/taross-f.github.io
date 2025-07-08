@@ -68,10 +68,6 @@
             <a href="{{ site.baseurl }}/about" data-i18n="nav.profile">Profile</a>
             <a href="{{ site.baseurl }}/apps" data-i18n="nav.apps">Apps</a>
             <a href="{{ site.baseurl }}/tags" data-i18n="nav.tags">Tags</a>
-            <div class="language-switcher">
-              <button class="lang-btn" data-lang="ja">日本語</button>
-              <button class="lang-btn" data-lang="en">English</button>
-            </div>
           </nav>
         </header>
       </div>
@@ -101,39 +97,43 @@
         }
       }
 
-      // 言語切り替え機能
-      class LanguageSwitcher {
+      // 自動言語検出機能
+      class AutoLanguageDetector {
         constructor() {
-          this.currentLang = localStorage.getItem('preferred-language') || 'ja';
+          this.supportedLanguages = ['ja', 'en'];
+          this.defaultLanguage = 'ja';
+          this.currentLang = this.detectLanguage();
           this.init();
         }
 
         init() {
           document.addEventListener('DOMContentLoaded', () => {
-            this.setupLanguageButtons();
             this.applyLanguage(this.currentLang);
           });
         }
 
-        setupLanguageButtons() {
-          const langButtons = document.querySelectorAll('.lang-btn');
-          langButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-              const lang = e.target.dataset.lang;
-              this.switchLanguage(lang);
-            });
-          });
-          this.updateButtonStates();
-        }
+        detectLanguage() {
+          // まずlocalStorageをチェック
+          const storedLang = localStorage.getItem('preferred-language');
+          if (storedLang && this.supportedLanguages.includes(storedLang)) {
+            return storedLang;
+          }
 
-        switchLanguage(lang) {
-          this.currentLang = lang;
-          localStorage.setItem('preferred-language', lang);
-          this.applyLanguage(lang);
-          this.updateButtonStates();
+          // ブラウザの言語設定を取得
+          const browserLangs = navigator.languages || [navigator.language || navigator.userLanguage];
           
-          // 言語切り替えイベントを発行
-          document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+          // ブラウザの言語リストから対応言語を検出
+          for (const lang of browserLangs) {
+            const primaryLang = lang.split('-')[0].toLowerCase();
+            if (this.supportedLanguages.includes(primaryLang)) {
+              localStorage.setItem('preferred-language', primaryLang);
+              return primaryLang;
+            }
+          }
+          
+          // 対応言語が見つからない場合はデフォルト言語
+          localStorage.setItem('preferred-language', this.defaultLanguage);
+          return this.defaultLanguage;
         }
 
         applyLanguage(lang) {
@@ -158,6 +158,16 @@
               element.placeholder = text;
             }
           });
+          
+          // data-i18n-title属性を持つ要素を更新
+          const titleElements = document.querySelectorAll('[data-i18n-title]');
+          titleElements.forEach(element => {
+            const key = element.dataset.i18nTitle;
+            const text = this.getTranslation(key, lang);
+            if (text) {
+              element.title = text;
+            }
+          });
         }
 
         getTranslation(key, lang) {
@@ -175,24 +185,13 @@
           return result;
         }
 
-        updateButtonStates() {
-          const langButtons = document.querySelectorAll('.lang-btn');
-          langButtons.forEach(button => {
-            if (button.dataset.lang === this.currentLang) {
-              button.classList.add('active');
-            } else {
-              button.classList.remove('active');
-            }
-          });
-        }
-
         getCurrentLanguage() {
           return this.currentLang;
         }
       }
 
-      // 言語切り替えのインスタンスを作成
-      window.languageSwitcher = new LanguageSwitcher();
+      // 自動言語検出のインスタンスを作成
+      window.autoLanguageDetector = new AutoLanguageDetector();
 
       // ページ読み込み時にツールページを検出
       window.addEventListener('DOMContentLoaded', function() {

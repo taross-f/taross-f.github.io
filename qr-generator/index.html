@@ -6,76 +6,76 @@ permalink: /qr-generator/
 
 <div class="qr-generator">
   <div class="tool-section">
-    <h3>📱 QRコード生成</h3>
+    <h3 data-i18n="apps.qr_generator.generation_section">📱 QRコード生成</h3>
     <div class="input-tabs">
-      <button id="textTab" class="tab-btn active">テキスト</button>
-      <button id="urlTab" class="tab-btn">URL</button>
-      <button id="wifiTab" class="tab-btn">WiFi</button>
-      <button id="vcardTab" class="tab-btn">連絡先</button>
+      <button id="textTab" class="tab-btn active" data-i18n="apps.qr_generator.text_tab">テキスト</button>
+      <button id="urlTab" class="tab-btn" data-i18n="apps.qr_generator.url_tab">URL</button>
+      <button id="wifiTab" class="tab-btn" data-i18n="apps.qr_generator.wifi_tab">WiFi</button>
+      <button id="vcardTab" class="tab-btn" data-i18n="apps.qr_generator.vcard_tab">連絡先</button>
     </div>
     
     <div id="textPanel" class="input-panel active">
-      <textarea id="textInput" placeholder="QRコードに変換するテキストを入力してください..." rows="6"></textarea>
+      <textarea id="textInput" data-i18n-placeholder="apps.qr_generator.text_placeholder" placeholder="QRコードに変換するテキストを入力してください..." rows="6"></textarea>
     </div>
     
     <div id="urlPanel" class="input-panel">
-      <input type="url" id="urlInput" placeholder="https://example.com">
-      <small>URLを入力してください（https://から始まる必要があります）</small>
+      <input type="url" id="urlInput" data-i18n-placeholder="apps.qr_generator.url_placeholder" placeholder="https://example.com">
+      <small data-i18n="apps.qr_generator.url_note">URLを入力してください（https://から始まる必要があります）</small>
     </div>
     
     <div id="wifiPanel" class="input-panel">
       <div class="form-group">
-        <label for="wifiSSID">ネットワーク名 (SSID):</label>
-        <input type="text" id="wifiSSID" placeholder="WiFiネットワーク名">
+        <label for="wifiSSID" data-i18n="apps.qr_generator.wifi_ssid_label">ネットワーク名 (SSID):</label>
+        <input type="text" id="wifiSSID" data-i18n-placeholder="apps.qr_generator.wifi_ssid_placeholder" placeholder="WiFiネットワーク名">
       </div>
       <div class="form-group">
-        <label for="wifiPassword">パスワード:</label>
-        <input type="password" id="wifiPassword" placeholder="WiFiパスワード">
+        <label for="wifiPassword" data-i18n="apps.qr_generator.wifi_password_label">パスワード:</label>
+        <input type="password" id="wifiPassword" data-i18n-placeholder="apps.qr_generator.wifi_password_placeholder" placeholder="WiFiパスワード">
       </div>
       <div class="form-group">
-        <label for="wifiSecurity">セキュリティ:</label>
+        <label for="wifiSecurity" data-i18n="apps.qr_generator.wifi_security_label">セキュリティ:</label>
         <select id="wifiSecurity">
-          <option value="WPA">WPA/WPA2</option>
-          <option value="WEP">WEP</option>
-          <option value="nopass">なし</option>
+          <option value="WPA" data-i18n="apps.qr_generator.wifi_security_wpa">WPA/WPA2</option>
+          <option value="WEP" data-i18n="apps.qr_generator.wifi_security_wep">WEP</option>
+          <option value="nopass" data-i18n="apps.qr_generator.wifi_security_none">なし</option>
         </select>
       </div>
       <div class="form-group">
         <label>
-          <input type="checkbox" id="wifiHidden"> ネットワークが非表示
+          <input type="checkbox" id="wifiHidden"> <span data-i18n="apps.qr_generator.wifi_hidden">ネットワークが非表示</span>
         </label>
       </div>
     </div>
     
     <div id="vcardPanel" class="input-panel">
       <div class="form-group">
-        <label for="vcardName">名前:</label>
-        <input type="text" id="vcardName" placeholder="山田 太郎">
+        <label for="vcardName" data-i18n="apps.qr_generator.vcard_name_label">名前:</label>
+        <input type="text" id="vcardName" data-i18n-placeholder="apps.qr_generator.vcard_name_placeholder" placeholder="山田 太郎">
       </div>
       <div class="form-group">
-        <label for="vcardPhone">電話番号:</label>
-        <input type="tel" id="vcardPhone" placeholder="090-1234-5678">
+        <label for="vcardPhone" data-i18n="apps.qr_generator.vcard_phone_label">電話番号:</label>
+        <input type="tel" id="vcardPhone" data-i18n-placeholder="apps.qr_generator.vcard_phone_placeholder" placeholder="090-1234-5678">
       </div>
       <div class="form-group">
-        <label for="vcardEmail">メールアドレス:</label>
-        <input type="email" id="vcardEmail" placeholder="example@example.com">
+        <label for="vcardEmail" data-i18n="apps.qr_generator.vcard_email_label">メールアドレス:</label>
+        <input type="email" id="vcardEmail" data-i18n-placeholder="apps.qr_generator.vcard_email_placeholder" placeholder="example@example.com">
       </div>
       <div class="form-group">
-        <label for="vcardOrg">会社/組織:</label>
-        <input type="text" id="vcardOrg" placeholder="株式会社サンプル">
+        <label for="vcardOrg" data-i18n="apps.qr_generator.vcard_org_label">会社/組織:</label>
+        <input type="text" id="vcardOrg" data-i18n-placeholder="apps.qr_generator.vcard_org_placeholder" placeholder="株式会社サンプル">
       </div>
       <div class="form-group">
-        <label for="vcardUrl">ウェブサイト:</label>
-        <input type="url" id="vcardUrl" placeholder="https://example.com">
+        <label for="vcardUrl" data-i18n="apps.qr_generator.vcard_url_label">ウェブサイト:</label>
+        <input type="url" id="vcardUrl" data-i18n-placeholder="apps.qr_generator.vcard_url_placeholder" placeholder="https://example.com">
       </div>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>⚙️ 設定</h3>
+    <h3 data-i18n="apps.qr_generator.settings_section">⚙️ 設定</h3>
     <div class="settings-grid">
       <div class="setting-item">
-        <label for="qrSize">サイズ:</label>
+        <label for="qrSize" data-i18n="apps.qr_generator.size_label">サイズ:</label>
         <select id="qrSize">
           <option value="200">200x200</option>
           <option value="300" selected>300x300</option>
@@ -84,7 +84,7 @@ permalink: /qr-generator/
         </select>
       </div>
       <div class="setting-item">
-        <label for="errorLevel">エラー訂正:</label>
+        <label for="errorLevel" data-i18n="apps.qr_generator.error_level_label">エラー訂正:</label>
         <select id="errorLevel">
           <option value="L">Low (7%)</option>
           <option value="M" selected>Medium (15%)</option>
@@ -93,43 +93,43 @@ permalink: /qr-generator/
         </select>
       </div>
       <div class="setting-item">
-        <label for="colorDark">前景色:</label>
+        <label for="colorDark" data-i18n="apps.qr_generator.foreground_color_label">前景色:</label>
         <input type="color" id="colorDark" value="#000000">
       </div>
       <div class="setting-item">
-        <label for="colorLight">背景色:</label>
+        <label for="colorLight" data-i18n="apps.qr_generator.background_color_label">背景色:</label>
         <input type="color" id="colorLight" value="#ffffff">
       </div>
     </div>
     <div class="button-group">
-      <button id="generateBtn" class="btn btn-primary">QRコード生成</button>
-      <button id="clearBtn" class="btn">クリア</button>
+      <button id="generateBtn" class="btn btn-primary" data-i18n="apps.qr_generator.generate_btn">QRコード生成</button>
+      <button id="clearBtn" class="btn" data-i18n="common.clear">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📸 生成されたQRコード</h3>
+    <h3 data-i18n="apps.qr_generator.output_section">📸 生成されたQRコード</h3>
     <div id="qrDisplay" class="qr-display">
-      <p>設定を行い「QRコード生成」ボタンを押してください</p>
+      <p data-i18n="apps.qr_generator.output_placeholder">設定を行い「QRコード生成」ボタンを押してください</p>
     </div>
     <div class="qr-actions">
-      <button id="downloadBtn" class="btn" style="display: none;">PNG形式でダウンロード</button>
-      <button id="copySVGBtn" class="btn" style="display: none;">SVG形式でコピー</button>
+      <button id="downloadBtn" class="btn" style="display: none;" data-i18n="apps.qr_generator.download_png_btn">PNG形式でダウンロード</button>
+      <button id="copySVGBtn" class="btn" style="display: none;" data-i18n="apps.qr_generator.copy_svg_btn">SVG形式でコピー</button>
     </div>
   </div>
   
   <div class="info-section">
-    <h4>💡 QRコードについて</h4>
-    <p>QRコード（Quick Response Code）は、1994年にデンソーウェーブが開発した二次元バーコードです。</p>
+    <h4 data-i18n="apps.qr_generator.info_title">💡 QRコードについて</h4>
+    <p data-i18n="apps.qr_generator.info_description">QRコード（Quick Response Code）は、1994年にデンソーウェーブが開発した二次元バーコードです。</p>
     <div class="qr-info">
-      <p><strong>エラー訂正レベル:</strong></p>
+      <p><strong data-i18n="apps.qr_generator.error_correction_levels">エラー訂正レベル:</strong></p>
       <ul>
-        <li><strong>Low (7%):</strong> 最小サイズ、汚れに弱い</li>
-        <li><strong>Medium (15%):</strong> 標準的な用途におすすめ</li>
-        <li><strong>Quartile (25%):</strong> やや汚れても読み取り可能</li>
-        <li><strong>High (30%):</strong> 最も汚れに強い、サイズが大きくなる</li>
+        <li><strong data-i18n="apps.qr_generator.error_level_low_name">Low (7%):</strong> <span data-i18n="apps.qr_generator.error_level_low_desc">最小サイズ、汚れに弱い</span></li>
+        <li><strong data-i18n="apps.qr_generator.error_level_medium_name">Medium (15%):</strong> <span data-i18n="apps.qr_generator.error_level_medium_desc">標準的な用途におすすめ</span></li>
+        <li><strong data-i18n="apps.qr_generator.error_level_quartile_name">Quartile (25%):</strong> <span data-i18n="apps.qr_generator.error_level_quartile_desc">やや汚れても読み取り可能</span></li>
+        <li><strong data-i18n="apps.qr_generator.error_level_high_name">High (30%):</strong> <span data-i18n="apps.qr_generator.error_level_high_desc">最も汚れに強い、サイズが大きくなる</span></li>
       </ul>
-      <p><strong>用途例:</strong> URL共有、WiFi設定、連絡先交換、決済、イベント参加など</p>
+      <p><strong data-i18n="apps.qr_generator.use_cases">用途例:</strong> <span data-i18n="apps.qr_generator.use_cases_desc">URL共有、WiFi設定、連絡先交換、決済、イベント参加など</span></p>
     </div>
   </div>
 </div>
