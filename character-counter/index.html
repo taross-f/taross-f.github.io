@@ -6,56 +6,56 @@ permalink: /character-counter/
 
 <div class="character-counter">
   <div class="input-section">
-    <textarea id="textInput" placeholder="ここにテキストを入力してください..." rows="15"></textarea>
+    <textarea id="textInput" data-i18n-placeholder="apps.character_counter.placeholder" placeholder="ここにテキストを入力してください..." rows="15"></textarea>
   </div>
   
   <div class="stats-section">
     <div class="stats-grid">
       <div class="stat-item">
-        <span class="stat-label">文字数</span>
+        <span class="stat-label" data-i18n="common.characters">文字数</span>
         <span class="stat-value" id="charCount">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">改行・空白除く</span>
+        <span class="stat-label" data-i18n="common.no_spaces">改行・空白除く</span>
         <span class="stat-value" id="charCountNoSpaces">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">バイト数</span>
+        <span class="stat-label" data-i18n="common.bytes">バイト数</span>
         <span class="stat-value" id="byteCount">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">行数</span>
+        <span class="stat-label" data-i18n="common.lines">行数</span>
         <span class="stat-value" id="lineCount">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">単語数</span>
+        <span class="stat-label" data-i18n="common.words">単語数</span>
         <span class="stat-value" id="wordCount">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">段落数</span>
+        <span class="stat-label" data-i18n="common.paragraphs">段落数</span>
         <span class="stat-value" id="paragraphCount">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">読み時間 (分)</span>
+        <span class="stat-label" data-i18n="common.reading_time">読み時間</span> <span class="stat-label" data-i18n="common.minutes">分</span>
         <span class="stat-value" id="readingTime">0</span>
       </div>
       
       <div class="stat-item">
-        <span class="stat-label">ユニーク文字数</span>
+        <span class="stat-label" data-i18n="common.unique_chars">ユニーク文字数</span>
         <span class="stat-value" id="uniqueCharCount">0</span>
       </div>
     </div>
   </div>
   
   <div class="actions-section">
-    <button id="clearBtn" class="btn">クリア</button>
-    <button id="copyBtn" class="btn">テキストをコピー</button>
+    <button id="clearBtn" class="btn" data-i18n="common.clear">クリア</button>
+    <button id="copyBtn" class="btn" data-i18n="common.copy">テキストをコピー</button>
   </div>
 </div>
 

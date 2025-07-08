@@ -1,0 +1,157 @@
+ja:
+  site:
+    title: "T=>"
+    description: "日々 => メモ"
+  nav:
+    blog: "Blog"
+    profile: "Profile"
+    apps: "Apps"
+    tags: "Tags"
+  common:
+    clear: "クリア"
+    copy: "コピー"
+    generate: "生成"
+    download: "ダウンロード"
+    validate: "検証"
+    format: "フォーマット"
+    minify: "圧縮"
+    encode: "エンコード"
+    decode: "デコード"
+    count: "カウント"
+    characters: "文字"
+    words: "単語"
+    lines: "行"
+    bytes: "バイト"
+    reading_time: "読み時間"
+    minutes: "分"
+    seconds: "秒"
+    paragraphs: "段落"
+    unique_chars: "ユニーク文字"
+    no_spaces: "改行・空白除く"
+  apps:
+    title: "Apps"
+    text_tools: "📝 テキストツール"
+    dev_tools: "🔧 開発者ツール"
+    design_tools: "🎨 デザインツール"
+    character_counter:
+      title: "文字数カウンター"
+      description: "テキストの文字数、単語数、行数をカウントします。"
+      placeholder: "ここにテキストを入力してください..."
+    base64_tool:
+      title: "Base64エンコーダー/デコーダー"
+      description: "Base64形式でテキストをエンコード・デコードします。"
+      encode_section: "📤 エンコード（テキスト → Base64）"
+      decode_section: "📥 デコード（Base64 → テキスト）"
+      result_section: "📋 結果"
+      encode_placeholder: "エンコードするテキストを入力してください..."
+      decode_placeholder: "デコードするBase64文字列を入力してください..."
+      result_placeholder: "結果がここに表示されます..."
+      copy_result: "結果をコピー"
+      clear_result: "結果をクリア"
+      about_title: "💡 Base64について"
+      about_text: "Base64は、バイナリデータをテキスト形式で表現するためのエンコード方式です。主に以下の用途で使用されます："
+      use_cases:
+        - "メールの添付ファイル"
+        - "Web APIでの画像データ転送"
+        - "設定ファイルでのバイナリデータ保存"
+        - "URLに含めるデータのエンコード"
+    json_formatter:
+      title: "JSON整形ツール"
+      description: "JSONデータを整形・検証します。"
+    jwt_analyzer:
+      title: "JWT解析ツール"
+      description: "JWT（JSON Web Token）を解析します。"
+    css_compressor:
+      title: "CSS圧縮ツール"
+      description: "CSSコードを圧縮してファイルサイズを削減します。"
+    uuid_generator:
+      title: "UUID生成ツール"
+      description: "各種UUID（v1、v4等）を生成します。"
+    color_palette:
+      title: "カラーパレット生成ツール"
+      description: "デザインプロジェクト用の美しいカラーパレットを生成します。"
+    qr_generator:
+      title: "QRコード生成ツール"
+      description: "テキストやURLからQRコードを生成します。"
+    quote_generator:
+      title: "引用画像生成ツール"
+      description: "ソーシャルメディア用の美しい引用画像を作成します。"
+
+en:
+  site:
+    title: "T=>"
+    description: "Daily => Notes"
+  nav:
+    blog: "Blog"
+    profile: "Profile"
+    apps: "Apps"
+    tags: "Tags"
+  common:
+    clear: "Clear"
+    copy: "Copy"
+    generate: "Generate"
+    download: "Download"
+    validate: "Validate"
+    format: "Format"
+    minify: "Minify"
+    encode: "Encode"
+    decode: "Decode"
+    count: "Count"
+    characters: "Characters"
+    words: "Words"
+    lines: "Lines"
+    bytes: "Bytes"
+    reading_time: "Reading Time"
+    minutes: "minutes"
+    seconds: "seconds"
+    paragraphs: "Paragraphs"
+    unique_chars: "Unique Characters"
+    no_spaces: "No Spaces"
+  apps:
+    title: "Apps"
+    text_tools: "📝 Text Tools"
+    dev_tools: "🔧 Developer Tools"
+    design_tools: "🎨 Design Tools"
+    character_counter:
+      title: "Character Counter"
+      description: "Count characters, words, and lines in text."
+      placeholder: "Type or paste your text here..."
+    base64_tool:
+      title: "Base64 Encoder/Decoder"
+      description: "Encode and decode Base64 strings."
+      encode_section: "📤 Encode (Text → Base64)"
+      decode_section: "📥 Decode (Base64 → Text)"
+      result_section: "📋 Result"
+      encode_placeholder: "Enter text to encode..."
+      decode_placeholder: "Enter Base64 string to decode..."
+      result_placeholder: "Result will appear here..."
+      copy_result: "Copy Result"
+      clear_result: "Clear Result"
+      about_title: "💡 About Base64"
+      about_text: "Base64 is an encoding scheme that represents binary data in text format. It's commonly used for:"
+      use_cases:
+        - "Email attachments"
+        - "Image data transfer via Web APIs"
+        - "Binary data storage in configuration files"
+        - "Data encoding for URLs"
+    json_formatter:
+      title: "JSON Formatter"
+      description: "Format, validate, and beautify JSON data."
+    jwt_analyzer:
+      title: "JWT Analyzer"
+      description: "Decode and analyze JWT (JSON Web Token)."
+    css_compressor:
+      title: "CSS Compressor"
+      description: "Minify and compress CSS code to reduce file size."
+    uuid_generator:
+      title: "UUID Generator"
+      description: "Generate various types of UUIDs (v1, v4, etc.)."
+    color_palette:
+      title: "Color Palette Generator"
+      description: "Generate beautiful color palettes for design projects."
+    qr_generator:
+      title: "QR Code Generator"
+      description: "Generate QR codes from text, URLs, and other data."
+    quote_generator:
+      title: "Quote Image Generator"
+      description: "Create beautiful quote images for social media."

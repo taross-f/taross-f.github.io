@@ -6,40 +6,40 @@ permalink: /base64-tool/
 
 <div class="base64-tool">
   <div class="tool-section">
-    <h3>📤 エンコード（テキスト → Base64）</h3>
-    <textarea id="textInput" placeholder="エンコードするテキストを入力してください..." rows="8"></textarea>
+    <h3 data-i18n="apps.base64_tool.encode_section">📤 エンコード（テキスト → Base64）</h3>
+    <textarea id="textInput" data-i18n-placeholder="apps.base64_tool.encode_placeholder" placeholder="エンコードするテキストを入力してください..." rows="8"></textarea>
     <div class="button-group">
-      <button id="encodeBtn" class="btn btn-primary">エンコード</button>
-      <button id="clearTextBtn" class="btn">クリア</button>
+      <button id="encodeBtn" class="btn btn-primary" data-i18n="common.encode">エンコード</button>
+      <button id="clearTextBtn" class="btn" data-i18n="common.clear">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📥 デコード（Base64 → テキスト）</h3>
-    <textarea id="base64Input" placeholder="デコードするBase64文字列を入力してください..." rows="8"></textarea>
+    <h3 data-i18n="apps.base64_tool.decode_section">📥 デコード（Base64 → テキスト）</h3>
+    <textarea id="base64Input" data-i18n-placeholder="apps.base64_tool.decode_placeholder" placeholder="デコードするBase64文字列を入力してください..." rows="8"></textarea>
     <div class="button-group">
-      <button id="decodeBtn" class="btn btn-primary">デコード</button>
-      <button id="clearBase64Btn" class="btn">クリア</button>
+      <button id="decodeBtn" class="btn btn-primary" data-i18n="common.decode">デコード</button>
+      <button id="clearBase64Btn" class="btn" data-i18n="common.clear">クリア</button>
     </div>
   </div>
   
   <div class="tool-section">
-    <h3>📋 結果</h3>
-    <textarea id="resultOutput" placeholder="結果がここに表示されます..." rows="8" readonly></textarea>
+    <h3 data-i18n="apps.base64_tool.result_section">📋 結果</h3>
+    <textarea id="resultOutput" data-i18n-placeholder="apps.base64_tool.result_placeholder" placeholder="結果がここに表示されます..." rows="8" readonly></textarea>
     <div class="button-group">
-      <button id="copyResultBtn" class="btn">結果をコピー</button>
-      <button id="clearResultBtn" class="btn">結果をクリア</button>
+      <button id="copyResultBtn" class="btn" data-i18n="apps.base64_tool.copy_result">結果をコピー</button>
+      <button id="clearResultBtn" class="btn" data-i18n="apps.base64_tool.clear_result">結果をクリア</button>
     </div>
   </div>
   
   <div class="info-section">
-    <h4>💡 Base64について</h4>
-    <p>Base64は、バイナリデータをテキスト形式で表現するためのエンコード方式です。主に以下の用途で使用されます：</p>
-    <ul>
-      <li>メールの添付ファイル</li>
-      <li>Web APIでの画像データ転送</li>
-      <li>設定ファイルでのバイナリデータ保存</li>
-      <li>URLに含めるデータのエンコード</li>
+    <h4 data-i18n="apps.base64_tool.about_title">💡 Base64について</h4>
+    <p data-i18n="apps.base64_tool.about_text">Base64は、バイナリデータをテキスト形式で表現するためのエンコード方式です。主に以下の用途で使用されます：</p>
+    <ul class="use-cases-list">
+      <li data-i18n="apps.base64_tool.use_cases.0">メールの添付ファイル</li>
+      <li data-i18n="apps.base64_tool.use_cases.1">Web APIでの画像データ転送</li>
+      <li data-i18n="apps.base64_tool.use_cases.2">設定ファイルでのバイナリデータ保存</li>
+      <li data-i18n="apps.base64_tool.use_cases.3">URLに含めるデータのエンコード</li>
     </ul>
   </div>
 </div>
