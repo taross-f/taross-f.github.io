@@ -11,6 +11,7 @@
       rel="stylesheet"
     />
     {% include meta.html %}
+    {{ I18n_Headers }}
 
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -64,6 +65,15 @@
             <a href="{{ site.baseurl }}/about">Profile</a>
             <a href="{{ site.baseurl }}/apps">Apps</a>
             <a href="{{ site.baseurl }}/tags">Tags</a>
+            <div class="language-switcher">
+              {% for lang in site.languages %}
+                {% if lang == site.active_lang %}
+                  <span class="current-lang">{{ lang }}</span>
+                {% else %}
+                  <a href="/{% if lang != site.default_lang %}{{ lang }}/{% endif %}{{ page.url }}" class="lang-link">{{ lang }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
           </nav>
         </header>
       </div>

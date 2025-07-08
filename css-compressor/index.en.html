@@ -1,0 +1,344 @@
+---
+layout: page
+title: CSS Compressor
+permalink: /css-compressor/
+lang: en
+---
+
+<div class="css-compressor">
+  <div class="input-section">
+    <h3>📝 CSS Input</h3>
+    <textarea id="cssInput" placeholder="Paste your CSS code here..." rows="15"></textarea>
+    <div class="button-group">
+      <button id="compressBtn" class="btn btn-primary">Compress CSS</button>
+      <button id="clearInputBtn" class="btn">Clear Input</button>
+    </div>
+  </div>
+  
+  <div class="output-section">
+    <h3>📋 Compressed CSS</h3>
+    <textarea id="cssOutput" placeholder="Compressed CSS will appear here..." rows="15" readonly></textarea>
+    <div class="button-group">
+      <button id="copyOutputBtn" class="btn">Copy Output</button>
+      <button id="clearOutputBtn" class="btn">Clear Output</button>
+      <button id="downloadBtn" class="btn">Download CSS</button>
+    </div>
+  </div>
+  
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">Original Size</span>
+        <span class="stat-value" id="originalSize">0 bytes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Compressed Size</span>
+        <span class="stat-value" id="compressedSize">0 bytes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Compression Ratio</span>
+        <span class="stat-value" id="compressionRatio">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Bytes Saved</span>
+        <span class="stat-value" id="bytesSaved">0 bytes</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 About CSS Compression</h4>
+    <p>CSS compression (minification) removes unnecessary characters like whitespace, comments, and redundant code to reduce file size and improve loading speed.</p>
+    <ul>
+      <li>Removes whitespace and line breaks</li>
+      <li>Strips comments</li>
+      <li>Shortens color values (e.g., #ffffff → #fff)</li>
+      <li>Removes unnecessary semicolons</li>
+      <li>Optimizes property values</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.css-compressor {
+  max-width: none;
+  margin: 0;
+}
+
+.input-section,
+.output-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.input-section h3,
+.output-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+#cssInput,
+#cssOutput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+#cssInput:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+#cssOutput {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.stat-item:hover {
+  background: #e9ecef;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-item {
+    padding: 12px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const cssInput = document.getElementById('cssInput');
+  const cssOutput = document.getElementById('cssOutput');
+  const compressBtn = document.getElementById('compressBtn');
+  const clearInputBtn = document.getElementById('clearInputBtn');
+  const copyOutputBtn = document.getElementById('copyOutputBtn');
+  const clearOutputBtn = document.getElementById('clearOutputBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const originalSize = document.getElementById('originalSize');
+  const compressedSize = document.getElementById('compressedSize');
+  const compressionRatio = document.getElementById('compressionRatio');
+  const bytesSaved = document.getElementById('bytesSaved');
+
+  function compressCSS(css) {
+    return css
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/;\s*}/g, '}')
+      .replace(/\s*{\s*/g, '{')
+      .replace(/;\s*/g, ';')
+      .replace(/:\s*/g, ':')
+      .replace(/,\s*/g, ',')
+      .replace(/>\s*/g, '>')
+      .replace(/\s*>\s*/g, '>')
+      .replace(/\s*\+\s*/g, '+')
+      .replace(/\s*~\s*/g, '~')
+      .replace(/\s*\|\s*/g, '|')
+      .replace(/\s*\^\s*/g, '^')
+      .replace(/\s*\$\s*/g, '$')
+      .replace(/\s*\*\s*/g, '*')
+      .replace(/#([a-fA-F0-9])\1([a-fA-F0-9])\2([a-fA-F0-9])\3/g, '#$1$2$3')
+      .replace(/0px/g, '0')
+      .replace(/0em/g, '0')
+      .replace(/0%/g, '0')
+      .replace(/0pt/g, '0')
+      .replace(/0pc/g, '0')
+      .replace(/0in/g, '0')
+      .replace(/0mm/g, '0')
+      .replace(/0cm/g, '0')
+      .replace(/0ex/g, '0')
+      .replace(/\s*}\s*/g, '}')
+      .replace(/^\s+|\s+$/g, '');
+  }
+
+  function updateStats(original, compressed) {
+    const originalBytes = new Blob([original]).size;
+    const compressedBytes = new Blob([compressed]).size;
+    const saved = originalBytes - compressedBytes;
+    const ratio = originalBytes > 0 ? Math.round((saved / originalBytes) * 100) : 0;
+
+    originalSize.textContent = originalBytes + ' bytes';
+    compressedSize.textContent = compressedBytes + ' bytes';
+    bytesSaved.textContent = saved + ' bytes';
+    compressionRatio.textContent = ratio + '%';
+  }
+
+  compressBtn.addEventListener('click', function() {
+    const css = cssInput.value.trim();
+    if (!css) {
+      alert('Please enter CSS code to compress');
+      return;
+    }
+
+    const compressed = compressCSS(css);
+    cssOutput.value = compressed;
+    updateStats(css, compressed);
+    
+    trackToolEvent('css-compressor', 'compress', css.length);
+  });
+
+  clearInputBtn.addEventListener('click', function() {
+    cssInput.value = '';
+    cssInput.focus();
+    trackToolEvent('css-compressor', 'clear_input');
+  });
+
+  copyOutputBtn.addEventListener('click', function() {
+    if (!cssOutput.value) {
+      alert('No compressed CSS to copy');
+      return;
+    }
+
+    cssOutput.select();
+    cssOutput.setSelectionRange(0, 99999);
+
+    try {
+      document.execCommand('copy');
+      copyOutputBtn.textContent = 'Copied!';
+      setTimeout(function() {
+        copyOutputBtn.textContent = 'Copy Output';
+      }, 2000);
+      trackToolEvent('css-compressor', 'copy_output', cssOutput.value.length);
+    } catch (err) {
+      console.error('Copy failed:', err);
+    }
+  });
+
+  clearOutputBtn.addEventListener('click', function() {
+    cssOutput.value = '';
+    updateStats('', '');
+    trackToolEvent('css-compressor', 'clear_output');
+  });
+
+  downloadBtn.addEventListener('click', function() {
+    if (!cssOutput.value) {
+      alert('No compressed CSS to download');
+      return;
+    }
+
+    const blob = new Blob([cssOutput.value], { type: 'text/css' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'compressed.css';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    trackToolEvent('css-compressor', 'download');
+  });
+
+  updateStats('', '');
+})();
+</script>

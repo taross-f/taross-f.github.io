@@ -1,0 +1,260 @@
+---
+layout: default
+title: Base64 Encoder/Decoder
+lang: en
+---
+
+<div class="container">
+  <h1>Base64 Encoder/Decoder</h1>
+  
+  <div class="tool-container">
+    <div class="input-section">
+      <div class="mode-selector">
+        <label>
+          <input type="radio" name="mode" value="encode" checked> Encode
+        </label>
+        <label>
+          <input type="radio" name="mode" value="decode"> Decode
+        </label>
+      </div>
+      
+      <div class="input-group">
+        <label for="inputText">Input:</label>
+        <textarea id="inputText" placeholder="Enter text to encode or Base64 to decode..." rows="8"></textarea>
+      </div>
+      
+      <div class="button-group">
+        <button id="processBtn" class="btn btn-primary">Encode</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+        <button id="copyInputBtn" class="btn btn-outline">Copy Input</button>
+      </div>
+    </div>
+    
+    <div class="output-section">
+      <div class="output-group">
+        <label for="outputText">Output:</label>
+        <textarea id="outputText" placeholder="Result will appear here..." rows="8" readonly></textarea>
+      </div>
+      
+      <div class="button-group">
+        <button id="copyOutputBtn" class="btn btn-primary">Copy Output</button>
+        <button id="clearOutputBtn" class="btn btn-secondary">Clear Output</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h3>About Base64</h3>
+    <p>Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used for encoding data in email, web applications, and data URLs.</p>
+    
+    <h4>Common Use Cases:</h4>
+    <ul>
+      <li>Encoding binary data for transmission over text-based protocols</li>
+      <li>Embedding images in HTML/CSS as data URLs</li>
+      <li>Encoding authentication credentials</li>
+      <li>Storing binary data in JSON or XML</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tool-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .tool-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mode-selector {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.mode-selector label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.input-group, .output-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label, .output-group label {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+#inputText, #outputText {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  resize: vertical;
+}
+
+#outputText {
+  background-color: #f8f9fa;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.info-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.info-section h3 {
+  margin-top: 0;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  const inputText = document.getElementById('inputText');
+  const outputText = document.getElementById('outputText');
+  const processBtn = document.getElementById('processBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const copyInputBtn = document.getElementById('copyInputBtn');
+  const copyOutputBtn = document.getElementById('copyOutputBtn');
+  const clearOutputBtn = document.getElementById('clearOutputBtn');
+  
+  let currentMode = 'encode';
+  
+  function updateMode() {
+    const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+    currentMode = selectedMode;
+    processBtn.textContent = selectedMode === 'encode' ? 'Encode' : 'Decode';
+    
+    if (selectedMode === 'encode') {
+      inputText.placeholder = 'Enter text to encode...';
+      outputText.placeholder = 'Base64 encoded result will appear here...';
+    } else {
+      inputText.placeholder = 'Enter Base64 to decode...';
+      outputText.placeholder = 'Decoded text will appear here...';
+    }
+    
+    outputText.value = '';
+  }
+  
+  function processText() {
+    const input = inputText.value.trim();
+    
+    if (!input) {
+      outputText.value = '';
+      return;
+    }
+    
+    try {
+      if (currentMode === 'encode') {
+        outputText.value = btoa(unescape(encodeURIComponent(input)));
+        trackToolEvent('base64-tool', 'encode');
+      } else {
+        outputText.value = decodeURIComponent(escape(atob(input)));
+        trackToolEvent('base64-tool', 'decode');
+      }
+    } catch (error) {
+      outputText.value = 'Error: Invalid input for ' + currentMode + ' operation';
+    }
+  }
+  
+  function copyToClipboard(text, button) {
+    navigator.clipboard.writeText(text).then(function() {
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      setTimeout(function() {
+        button.textContent = originalText;
+      }, 2000);
+    });
+  }
+  
+  modeRadios.forEach(radio => {
+    radio.addEventListener('change', updateMode);
+  });
+  
+  inputText.addEventListener('input', processText);
+  
+  processBtn.addEventListener('click', processText);
+  
+  clearBtn.addEventListener('click', function() {
+    inputText.value = '';
+    outputText.value = '';
+    trackToolEvent('base64-tool', 'clear');
+  });
+  
+  copyInputBtn.addEventListener('click', function() {
+    copyToClipboard(inputText.value, copyInputBtn);
+    trackToolEvent('base64-tool', 'copy_input');
+  });
+  
+  copyOutputBtn.addEventListener('click', function() {
+    copyToClipboard(outputText.value, copyOutputBtn);
+    trackToolEvent('base64-tool', 'copy_output');
+  });
+  
+  clearOutputBtn.addEventListener('click', function() {
+    outputText.value = '';
+    trackToolEvent('base64-tool', 'clear_output');
+  });
+  
+  updateMode();
+  trackToolEvent('base64-tool', 'load');
+});
+</script>

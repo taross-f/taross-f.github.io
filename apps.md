@@ -2,6 +2,7 @@
 layout: page
 title: Apps
 permalink: /apps/
+lang: ja
 ---
 
 <a href="https://github.com/taross-f/deco-slack" target="_blank">

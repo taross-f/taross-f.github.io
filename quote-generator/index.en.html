@@ -1,0 +1,374 @@
+---
+layout: page
+title: Quote Image Generator
+permalink: /quote-generator/
+lang: en
+---
+
+<div class="quote-generator">
+  <div class="input-section">
+    <h3>✍️ Quote Input</h3>
+    <div class="input-group">
+      <label for="quoteText">Quote Text:</label>
+      <textarea id="quoteText" placeholder="Enter your quote here..." rows="4"></textarea>
+    </div>
+    
+    <div class="input-group">
+      <label for="authorText">Author (optional):</label>
+      <input type="text" id="authorText" placeholder="Author name">
+    </div>
+    
+    <div class="settings-group">
+      <div class="setting-item">
+        <label for="bgColor">Background Color:</label>
+        <input type="color" id="bgColor" value="#2c3e50">
+      </div>
+      
+      <div class="setting-item">
+        <label for="textColor">Text Color:</label>
+        <input type="color" id="textColor" value="#ffffff">
+      </div>
+      
+      <div class="setting-item">
+        <label for="fontSize">Font Size:</label>
+        <input type="range" id="fontSize" min="20" max="60" value="32">
+        <span id="fontSizeValue">32px</span>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button id="generateBtn" class="btn btn-primary">Generate Quote Image</button>
+      <button id="clearBtn" class="btn">Clear</button>
+    </div>
+  </div>
+  
+  <div class="output-section">
+    <h3>🖼️ Generated Quote Image</h3>
+    <div id="canvasContainer" class="canvas-container">
+      <canvas id="quoteCanvas" width="800" height="600"></canvas>
+    </div>
+    
+    <div class="button-group">
+      <button id="downloadBtn" class="btn btn-primary" disabled>Download Image</button>
+      <button id="copyImageBtn" class="btn" disabled>Copy Image</button>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <h4>💡 About Quote Images</h4>
+    <p>Quote images are perfect for social media, presentations, and sharing inspirational content. This tool creates beautiful, customizable quote graphics.</p>
+    <ul>
+      <li>Customizable colors and font sizes</li>
+      <li>High-resolution output (800x600px)</li>
+      <li>Perfect for social media sharing</li>
+      <li>Download as PNG format</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.quote-generator {
+  max-width: none;
+  margin: 0;
+}
+
+.input-section,
+.output-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.input-section h3,
+.output-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+#quoteText {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+#authorText {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+#quoteText:focus,
+#authorText:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.settings-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.setting-item label {
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+.setting-item input[type="color"],
+.setting-item input[type="range"] {
+  padding: 4px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.setting-item input[type="color"]:focus,
+.setting-item input[type="range"]:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+#fontSizeValue {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: white;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+#quoteCanvas {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .settings-group {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const quoteText = document.getElementById('quoteText');
+  const authorText = document.getElementById('authorText');
+  const bgColor = document.getElementById('bgColor');
+  const textColor = document.getElementById('textColor');
+  const fontSize = document.getElementById('fontSize');
+  const fontSizeValue = document.getElementById('fontSizeValue');
+  const generateBtn = document.getElementById('generateBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const canvas = document.getElementById('quoteCanvas');
+  const ctx = canvas.getContext('2d');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const copyImageBtn = document.getElementById('copyImageBtn');
+
+  function updateFontSizeDisplay() {
+    fontSizeValue.textContent = fontSize.value + 'px';
+  }
+
+  function generateQuoteImage() {
+    const quote = quoteText.value.trim();
+    if (!quote) {
+      alert('Please enter a quote to generate image');
+      return;
+    }
+
+    const author = authorText.value.trim();
+    const bg = bgColor.value;
+    const text = textColor.value;
+    const size = parseInt(fontSize.value);
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = text;
+    ctx.font = `${size}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const maxWidth = canvas.width - 80;
+    const words = quote.split(' ');
+    const lines = [];
+    let currentLine = '';
+
+    for (let word of words) {
+      const testLine = currentLine + (currentLine ? ' ' : '') + word;
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    const lineHeight = size * 1.2;
+    const totalHeight = lines.length * lineHeight;
+    let startY = (canvas.height - totalHeight) / 2;
+
+    if (author) {
+      startY -= 20;
+    }
+
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
+    });
+
+    if (author) {
+      ctx.font = `${Math.max(16, size * 0.6)}px Arial, sans-serif`;
+      ctx.fillText(`— ${author}`, canvas.width / 2, startY + totalHeight + 40);
+    }
+
+    downloadBtn.disabled = false;
+    copyImageBtn.disabled = true;
+    
+    trackToolEvent('quote-generator', 'generate', quote.length);
+  }
+
+  function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'quote-image.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    trackToolEvent('quote-generator', 'download');
+  }
+
+  function copyImage() {
+    canvas.toBlob(function(blob) {
+      const item = new ClipboardItem({ 'image/png': blob });
+      navigator.clipboard.write([item]).then(function() {
+        copyImageBtn.textContent = 'Copied!';
+        setTimeout(function() {
+          copyImageBtn.textContent = 'Copy Image';
+        }, 2000);
+        trackToolEvent('quote-generator', 'copy');
+      }).catch(function(err) {
+        console.error('Copy failed:', err);
+        alert('Copy failed. Please try downloading instead.');
+      });
+    });
+  }
+
+  function clearAll() {
+    quoteText.value = '';
+    authorText.value = '';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    downloadBtn.disabled = true;
+    copyImageBtn.disabled = true;
+    quoteText.focus();
+    trackToolEvent('quote-generator', 'clear');
+  }
+
+  fontSize.addEventListener('input', updateFontSizeDisplay);
+  generateBtn.addEventListener('click', generateQuoteImage);
+  clearBtn.addEventListener('click', clearAll);
+  downloadBtn.addEventListener('click', downloadImage);
+  copyImageBtn.addEventListener('click', copyImage);
+
+  updateFontSizeDisplay();
+})();
+</script>
