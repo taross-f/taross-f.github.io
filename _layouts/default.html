@@ -86,7 +86,7 @@
       function trackToolEvent(toolName, action, value) {
         if (typeof gtag !== 'undefined') {
           gtag('event', action, {
-            'event_category': 'tool_usage',
+            'event_category': toolName + '_usage',
             'event_label': toolName,
             'value': value || 0
           });
