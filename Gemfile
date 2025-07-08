@@ -8,4 +8,5 @@ group :jekyll_plugins do
   gem "jekyll-feed"
   gem "jekyll-twitter-plugin"
   gem "jekyll-polyglot"
+  gem "jekyll-paginate"
 end
