@@ -256,9 +256,9 @@ permalink: /character-counter/
     
     try {
       document.execCommand('copy');
-      copyBtn.textContent = 'コピーしました!';
+      copyBtn.textContent = window.i18n('common.copy_success');
       setTimeout(function() {
-        copyBtn.textContent = 'テキストをコピー';
+        copyBtn.textContent = window.i18n('common.copy');
       }, 2000);
       trackToolEvent('character-counter', 'copy_text', textInput.value.length);
     } catch (err) {

@@ -110,7 +110,7 @@ permalink: /qr-generator/
   <div class="tool-section">
     <h3 data-i18n="apps.qr_generator.output_section">📸 生成されたQRコード</h3>
     <div id="qrDisplay" class="qr-display">
-      <p data-i18n="apps.qr_generator.output_placeholder">設定を行い「QRコード生成」ボタンを押してください</p>
+      <p data-i18n="apps.qr_generator.default_message">設定を行い「QRコード生成」ボタンを押してください</p>
     </div>
     <div class="qr-actions">
       <button id="downloadBtn" class="btn" style="display: none;" data-i18n="apps.qr_generator.download_png_btn">PNG形式でダウンロード</button>
@@ -679,7 +679,7 @@ function initQRGenerator() {
         input.value = '';
       }
     });
-    qrDisplay.innerHTML = '<p>設定を行い「QRコード生成」ボタンを押してください</p>';
+    qrDisplay.innerHTML = '<p data-i18n="apps.qr_generator.default_message">' + window.i18n('apps.qr_generator.default_message') + '</p>';
     downloadBtn.style.display = 'none';
     copySVGBtn.style.display = 'none';
     currentQRData = null;

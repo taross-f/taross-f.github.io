@@ -12,7 +12,7 @@ permalink: /jwt-analyzer/
     <div class="button-group">
       <button id="parseBtn" class="btn btn-primary" data-i18n="apps.jwt_analyzer.decode_btn">解析</button>
       <button id="clearBtn" class="btn" data-i18n="common.clear">クリア</button>
-      <button id="sampleBtn" class="btn">Sample JWT</button>
+      <button id="sampleBtn" class="btn" data-i18n="apps.jwt_analyzer.sample_btn">サンプルJWT</button>
     </div>
     <div id="parseStatus" class="status-message"></div>
   </div>
@@ -39,21 +39,21 @@ permalink: /jwt-analyzer/
     <div class="tool-section">
       <h3 data-i18n="apps.jwt_analyzer.signature_section">🔏 署名</h3>
       <div class="signature-section">
-        <p><strong>署名:</strong> <code id="signatureOutput"></code></p>
+        <p><strong data-i18n="apps.jwt_analyzer.signature_label">署名:</strong> <code id="signatureOutput"></code></p>
         <div class="verification-section">
-          <h4>署名検証 (オプション)</h4>
+          <h4 data-i18n="apps.jwt_analyzer.signature_verify_title">署名検証 (オプション)</h4>
           <div class="input-group">
-            <label for="secretInput">秘密鍵/公開鍵:</label>
-            <textarea id="secretInput" placeholder="HS256の場合は秘密鍵、RS256の場合は公開鍵を入力..." rows="3"></textarea>
+            <label for="secretInput" data-i18n="apps.jwt_analyzer.secret_key_label">秘密鍵/公開鍵:</label>
+            <textarea id="secretInput" data-i18n-placeholder="apps.jwt_analyzer.secret_key_placeholder" placeholder="HS256の場合は秘密鍵、RS256の場合は公開鍵を入力..." rows="3"></textarea>
           </div>
-          <button id="verifyBtn" class="btn btn-secondary">署名を検証</button>
+          <button id="verifyBtn" class="btn btn-secondary" data-i18n="apps.jwt_analyzer.verify_signature_btn">署名を検証</button>
           <div id="verificationResult" class="verification-result"></div>
         </div>
       </div>
     </div>
     
     <div class="tool-section">
-      <h3>🔍 セキュリティ分析</h3>
+      <h3 data-i18n="apps.jwt_analyzer.security_analysis_title">🔍 セキュリティ分析</h3>
       <div id="securityAnalysis" class="security-analysis"></div>
     </div>
   </div>
@@ -62,11 +62,11 @@ permalink: /jwt-analyzer/
     <h4 data-i18n="apps.jwt_analyzer.about_title">💡 JWTについて</h4>
     <p data-i18n="apps.jwt_analyzer.about_text">JWT (JSON Web Token) は、安全にパーティ間で情報を転送するためのオープンスタンダードです。</p>
     <ul>
-      <li><strong>認証:</strong> ユーザーがログイン後、リクエストに含めてサーバーに送信</li>
-      <li><strong>情報交換:</strong> デジタル署名により改ざんを検出可能</li>
-      <li><strong>無状態認証:</strong> サーバー側でセッション状態を保持不要</li>
+      <li><strong data-i18n="apps.jwt_analyzer.use_case_auth">認証:</strong> <span data-i18n="apps.jwt_analyzer.use_case_auth">ユーザーがログイン後、リクエストに含めてサーバーに送信</span></li>
+      <li><strong data-i18n="apps.jwt_analyzer.use_case_exchange">情報交換:</strong> <span data-i18n="apps.jwt_analyzer.use_case_exchange">デジタル署名により改ざんを検出可能</span></li>
+      <li><strong data-i18n="apps.jwt_analyzer.use_case_stateless">無状態認証:</strong> <span data-i18n="apps.jwt_analyzer.use_case_stateless">サーバー側でセッション状態を保持不要</span></li>
     </ul>
-    <p><strong>⚠️ セキュリティ注意:</strong> このツールはブラウザ内でのみ動作し、JWT は外部に送信されません。</p>
+    <p><strong data-i18n="common.security_warning">⚠️ セキュリティ注意:</strong> <span data-i18n="common.browser_only">このツールはブラウザ内でのみ動作し、JWT は外部に送信されません。</span></p>
   </div>
 </div>
 

@@ -196,14 +196,14 @@ permalink: /base64-tool/
   encodeBtn.addEventListener('click', function() {
     const text = textInput.value;
     if (!text.trim()) {
-      showMessage(resultOutput, 'エンコードするテキストを入力してください', 'error');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.encode_empty_error'), 'error');
       return;
     }
     
     try {
       const encoded = btoa(unescape(encodeURIComponent(text)));
       resultOutput.value = encoded;
-      showMessage(resultOutput, 'エンコードが完了しました');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.encode_success'));
       trackToolEvent('base64-tool', 'encode', text.length);
     } catch (error) {
       showMessage(resultOutput, 'エンコードに失敗しました: ' + error.message, 'error');
@@ -214,24 +214,24 @@ permalink: /base64-tool/
   decodeBtn.addEventListener('click', function() {
     const base64 = base64Input.value.trim();
     if (!base64) {
-      showMessage(resultOutput, 'デコードするBase64文字列を入力してください', 'error');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.decode_empty_error'), 'error');
       return;
     }
     
     try {
       const decoded = decodeURIComponent(escape(atob(base64)));
       resultOutput.value = decoded;
-      showMessage(resultOutput, 'デコードが完了しました');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.decode_success'));
       trackToolEvent('base64-tool', 'decode', base64.length);
     } catch (error) {
-      showMessage(resultOutput, 'デコードに失敗しました。正しいBase64文字列か確認してください', 'error');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.decode_failed'), 'error');
     }
   });
 
   // コピー
   copyResultBtn.addEventListener('click', function() {
     if (!resultOutput.value) {
-      showMessage(resultOutput, 'コピーする結果がありません', 'error');
+      showMessage(resultOutput, window.i18n('common.copy_no_result'), 'error');
       return;
     }
     
@@ -240,10 +240,10 @@ permalink: /base64-tool/
     
     try {
       document.execCommand('copy');
-      showMessage(resultOutput, '結果をクリップボードにコピーしました');
+      showMessage(resultOutput, window.i18n('apps.base64_tool.copy_result_success'));
       trackToolEvent('base64-tool', 'copy_result', resultOutput.value.length);
     } catch (err) {
-      showMessage(resultOutput, 'コピーに失敗しました', 'error');
+      showMessage(resultOutput, window.i18n('common.copy_failed'), 'error');
     }
   });
 

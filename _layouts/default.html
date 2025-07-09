@@ -193,6 +193,11 @@
       // 自動言語検出のインスタンスを作成
       window.autoLanguageDetector = new AutoLanguageDetector();
 
+      // 翻訳取得のヘルパー関数
+      window.i18n = function(key) {
+        return window.autoLanguageDetector.getTranslation(key, window.autoLanguageDetector.getCurrentLanguage()) || key;
+      };
+
       // ページ読み込み時にツールページを検出
       window.addEventListener('DOMContentLoaded', function() {
         const path = window.location.pathname;
