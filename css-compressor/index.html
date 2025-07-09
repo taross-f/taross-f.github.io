@@ -23,7 +23,7 @@ body {
 }" rows="15"></textarea>
     <div class="button-group">
       <button id="compressBtn" class="btn btn-primary" data-i18n="apps.css_compressor.compress_btn">CSS圧縮</button>
-      <button id="clearInputBtn" class="btn" data-i18n="apps.css_compressor.clear_input_btn">入力をクリア</button>
+      <button id="clearInputBtn" class="btn" data-i18n="apps.css_compressor.clear_input">入力をクリア</button>
     </div>
   </div>
   
@@ -78,11 +78,11 @@ body {
   </div>
   
   <div class="tool-section">
-    <h3 data-i18n="apps.css_compressor.result_section">📤 圧縮結果</h3>
+    <h3 data-i18n="apps.css_compressor.output_section">📋 圧縮結果</h3>
     <textarea id="cssOutput" data-i18n-placeholder="apps.css_compressor.output_placeholder" placeholder="圧縮されたCSSがここに表示されます..." rows="15" readonly></textarea>
     <div class="button-group">
       <button id="copyResultBtn" class="btn" data-i18n="common.copy_result">結果をコピー</button>
-      <button id="clearResultBtn" class="btn" data-i18n="common.clear_result">結果をクリア</button>
+      <button id="clearResultBtn" class="btn" data-i18n="apps.css_compressor.clear_output">結果をクリア</button>
       <button id="downloadBtn" class="btn" data-i18n="apps.css_compressor.download_btn">CSSファイルでダウンロード</button>
     </div>
   </div>
@@ -223,7 +223,7 @@ function initCSSCompressor() {
   function compressCSS() {
     const inputCSS = cssInput.value.trim();
     if (!inputCSS) {
-      showMessage(cssOutput, '圧縮するCSSコードを入力してください', 'error');
+      showMessage(cssOutput, window.i18n('apps.css_compressor.compression_empty_error'), 'error');
       return;
     }
     
@@ -240,18 +240,18 @@ function initCSSCompressor() {
       
       cssOutput.value = compressedCSS;
       updateStats(inputCSS, compressedCSS);
-      showMessage(cssOutput, 'CSS圧縮が完了しました');
+      showMessage(cssOutput, window.i18n('apps.css_compressor.compression_success'));
       trackToolEvent('css-compressor', 'compress', inputCSS.length);
       
     } catch (error) {
-      showMessage(cssOutput, 'CSS圧縮に失敗しました: ' + error.message, 'error');
+      showMessage(cssOutput, window.i18n('apps.css_compressor.compression_failed') + error.message, 'error');
       console.error('CSS compression error:', error);
     }
   }
 
   function copyCSSResult() {
     if (!cssOutput.value) {
-      showMessage(cssOutput, 'コピーする結果がありません', 'error');
+      showMessage(cssOutput, window.i18n('common.copy_no_result'), 'error');
       return;
     }
     
@@ -260,26 +260,26 @@ function initCSSCompressor() {
     
     try {
       document.execCommand('copy');
-      showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+      showMessage(cssOutput, window.i18n('apps.css_compressor.copy_result_success'));
       trackToolEvent('css-compressor', 'copy_result', cssOutput.value.length);
     } catch (err) {
       // モダンブラウザ対応
       if (navigator.clipboard) {
         navigator.clipboard.writeText(cssOutput.value).then(() => {
-          showMessage(cssOutput, '圧縮されたCSSをクリップボードにコピーしました');
+          showMessage(cssOutput, window.i18n('apps.css_compressor.copy_result_success'));
           trackToolEvent('css-compressor', 'copy_result', cssOutput.value.length);
         }).catch(() => {
-          showMessage(cssOutput, 'コピーに失敗しました', 'error');
+          showMessage(cssOutput, window.i18n('common.copy_failed'), 'error');
         });
       } else {
-        showMessage(cssOutput, 'コピーに失敗しました', 'error');
+        showMessage(cssOutput, window.i18n('common.copy_failed'), 'error');
       }
     }
   }
 
   function downloadCSS() {
     if (!cssOutput.value) {
-      showMessage(cssOutput, 'ダウンロードする結果がありません', 'error');
+      showMessage(cssOutput, window.i18n('common.copy_no_result'), 'error');
       return;
     }
     
@@ -293,7 +293,7 @@ function initCSSCompressor() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     
-    showMessage(cssOutput, 'CSSファイルをダウンロードしました');
+    showMessage(cssOutput, window.i18n('apps.css_compressor.download_success'));
     trackToolEvent('css-compressor', 'download', cssOutput.value.length);
   }
 
@@ -305,7 +305,7 @@ function initCSSCompressor() {
   clearInputBtn.addEventListener('click', function() {
     cssInput.value = '';
     updateStats('', '');
-    showMessage(cssInput, '入力をクリアしました');
+    showMessage(cssInput, window.i18n('apps.css_compressor.clear_input_success'));
     trackToolEvent('css-compressor', 'clear_input');
     cssInput.focus();
   });
@@ -313,7 +313,7 @@ function initCSSCompressor() {
   clearResultBtn.addEventListener('click', function() {
     cssOutput.value = '';
     updateStats('', '');
-    showMessage(cssOutput, '結果をクリアしました');
+    showMessage(cssOutput, window.i18n('apps.css_compressor.clear_output_success'));
     trackToolEvent('css-compressor', 'clear_result');
   });
 
