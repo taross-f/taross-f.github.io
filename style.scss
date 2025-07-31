@@ -806,10 +806,9 @@ iframe {
 
 // Breadcrumb navigation
 .breadcrumb {
-  margin: -10px 0 25px 0;
-  padding: 12px 0;
+  margin: 0 0 20px 0;
+  padding: 0;
   background: transparent;
-  border-bottom: 1px solid #e9ecef;
   
   ol {
     list-style: none;
@@ -819,53 +818,39 @@ iframe {
     flex-wrap: wrap;
     align-items: center;
     font-size: 14px;
-    line-height: 1.4;
   }
   
   li {
     display: inline-flex;
     align-items: center;
-    white-space: nowrap;
     
     &:not(:last-child)::after {
       content: "›";
-      margin: 0 8px;
+      margin: 0 10px;
       color: #6c757d;
-      font-weight: normal;
-      opacity: 0.7;
+      font-weight: bold;
     }
     
     a {
       color: #007acc;
       text-decoration: none;
-      transition: all 0.2s ease;
-      padding: 2px 4px;
-      border-radius: 3px;
+      transition: color 0.2s ease;
       
       &:hover {
         color: #0056b3;
-        background: rgba(0, 122, 204, 0.1);
+        text-decoration: underline;
       }
     }
     
     &.active {
-      color: #495057;
+      color: #6c757d;
       font-weight: 500;
     }
   }
 }
 
-// ページレイアウト内での調整
-.page .breadcrumb {
-  margin-top: -5px;
-  margin-bottom: 20px;
-}
-
 @include mobile {
   .breadcrumb {
-    margin: -5px 0 20px 0;
-    padding: 8px 0;
-    
     ol {
       font-size: 13px;
     }
