@@ -804,5 +804,62 @@ iframe {
   }
 }
 
+// Breadcrumb navigation
+.breadcrumb {
+  margin: 0 0 20px 0;
+  padding: 0;
+  background: transparent;
+  
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  li {
+    display: inline-flex;
+    align-items: center;
+    
+    &:not(:last-child)::after {
+      content: "›";
+      margin: 0 10px;
+      color: #6c757d;
+      font-weight: bold;
+    }
+    
+    a {
+      color: #007acc;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    }
+    
+    &.active {
+      color: #6c757d;
+      font-weight: 500;
+    }
+  }
+}
+
+@include mobile {
+  .breadcrumb {
+    ol {
+      font-size: 13px;
+    }
+    
+    li:not(:last-child)::after {
+      margin: 0 6px;
+    }
+  }
+}
+
 // Syntax highlighting @import is at the bottom of this file
 @import "highlights";
