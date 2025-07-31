@@ -7,7 +7,6 @@ ja:
     profile: "Profile"
     apps: "Apps"
     tags: "Tags"
-    home: "ホーム"
   common:
     clear: "クリア"
     copy: "コピー"
@@ -348,7 +347,6 @@ en:
     profile: "Profile"
     apps: "Apps"
     tags: "Tags"
-    home: "Home"
   common:
     clear: "Clear"
     copy: "Copy"
