@@ -804,5 +804,70 @@ iframe {
   }
 }
 
+// パンくずリストのスタイル
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+  
+  .breadcrumb-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(203, 213, 224, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    
+    &:not(:last-child)::after {
+      content: "›";
+      margin: 0 8px;
+      color: #a0aec0;
+      font-weight: 500;
+    }
+    
+    a {
+      color: #4a5568;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-weight: 500;
+      
+      &:hover {
+        color: #2d3748;
+        text-decoration: underline;
+      }
+    }
+    
+    &[aria-current="page"] {
+      color: #2d3748;
+      font-weight: 600;
+    }
+  }
+  
+  @include mobile {
+    margin-bottom: 15px;
+    font-size: 13px;
+    
+    .breadcrumb-list {
+      padding: 8px 12px;
+    }
+    
+    .breadcrumb-item {
+      &:not(:last-child)::after {
+        margin: 0 6px;
+      }
+    }
+  }
+}
+
 // Syntax highlighting @import is at the bottom of this file
 @import "highlights";

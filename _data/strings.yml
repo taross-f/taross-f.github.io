@@ -40,6 +40,7 @@ ja:
     error: "エラー"
     success: "成功"
     warning: "警告"
+    home: "ホーム"
   apps:
     title: "Apps"
     text_tools: "📝 テキストツール"
@@ -380,6 +381,7 @@ en:
     error: "Error"
     success: "Success"
     warning: "Warning"
+    home: "Home"
   apps:
     title: "Apps"
     text_tools: "📝 Text Tools"
