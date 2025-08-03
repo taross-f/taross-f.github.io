@@ -857,13 +857,29 @@ iframe {
   
   // パンくずリンク専用スタイル（他のリンクに影響しない）
   .breadcrumb-list .breadcrumb-item a {
+    // Reset nav a styles
+    margin-left: 0;
     color: #718096;
-    text-decoration: none;
+    text-align: initial;
     font-weight: 400;
+    letter-spacing: normal;
+    text-decoration: none;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    transition: none;
+    will-change: auto;
+    display: inline;
     
     &:hover {
       color: #4a5568;
       text-decoration: underline;
+      background: none;
+      box-shadow: none;
+      transform: none;
     }
   }
   
