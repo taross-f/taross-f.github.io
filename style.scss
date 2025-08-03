@@ -356,6 +356,25 @@ nav {
       display: inline-block;
     }
   }
+
+  .breadcrumb {
+    margin-top: 0;
+    a {
+      margin-left: 16px;
+      margin-right: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 8px 16px;
+      &:hover {
+        color: #2d3748;
+      }
+  
+      @include mobile {
+        margin: 5px 10px;
+        display: inline-block;
+      }
+    }
+  }
 }
 
 
