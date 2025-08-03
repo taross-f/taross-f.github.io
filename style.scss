@@ -835,21 +835,20 @@ iframe {
       font-weight: 500;
     }
     
-    a {
-      color: #4a5568;
-      text-decoration: none;
-      transition: color 0.2s ease;
-      font-weight: 500;
-      
-      &:hover {
-        color: #2d3748;
-        text-decoration: underline;
-      }
-    }
-    
     &[aria-current="page"] {
       color: #2d3748;
       font-weight: 600;
+    }
+  }
+  
+  // パンくずリンク専用スタイル（他のリンクに影響しない）
+  .breadcrumb-list .breadcrumb-item a {
+    color: #4a5568;
+    text-decoration: none;
+    font-weight: 500;
+    
+    &:hover {
+      color: #2d3748;
     }
   }
   
