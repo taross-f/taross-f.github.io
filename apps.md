@@ -56,6 +56,9 @@ permalink: /apps/
 ### [<span data-i18n="apps.uuid_generator.title">UUID生成ツール</span>](/uuid-generator/)
 <span data-i18n="apps.uuid_generator.description">各種UUID（v1、v4等）を生成します。</span>
 
+### [<span data-i18n="apps.ogp_checker.title">OGP確認ツール</span>](/ogp-checker/)
+<span data-i18n="apps.ogp_checker.description">WebページのOGPメタタグを確認・検証します。</span>
+
 ## <span data-i18n="apps.design_tools">🎨 デザインツール</span>
 
 ### [<span data-i18n="apps.color_palette.title">カラーパレット生成ツール</span>](/color-palette/)

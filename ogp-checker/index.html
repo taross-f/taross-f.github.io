@@ -1,0 +1,451 @@
+---
+layout: page
+title: OGP確認ツール
+title_i18n_key: apps.ogp_checker.title
+permalink: /ogp-checker/
+---
+
+<div class="ogp-checker">
+  <div class="tool-section">
+    <h3>🔍 URL入力</h3>
+    <input type="url" id="urlInput" placeholder="https://example.com" />
+    <button id="checkBtn" class="btn btn-primary">OGP確認</button>
+  </div>
+  
+  <div id="resultsContainer" style="display: none;">
+    <div class="tool-section">
+      <h3>📋 OGPメタタグ</h3>
+      <div id="metaTags" class="meta-tags-grid"></div>
+    </div>
+    
+    <div class="tool-section">
+      <h3>👁️ プレビュー</h3>
+      <div class="preview-container">
+        <div class="preview-card twitter-card">
+          <h4>Twitter Card</h4>
+          <div class="card-content">
+            <img id="twitterImage" src="" alt="">
+            <div class="card-text">
+              <div id="twitterTitle" class="card-title"></div>
+              <div id="twitterDesc" class="card-description"></div>
+              <div id="twitterUrl" class="card-url"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="preview-card facebook-card">
+          <h4>Facebook</h4>
+          <div class="card-content">
+            <img id="fbImage" src="" alt="">
+            <div class="card-text">
+              <div id="fbTitle" class="card-title"></div>
+              <div id="fbDesc" class="card-description"></div>
+              <div id="fbUrl" class="card-url"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tool-section">
+      <h3>✅ 検証結果</h3>
+      <div id="validationResults"></div>
+    </div>
+  </div>
+  
+  <div id="errorMessage" class="error" style="display: none;"></div>
+</div>
+
+<style>
+.ogp-checker {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section input[type="url"] {
+  width: calc(100% - 120px);
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+
+.tool-section input[type="url"]:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.meta-tags-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.meta-tag-item {
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.meta-tag-name {
+  font-weight: bold;
+  color: #007acc;
+  word-break: break-all;
+}
+
+.meta-tag-value {
+  color: #333;
+  word-break: break-all;
+}
+
+.preview-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.preview-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.preview-card h4 {
+  margin: 0;
+  padding: 10px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.card-content img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: #f0f0f0;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.card-url {
+  font-size: 12px;
+  color: #999;
+}
+
+#validationResults {
+  padding: 15px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.validation-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.validation-item:last-child {
+  border-bottom: none;
+}
+
+.validation-status {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.validation-status.pass {
+  background: #28a745;
+}
+
+.validation-status.fail {
+  background: #dc3545;
+}
+
+.validation-status.warning {
+  background: #ffc107;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+  .tool-section input[type="url"] {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+  
+  .preview-container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const urlInput = document.getElementById('urlInput');
+  const checkBtn = document.getElementById('checkBtn');
+  const resultsContainer = document.getElementById('resultsContainer');
+  const metaTags = document.getElementById('metaTags');
+  const validationResults = document.getElementById('validationResults');
+  const errorMessage = document.getElementById('errorMessage');
+
+  function extractOGPTags(html, url) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const metaElements = doc.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]');
+    
+    const tags = {};
+    metaElements.forEach(meta => {
+      const property = meta.getAttribute('property') || meta.getAttribute('name');
+      const content = meta.getAttribute('content');
+      if (property && content) {
+        tags[property] = content;
+      }
+    });
+    
+    const titleElement = doc.querySelector('title');
+    if (titleElement) {
+      tags['title'] = titleElement.textContent;
+    }
+    
+    const descElement = doc.querySelector('meta[name="description"]');
+    if (descElement) {
+      tags['description'] = descElement.getAttribute('content');
+    }
+    
+    return tags;
+  }
+
+  function displayResults(tags) {
+    metaTags.innerHTML = '';
+    
+    const importantTags = [
+      'og:title', 'og:description', 'og:image', 'og:url', 'og:type',
+      'og:site_name', 'twitter:card', 'twitter:title', 'twitter:description',
+      'twitter:image', 'title', 'description'
+    ];
+    
+    Object.keys(tags).sort((a, b) => {
+      const aImportant = importantTags.includes(a);
+      const bImportant = importantTags.includes(b);
+      if (aImportant && !bImportant) return -1;
+      if (!aImportant && bImportant) return 1;
+      return a.localeCompare(b);
+    }).forEach(key => {
+      const item = document.createElement('div');
+      item.className = 'meta-tag-item';
+      
+      const name = document.createElement('div');
+      name.className = 'meta-tag-name';
+      name.textContent = key;
+      
+      const value = document.createElement('div');
+      value.className = 'meta-tag-value';
+      value.textContent = tags[key];
+      
+      item.appendChild(name);
+      item.appendChild(value);
+      metaTags.appendChild(item);
+    });
+    
+    updatePreviews(tags);
+    validateTags(tags);
+    
+    resultsContainer.style.display = 'block';
+  }
+
+  function updatePreviews(tags) {
+    const title = tags['og:title'] || tags['twitter:title'] || tags['title'] || '';
+    const description = tags['og:description'] || tags['twitter:description'] || tags['description'] || '';
+    const image = tags['og:image'] || tags['twitter:image'] || '';
+    const url = tags['og:url'] || urlInput.value;
+    
+    document.getElementById('twitterTitle').textContent = title;
+    document.getElementById('twitterDesc').textContent = description;
+    document.getElementById('twitterUrl').textContent = new URL(url).hostname;
+    document.getElementById('twitterImage').src = image;
+    document.getElementById('twitterImage').style.display = image ? 'block' : 'none';
+    
+    document.getElementById('fbTitle').textContent = title;
+    document.getElementById('fbDesc').textContent = description;
+    document.getElementById('fbUrl').textContent = new URL(url).hostname;
+    document.getElementById('fbImage').src = image;
+    document.getElementById('fbImage').style.display = image ? 'block' : 'none';
+  }
+
+  function validateTags(tags) {
+    validationResults.innerHTML = '';
+    
+    const checks = [
+      { name: 'og:title', label: 'OG Title', required: true },
+      { name: 'og:description', label: 'OG Description', required: true },
+      { name: 'og:image', label: 'OG Image', required: true },
+      { name: 'og:url', label: 'OG URL', required: true },
+      { name: 'og:type', label: 'OG Type', required: false },
+      { name: 'twitter:card', label: 'Twitter Card Type', required: false },
+    ];
+    
+    checks.forEach(check => {
+      const item = document.createElement('div');
+      item.className = 'validation-item';
+      
+      const status = document.createElement('span');
+      status.className = 'validation-status';
+      
+      const text = document.createElement('span');
+      
+      if (tags[check.name]) {
+        status.classList.add('pass');
+        status.textContent = '✓';
+        text.textContent = `${check.label}: 設定済み`;
+      } else if (check.required) {
+        status.classList.add('fail');
+        status.textContent = '✗';
+        text.textContent = `${check.label}: 未設定（必須）`;
+      } else {
+        status.classList.add('warning');
+        status.textContent = '!';
+        text.textContent = `${check.label}: 未設定（推奨）`;
+      }
+      
+      item.appendChild(status);
+      item.appendChild(text);
+      validationResults.appendChild(item);
+    });
+  }
+
+  async function checkOGP() {
+    const url = urlInput.value.trim();
+    
+    if (!url) {
+      showError('URLを入力してください');
+      return;
+    }
+    
+    try {
+      new URL(url);
+    } catch (e) {
+      showError('有効なURLを入力してください');
+      return;
+    }
+    
+    checkBtn.disabled = true;
+    checkBtn.textContent = '確認中...';
+    errorMessage.style.display = 'none';
+    resultsContainer.style.display = 'none';
+    
+    try {
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const response = await fetch(proxyUrl);
+      
+      if (!response.ok) {
+        throw new Error('URLの取得に失敗しました');
+      }
+      
+      const data = await response.json();
+      const tags = extractOGPTags(data.contents, url);
+      
+      if (Object.keys(tags).length === 0) {
+        showError('OGPタグが見つかりませんでした');
+      } else {
+        displayResults(tags);
+      }
+    } catch (error) {
+      showError('エラー: ' + error.message);
+    } finally {
+      checkBtn.disabled = false;
+      checkBtn.textContent = 'OGP確認';
+    }
+  }
+
+  function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+    resultsContainer.style.display = 'none';
+  }
+
+  checkBtn.addEventListener('click', checkOGP);
+  
+  urlInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      checkOGP();
+    }
+  });
+})();
+</script>
