@@ -379,9 +379,75 @@ permalink: /about/
 ></script>
 
 <!-- QR Code Generator -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+<script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  // フォールバック用のライブラリ読み込み
+  if (typeof QRCode === "undefined") {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";
+    script.onload = function () {
+      // qrcode-generatorライブラリ用のアダプター
+      if (typeof qrcode !== "undefined" && typeof QRCode === "undefined") {
+        window.QRCode = {
+          toCanvas: function (canvas, text, options, callback) {
+            try {
+              const qr = qrcode(
+                options.errorCorrectionLevel === "L"
+                  ? 1
+                  : options.errorCorrectionLevel === "M"
+                  ? 0
+                  : options.errorCorrectionLevel === "Q"
+                  ? 3
+                  : 2,
+                "L"
+              );
+              qr.addData(text);
+              qr.make();
+
+              const size = options.width || 256;
+              const ctx = canvas.getContext("2d");
+              canvas.width = size;
+              canvas.height = size;
+
+              const cellSize = size / qr.getModuleCount();
+
+              ctx.fillStyle = options.color?.light || "#ffffff";
+              ctx.fillRect(0, 0, size, size);
+
+              ctx.fillStyle = options.color?.dark || "#000000";
+              for (let row = 0; row < qr.getModuleCount(); row++) {
+                for (let col = 0; col < qr.getModuleCount(); col++) {
+                  if (qr.isDark(row, col)) {
+                    ctx.fillRect(
+                      col * cellSize,
+                      row * cellSize,
+                      cellSize,
+                      cellSize
+                    );
+                  }
+                }
+              }
+
+              callback(null);
+            } catch (error) {
+              callback(error);
+            }
+          },
+        };
+      }
+      setTimeout(initQRCode, 100);
+    };
+    document.head.appendChild(script);
+  }
+
+  function initQRCode() {
+    // QRCodeライブラリの読み込み確認
+    if (typeof QRCode === "undefined") {
+      console.error("QRCode library is not loaded");
+      return;
+    }
+
     const qrCodeContainer = document.getElementById("qr-code");
     const url = "https://blog.taross-f.dev/about/";
 
@@ -398,10 +464,39 @@ permalink: /about/
         },
       },
       function (error) {
-        if (error) console.error(error);
+        if (error) {
+          console.error("QR Code generation failed:", error);
+        } else {
+          console.log("QR Code generated successfully");
+        }
       }
     );
-  });
+  }
+
+  // ページ読み込み後とライブラリ読み込み後に初期化
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof QRCode !== "undefined") {
+        setTimeout(initQRCode, 100);
+      } else {
+        setTimeout(function () {
+          if (typeof QRCode !== "undefined") {
+            initQRCode();
+          }
+        }, 500);
+      }
+    });
+  } else {
+    if (typeof QRCode !== "undefined") {
+      setTimeout(initQRCode, 100);
+    } else {
+      setTimeout(function () {
+        if (typeof QRCode !== "undefined") {
+          initQRCode();
+        }
+      }, 500);
+    }
+  }
 </script>
 
 <style>
