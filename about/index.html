@@ -838,10 +838,15 @@ permalink: /about/
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
   }
 
   .speaking-preview iframe {
     border-radius: 8px;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
   }
 
   .speaking-actions {
@@ -884,10 +889,12 @@ permalink: /about/
   @media (max-width: 768px) {
     .speaking-grid {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
     .speaking-card {
       padding: 1.5rem;
+      margin: 0;
     }
 
     .speaking-header {
@@ -905,7 +912,44 @@ permalink: /about/
     }
 
     .speaking-preview {
-      height: 250px;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .speaking-preview iframe {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: 200px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .speaking-section {
+      margin: 2rem 0.5rem;
+      padding: 2rem 1rem;
+    }
+
+    .speaking-grid {
+      gap: 1rem;
+    }
+
+    .speaking-card {
+      padding: 1rem;
+    }
+
+    .speaking-preview iframe {
+      min-height: 180px !important;
+    }
+
+    .speaking-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .speaking-link {
+      width: 100%;
+      justify-content: center;
     }
   }
 
