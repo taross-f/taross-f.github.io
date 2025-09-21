@@ -332,6 +332,93 @@ permalink: /about/
     </div>
   </section>
 
+  <!-- Speaking Engagements Section -->
+  <section class="speaking-section">
+    <div class="section-header">
+      <h2>🎤 Speaking Engagements</h2>
+      <p>技術カンファレンスでの登壇実績</p>
+    </div>
+    <div class="speaking-grid">
+      <div class="speaking-card">
+        <div class="speaking-header">
+          <div class="speaking-icon">🤖</div>
+          <div class="speaking-meta">
+            <h3>Azure OpenAI Serviceを活用した AI SaaSプロダクト開発の実践</h3>
+            <div class="speaking-details">
+              <span class="speaking-event">Microsoft Build 2023</span>
+              <span class="speaking-date">2023年6月</span>
+            </div>
+          </div>
+        </div>
+        <p class="speaking-description">
+          AI SaaS "PKSHA AI ヘルプデスク for Microsoft Teams"
+          の開発におけるAzure OpenAI Service
+          の利用経験を共有。Teamsに展開されるアプリケーションの開発を中心に、APIの適用方法とプロダクトへの組み込み方を解説。
+        </p>
+        <div class="speaking-preview">
+          <script
+            async
+            class="speakerdeck-embed"
+            data-id="azure-openai-servicewohuo-yong-sita-ai-saaspurodakutokai-fa-noshi-jian"
+            data-ratio="1.7777777777777777"
+            src="//speakerdeck.com/assets/embed.js"
+          ></script>
+        </div>
+        <div class="speaking-actions">
+          <a
+            href="https://speakerdeck.com/pkshadeck/azure-openai-servicewohuo-yong-sita-ai-saaspurodakutokai-fa-noshi-jian"
+            target="_blank"
+            class="speaking-link"
+          >
+            📄 スライドを見る
+          </a>
+        </div>
+      </div>
+
+      <div class="speaking-card">
+        <div class="speaking-header">
+          <div class="speaking-icon">🚀</div>
+          <div class="speaking-meta">
+            <h3>SaaSにおける生成AI の実装とその未来</h3>
+            <div class="speaking-details">
+              <span class="speaking-event">SaaS on AWS 2023</span>
+              <span class="speaking-date">2023年10月</span>
+            </div>
+          </div>
+        </div>
+        <p class="speaking-description">
+          AWS主催のSaaS on AWS
+          2023セミナーにて登壇。SaaSプロダクトにおける生成AI技術の実装方法と、その将来的な可能性について解説。実際のプロダクト開発での経験を基に、技術選択の考え方やベストプラクティスを紹介。
+        </p>
+        <div class="speaking-preview">
+          <script
+            async
+            class="speakerdeck-embed"
+            data-id="saasniokerusheng-cheng-ai-noshi-zhuang-tosonowei-lai"
+            data-ratio="1.7777777777777777"
+            src="//speakerdeck.com/assets/embed.js"
+          ></script>
+        </div>
+        <div class="speaking-actions">
+          <a
+            href="https://speakerdeck.com/pkshadeck/saasniokerusheng-cheng-ai-noshi-zhuang-tosonowei-lai"
+            target="_blank"
+            class="speaking-link"
+          >
+            📄 スライドを見る
+          </a>
+          <a
+            href="https://aws.amazon.com/jp/blogs/news/saas-on-aws-2023-10-10-11/"
+            target="_blank"
+            class="speaking-link secondary"
+          >
+            🔗 イベント詳細
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Contact Section -->
   <section class="contact-section">
     <div class="contact-content">
@@ -360,124 +447,33 @@ permalink: /about/
   src="//cdn.credly.com/assets/utilities/embed.js"
 ></script>
 
-<!-- QR Code Generator -->
+<!-- QR Code Generator (CDN) + shared adapter -->
 <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="/assets/js/qr-adapter.js"></script>
 <script>
-  // フォールバック用のライブラリ読み込み
-  if (typeof QRCode === "undefined") {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";
-    script.onload = function () {
-      // qrcode-generatorライブラリ用のアダプター
-      if (typeof qrcode !== "undefined" && typeof QRCode === "undefined") {
-        window.QRCode = {
-          toCanvas: function (canvas, text, options, callback) {
-            try {
-              const qr = qrcode(
-                options.errorCorrectionLevel === "L"
-                  ? 1
-                  : options.errorCorrectionLevel === "M"
-                  ? 0
-                  : options.errorCorrectionLevel === "Q"
-                  ? 3
-                  : 2,
-                "L"
-              );
-              qr.addData(text);
-              qr.make();
-
-              const size = options.width || 256;
-              const ctx = canvas.getContext("2d");
-              canvas.width = size;
-              canvas.height = size;
-
-              const cellSize = size / qr.getModuleCount();
-
-              ctx.fillStyle = options.color?.light || "#ffffff";
-              ctx.fillRect(0, 0, size, size);
-
-              ctx.fillStyle = options.color?.dark || "#000000";
-              for (let row = 0; row < qr.getModuleCount(); row++) {
-                for (let col = 0; col < qr.getModuleCount(); col++) {
-                  if (qr.isDark(row, col)) {
-                    ctx.fillRect(
-                      col * cellSize,
-                      row * cellSize,
-                      cellSize,
-                      cellSize
-                    );
-                  }
-                }
-              }
-
-              callback(null);
-            } catch (error) {
-              callback(error);
-            }
-          },
-        };
-      }
-      setTimeout(initQRCode, 100);
-    };
-    document.head.appendChild(script);
-  }
-
   function initQRCode() {
-    // QRCodeライブラリの読み込み確認
-    if (typeof QRCode === "undefined") {
-      console.error("QRCode library is not loaded");
-      return;
-    }
-
     const qrCodeContainer = document.getElementById("qr-code");
     const url = "https://blog.taross-f.dev/about/";
-
-    // Generate QR Code
-    QRCode.toCanvas(
-      qrCodeContainer,
-      url,
-      {
-        width: 120,
-        margin: 2,
-        color: {
-          dark: "#000000",
-          light: "#ffffff",
-        },
-      },
-      function (error) {
-        if (error) {
-          console.error("QR Code generation failed:", error);
-        } else {
-          console.log("QR Code generated successfully");
-        }
-      }
-    );
+    if (!qrCodeContainer) return;
+    QRAdapter.ensureQRCodeLoaded()
+      .then(function () {
+        return QRAdapter.renderToCanvas(qrCodeContainer, url, {
+          width: 120,
+          margin: 2,
+          color: { dark: "#000000", light: "#ffffff" },
+        });
+      })
+      .catch(function (err) {
+        console.error("QR Code generation failed:", err);
+      });
   }
 
-  // ページ読み込み後とライブラリ読み込み後に初期化
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      if (typeof QRCode !== "undefined") {
-        setTimeout(initQRCode, 100);
-      } else {
-        setTimeout(function () {
-          if (typeof QRCode !== "undefined") {
-            initQRCode();
-          }
-        }, 500);
-      }
+      setTimeout(initQRCode, 100);
     });
   } else {
-    if (typeof QRCode !== "undefined") {
-      setTimeout(initQRCode, 100);
-    } else {
-      setTimeout(function () {
-        if (typeof QRCode !== "undefined") {
-          initQRCode();
-        }
-      }, 500);
-    }
+    setTimeout(initQRCode, 100);
   }
 </script>
 
@@ -759,6 +755,158 @@ permalink: /about/
 
     .qr-label {
       display: none; /* 超小型画面ではラベルを非表示 */
+    }
+  }
+
+  /* Speaking Engagements Section */
+  .speaking-section {
+    background: #f8fafc;
+    border-radius: 20px;
+    margin: 3rem 2rem;
+    border: 1px solid #e2e8f0;
+  }
+
+  .speaking-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .speaking-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .speaking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .speaking-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .speaking-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .speaking-meta h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #2d3748;
+    line-height: 1.4;
+  }
+
+  .speaking-details {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .speaking-event,
+  .speaking-date {
+    background: #667eea;
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .speaking-date {
+    background: #4a5568;
+  }
+
+  .speaking-description {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .speaking-preview {
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .speaking-preview iframe {
+    border-radius: 8px;
+  }
+
+  .speaking-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .speaking-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+  }
+
+  .speaking-link:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .speaking-link.secondary {
+    background: #4a5568;
+    box-shadow: 0 2px 4px rgba(74, 85, 104, 0.3);
+  }
+
+  .speaking-link.secondary:hover {
+    background: #2d3748;
+    box-shadow: 0 4px 8px rgba(74, 85, 104, 0.4);
+  }
+
+  /* Speaking Section Responsive */
+  @media (max-width: 768px) {
+    .speaking-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .speaking-card {
+      padding: 1.5rem;
+    }
+
+    .speaking-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .speaking-meta h3 {
+      font-size: 1.1rem;
+    }
+
+    .speaking-details {
+      justify-content: center;
+    }
+
+    .speaking-preview {
+      height: 250px;
     }
   }
 
