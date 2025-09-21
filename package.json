@@ -1,0 +1,23 @@
+{
+  "name": "taross-f-blog",
+  "version": "1.0.0",
+  "description": "Personal technical blog powered by Jekyll",
+  "private": true,
+  "dependencies": {
+    "playwright": "^1.54.2"
+  },
+  "scripts": {
+    "test": "node tests/run-tests.js",
+    "serve": "bundle exec jekyll serve",
+    "build": "bundle exec jekyll build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taross-f/taross-f.github.io.git"
+  },
+  "author": "Taro Furuya",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
