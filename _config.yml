@@ -85,3 +85,11 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+  - package.json
+  - package-lock.json
+  - CLAUDE.md
+  - .claude/
+  - tests/
+  - .tool-versions
+  - .github/
+  - node_modules/
