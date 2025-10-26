@@ -275,6 +275,7 @@ permalink: /timestamp-converter/
 }
 </style>
 
+<script src="timestamp-utils.js"></script>
 <script>
 (function() {
   const unixInput = document.getElementById('unixInput');
@@ -291,6 +292,9 @@ permalink: /timestamp-converter/
   const currentUnixMs = document.getElementById('currentUnixMs');
   const currentDateTime = document.getElementById('currentDateTime');
 
+  // ユーティリティ関数の参照
+  const utils = window.TimestampUtils;
+
   // 現在時刻を更新
   function updateCurrentTime() {
     const now = new Date();
@@ -299,53 +303,12 @@ permalink: /timestamp-converter/
 
     currentUnixSeconds.textContent = seconds;
     currentUnixMs.textContent = ms;
-    currentDateTime.textContent = formatDateTime(now);
+    currentDateTime.textContent = utils.formatDateTime(now);
   }
 
   // 初期表示と1秒ごとの更新
   updateCurrentTime();
   setInterval(updateCurrentTime, 1000);
-
-  // 日時をフォーマット
-  function formatDateTime(date) {
-    const pad = (n) => String(n).padStart(2, '0');
-
-    const year = date.getFullYear();
-    const month = pad(date.getMonth() + 1);
-    const day = pad(date.getDate());
-    const hour = pad(date.getHours());
-    const minute = pad(date.getMinutes());
-    const second = pad(date.getSeconds());
-
-    const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-    const weekday = weekdays[date.getDay()];
-
-    return `${year}年${month}月${day}日 (${weekday}) ${hour}:${minute}:${second}`;
-  }
-
-  // ISO 8601形式の日時文字列を取得
-  function formatISO(date) {
-    return date.toISOString();
-  }
-
-  // UTC表示
-  function formatUTC(date) {
-    return date.toUTCString();
-  }
-
-  // ローカル日時文字列
-  function formatLocaleString(date) {
-    return date.toLocaleString('ja-JP', {
-      timeZone: 'Asia/Tokyo',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      weekday: 'short'
-    });
-  }
 
   // メッセージ表示
   function showMessage(message, type = 'success') {
@@ -398,56 +361,46 @@ permalink: /timestamp-converter/
       return;
     }
 
-    const timestamp = parseInt(input, 10);
+    try {
+      const converted = utils.convertTimestampToFormats(input);
 
-    if (isNaN(timestamp)) {
-      showMessage('有効な数値を入力してください', 'error');
-      return;
-    }
+      // 結果を表示
+      const results = [
+        { label: '入力形式', value: converted.inputFormat },
+        { label: '日本時間', value: converted.dateTimeJa, copyable: true },
+        { label: 'ISO 8601', value: converted.iso8601, copyable: true },
+        { label: 'UTC', value: converted.utc, copyable: true },
+        { label: 'Unix (秒)', value: converted.unixSeconds, copyable: true },
+        { label: 'Unix (ミリ秒)', value: converted.unixMs, copyable: true }
+      ];
 
-    // 13桁以上はミリ秒と判定
-    const isMilliseconds = input.length >= 13;
-    const date = new Date(isMilliseconds ? timestamp : timestamp * 1000);
+      results.forEach(result => {
+        const line = document.createElement('div');
+        line.className = 'result-line';
 
-    if (isNaN(date.getTime())) {
-      showMessage('無効なタイムスタンプです', 'error');
-      return;
-    }
+        const label = document.createElement('span');
+        label.className = 'result-label';
+        label.textContent = result.label + ': ';
 
-    // 結果を表示
-    const results = [
-      { label: '入力形式', value: isMilliseconds ? 'ミリ秒' : '秒' },
-      { label: '日本時間', value: formatDateTime(date), copyable: true },
-      { label: 'ISO 8601', value: formatISO(date), copyable: true },
-      { label: 'UTC', value: formatUTC(date), copyable: true },
-      { label: 'Unix (秒)', value: Math.floor(date.getTime() / 1000), copyable: true },
-      { label: 'Unix (ミリ秒)', value: date.getTime(), copyable: true }
-    ];
+        const value = document.createElement('span');
+        value.className = 'result-value';
+        value.textContent = result.value;
 
-    results.forEach(result => {
-      const line = document.createElement('div');
-      line.className = 'result-line';
+        line.appendChild(label);
+        line.appendChild(value);
 
-      const label = document.createElement('span');
-      label.className = 'result-label';
-      label.textContent = result.label + ': ';
+        if (result.copyable) {
+          line.appendChild(createCopyButton(String(result.value)));
+        }
 
-      const value = document.createElement('span');
-      value.className = 'result-value';
-      value.textContent = result.value;
+        dateResult.appendChild(line);
+      });
 
-      line.appendChild(label);
-      line.appendChild(value);
-
-      if (result.copyable) {
-        line.appendChild(createCopyButton(String(result.value)));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('timestamp-converter', 'convert_to_date', input);
       }
-
-      dateResult.appendChild(line);
-    });
-
-    if (typeof trackToolEvent === 'function') {
-      trackToolEvent('timestamp-converter', 'convert_to_date', timestamp);
+    } catch (error) {
+      showMessage(error.message || '変換に失敗しました', 'error');
     }
   });
 
@@ -461,47 +414,43 @@ permalink: /timestamp-converter/
       return;
     }
 
-    const date = new Date(input);
+    try {
+      const converted = utils.convertDateToFormats(input);
 
-    if (isNaN(date.getTime())) {
-      showMessage('無効な日時です', 'error');
-      return;
-    }
+      const results = [
+        { label: '日本時間', value: converted.dateTimeJa },
+        { label: 'ISO 8601', value: converted.iso8601, copyable: true },
+        { label: 'Unix (秒)', value: converted.unixSeconds, copyable: true },
+        { label: 'Unix (ミリ秒)', value: converted.unixMs, copyable: true }
+      ];
 
-    const seconds = Math.floor(date.getTime() / 1000);
-    const ms = date.getTime();
+      results.forEach(result => {
+        const line = document.createElement('div');
+        line.className = 'result-line';
 
-    const results = [
-      { label: '日本時間', value: formatDateTime(date) },
-      { label: 'ISO 8601', value: formatISO(date), copyable: true },
-      { label: 'Unix (秒)', value: seconds, copyable: true },
-      { label: 'Unix (ミリ秒)', value: ms, copyable: true }
-    ];
+        const label = document.createElement('span');
+        label.className = 'result-label';
+        label.textContent = result.label + ': ';
 
-    results.forEach(result => {
-      const line = document.createElement('div');
-      line.className = 'result-line';
+        const value = document.createElement('span');
+        value.className = 'result-value';
+        value.textContent = result.value;
 
-      const label = document.createElement('span');
-      label.className = 'result-label';
-      label.textContent = result.label + ': ';
+        line.appendChild(label);
+        line.appendChild(value);
 
-      const value = document.createElement('span');
-      value.className = 'result-value';
-      value.textContent = result.value;
+        if (result.copyable) {
+          line.appendChild(createCopyButton(String(result.value)));
+        }
 
-      line.appendChild(label);
-      line.appendChild(value);
+        unixResult.appendChild(line);
+      });
 
-      if (result.copyable) {
-        line.appendChild(createCopyButton(String(result.value)));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('timestamp-converter', 'convert_to_unix', converted.unixSeconds);
       }
-
-      unixResult.appendChild(line);
-    });
-
-    if (typeof trackToolEvent === 'function') {
-      trackToolEvent('timestamp-converter', 'convert_to_unix', seconds);
+    } catch (error) {
+      showMessage(error.message || '変換に失敗しました', 'error');
     }
   });
 
@@ -518,13 +467,7 @@ permalink: /timestamp-converter/
   // 現在時刻を設定
   useNowBtn.addEventListener('click', function() {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hour = String(now.getHours()).padStart(2, '0');
-    const minute = String(now.getMinutes()).padStart(2, '0');
-
-    dateInput.value = `${year}-${month}-${day}T${hour}:${minute}`;
+    dateInput.value = utils.formatDateTimeLocal(now);
     convertToUnixBtn.click();
     if (typeof trackToolEvent === 'function') {
       trackToolEvent('timestamp-converter', 'use_now');

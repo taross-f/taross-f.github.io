@@ -1,5 +1,6 @@
 const tests = [
   require('./qr-data.test.js'),
+  require('./timestamp-utils.test.js'),
 ];
 
 let passed = 0;
