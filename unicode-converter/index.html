@@ -315,7 +315,6 @@ permalink: /unicode-converter/
       return;
     }
     resultOutput.select();
-    resultOutput.setSelectionRange(0, 99999);
     try {
       document.execCommand('copy');
       showMessage(resultOutput, window.i18n('common.copy_success'));
