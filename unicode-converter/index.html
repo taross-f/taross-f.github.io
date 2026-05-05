@@ -1,0 +1,351 @@
+---
+layout: page
+title: Unicode変換ツール
+title_i18n_key: apps.unicode_converter.title
+permalink: /unicode-converter/
+---
+
+<div class="unicode-converter">
+  <div class="tool-section">
+    <h3 data-i18n="apps.unicode_converter.encode_section">📤 テキスト → Unicode</h3>
+    <textarea id="textInput" data-i18n-placeholder="apps.unicode_converter.encode_placeholder" placeholder="変換するテキストを入力してください..." rows="6"></textarea>
+    <div class="format-group">
+      <label><span data-i18n="apps.unicode_converter.format_label">出力形式:</span></label>
+      <select id="encodeFormat">
+        <option value="u-escape">\uXXXX (JavaScript)</option>
+        <option value="x-escape">\xXX (バイト)</option>
+        <option value="u-plus">U+XXXX</option>
+        <option value="html-dec">&amp;#XXXX; (HTML 10進)</option>
+        <option value="html-hex">&amp;#xXXXX; (HTML 16進)</option>
+        <option value="code-points">コードポイント (空白区切り)</option>
+        <option value="utf16">UTF-16 (16進)</option>
+        <option value="utf8">UTF-8 (16進)</option>
+      </select>
+    </div>
+    <div class="button-group">
+      <button id="encodeBtn" class="btn btn-primary" data-i18n="apps.unicode_converter.encode_btn">変換</button>
+      <button id="clearTextBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h3 data-i18n="apps.unicode_converter.decode_section">📥 Unicode → テキスト</h3>
+    <textarea id="unicodeInput" data-i18n-placeholder="apps.unicode_converter.decode_placeholder" placeholder="こんにちは や U+1F600 など" rows="6"></textarea>
+    <div class="button-group">
+      <button id="decodeBtn" class="btn btn-primary" data-i18n="apps.unicode_converter.decode_btn">テキストに変換</button>
+      <button id="clearUnicodeBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h3 data-i18n="apps.unicode_converter.result_section">📋 結果</h3>
+    <textarea id="resultOutput" data-i18n-placeholder="apps.unicode_converter.result_placeholder" placeholder="結果がここに表示されます..." rows="6" readonly></textarea>
+    <div class="button-group">
+      <button id="copyResultBtn" class="btn" data-i18n="common.copy_result">結果をコピー</button>
+      <button id="clearResultBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h4 data-i18n="apps.unicode_converter.about_title">💡 Unicodeについて</h4>
+    <p data-i18n="apps.unicode_converter.about_text">Unicodeは、世界中のあらゆる文字をコンピュータで一貫して表現するための文字符号化標準です。主な用途：</p>
+    <ul class="use-cases-list">
+      <li data-i18n="apps.unicode_converter.use_cases.0">プログラム中の特殊文字の埋め込み</li>
+      <li data-i18n="apps.unicode_converter.use_cases.1">絵文字・記号の文字コード確認</li>
+      <li data-i18n="apps.unicode_converter.use_cases.2">国際化対応（i18n）</li>
+      <li data-i18n="apps.unicode_converter.use_cases.3">エスケープシーケンスのデバッグ</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.unicode-converter {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.format-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.format-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.format-group select {
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.format-group select:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const textInput = document.getElementById('textInput');
+  const unicodeInput = document.getElementById('unicodeInput');
+  const resultOutput = document.getElementById('resultOutput');
+  const encodeFormat = document.getElementById('encodeFormat');
+  const encodeBtn = document.getElementById('encodeBtn');
+  const decodeBtn = document.getElementById('decodeBtn');
+  const copyResultBtn = document.getElementById('copyResultBtn');
+  const clearTextBtn = document.getElementById('clearTextBtn');
+  const clearUnicodeBtn = document.getElementById('clearUnicodeBtn');
+  const clearResultBtn = document.getElementById('clearResultBtn');
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) {
+      existingMsg.remove();
+    }
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    setTimeout(() => {
+      if (msgDiv.parentNode) msgDiv.remove();
+    }, 3000);
+  }
+
+  function pad(num, len) {
+    return num.toString(16).toUpperCase().padStart(len, '0');
+  }
+
+  function encodeText(text, format) {
+    const codePoints = Array.from(text);
+    switch (format) {
+      case 'u-escape':
+        return text.split('').map(ch => {
+          const code = ch.charCodeAt(0);
+          if (code < 0x80 && code >= 0x20 && ch !== '\\') return ch;
+          return '\\u' + pad(code, 4);
+        }).join('');
+      case 'x-escape': {
+        const utf8 = new TextEncoder().encode(text);
+        return Array.from(utf8).map(b => '\\x' + pad(b, 2)).join('');
+      }
+      case 'u-plus':
+        return codePoints.map(ch => 'U+' + pad(ch.codePointAt(0), 4)).join(' ');
+      case 'html-dec':
+        return codePoints.map(ch => '&#' + ch.codePointAt(0) + ';').join('');
+      case 'html-hex':
+        return codePoints.map(ch => '&#x' + pad(ch.codePointAt(0), 4) + ';').join('');
+      case 'code-points':
+        return codePoints.map(ch => pad(ch.codePointAt(0), 4)).join(' ');
+      case 'utf16':
+        return text.split('').map(ch => pad(ch.charCodeAt(0), 4)).join(' ');
+      case 'utf8': {
+        const utf8 = new TextEncoder().encode(text);
+        return Array.from(utf8).map(b => pad(b, 2)).join(' ');
+      }
+      default:
+        return text;
+    }
+  }
+
+  function decodeUnicode(input) {
+    let result = input;
+    result = result.replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+    result = result.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    result = result.replace(/\\x([0-9a-fA-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    result = result.replace(/U\+([0-9a-fA-F]{1,6})/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+    result = result.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+    result = result.replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)));
+    return result;
+  }
+
+  encodeBtn.addEventListener('click', function() {
+    const text = textInput.value;
+    if (!text) {
+      showMessage(resultOutput, window.i18n('apps.unicode_converter.encode_empty_error'), 'error');
+      return;
+    }
+    try {
+      resultOutput.value = encodeText(text, encodeFormat.value);
+      showMessage(resultOutput, window.i18n('apps.unicode_converter.encode_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('unicode-converter', 'encode', text.length);
+      }
+    } catch (error) {
+      showMessage(resultOutput, '変換に失敗しました: ' + error.message, 'error');
+    }
+  });
+
+  decodeBtn.addEventListener('click', function() {
+    const input = unicodeInput.value;
+    if (!input.trim()) {
+      showMessage(resultOutput, window.i18n('apps.unicode_converter.decode_empty_error'), 'error');
+      return;
+    }
+    try {
+      resultOutput.value = decodeUnicode(input);
+      showMessage(resultOutput, window.i18n('apps.unicode_converter.decode_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('unicode-converter', 'decode', input.length);
+      }
+    } catch (error) {
+      showMessage(resultOutput, '変換に失敗しました: ' + error.message, 'error');
+    }
+  });
+
+  copyResultBtn.addEventListener('click', function() {
+    if (!resultOutput.value) {
+      showMessage(resultOutput, window.i18n('common.copy_no_result'), 'error');
+      return;
+    }
+    resultOutput.select();
+    resultOutput.setSelectionRange(0, 99999);
+    try {
+      document.execCommand('copy');
+      showMessage(resultOutput, window.i18n('common.copy_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('unicode-converter', 'copy_result', resultOutput.value.length);
+      }
+    } catch (err) {
+      showMessage(resultOutput, window.i18n('common.copy_failed'), 'error');
+    }
+  });
+
+  clearTextBtn.addEventListener('click', function() {
+    textInput.value = '';
+    textInput.focus();
+  });
+
+  clearUnicodeBtn.addEventListener('click', function() {
+    unicodeInput.value = '';
+    unicodeInput.focus();
+  });
+
+  clearResultBtn.addEventListener('click', function() {
+    resultOutput.value = '';
+  });
+
+  textInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') encodeBtn.click();
+  });
+  unicodeInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') decodeBtn.click();
+  });
+})();
+</script>

@@ -1,0 +1,330 @@
+---
+layout: page
+title: URLエンコード/デコード
+title_i18n_key: apps.url_encoder.title
+permalink: /url-encoder/
+---
+
+<div class="url-encoder">
+  <div class="tool-section">
+    <h3 data-i18n="apps.url_encoder.encode_section">📤 エンコード（テキスト → URL）</h3>
+    <textarea id="textInput" data-i18n-placeholder="apps.url_encoder.encode_placeholder" placeholder="エンコードするテキストを入力してください..." rows="6"></textarea>
+    <div class="format-group">
+      <label><span data-i18n="apps.url_encoder.mode_label">エンコード方式:</span></label>
+      <select id="encodeMode">
+        <option value="component">encodeURIComponent (推奨)</option>
+        <option value="uri">encodeURI (URL全体用)</option>
+        <option value="form">application/x-www-form-urlencoded</option>
+      </select>
+    </div>
+    <div class="button-group">
+      <button id="encodeBtn" class="btn btn-primary" data-i18n="common.encode">エンコード</button>
+      <button id="clearTextBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h3 data-i18n="apps.url_encoder.decode_section">📥 デコード（URL → テキスト）</h3>
+    <textarea id="urlInput" data-i18n-placeholder="apps.url_encoder.decode_placeholder" placeholder="デコードするURLエンコード文字列を入力してください..." rows="6"></textarea>
+    <div class="format-group">
+      <label><span data-i18n="apps.url_encoder.mode_label">デコード方式:</span></label>
+      <select id="decodeMode">
+        <option value="component">decodeURIComponent (推奨)</option>
+        <option value="uri">decodeURI (URL全体用)</option>
+        <option value="form">application/x-www-form-urlencoded (+ をスペースに)</option>
+      </select>
+    </div>
+    <div class="button-group">
+      <button id="decodeBtn" class="btn btn-primary" data-i18n="common.decode">デコード</button>
+      <button id="clearUrlBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h3 data-i18n="apps.url_encoder.result_section">📋 結果</h3>
+    <textarea id="resultOutput" data-i18n-placeholder="apps.url_encoder.result_placeholder" placeholder="結果がここに表示されます..." rows="6" readonly></textarea>
+    <div class="button-group">
+      <button id="copyResultBtn" class="btn" data-i18n="common.copy_result">結果をコピー</button>
+      <button id="clearResultBtn" class="btn" data-i18n="common.clear">クリア</button>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h4 data-i18n="apps.url_encoder.about_title">💡 URLエンコードについて</h4>
+    <p data-i18n="apps.url_encoder.about_text">URLエンコード（パーセントエンコーディング）は、URLで使用できない文字をパーセント記号と16進数で表現する方式です。主な用途：</p>
+    <ul class="use-cases-list">
+      <li data-i18n="apps.url_encoder.use_cases.0">クエリパラメータでの日本語・特殊文字の送信</li>
+      <li data-i18n="apps.url_encoder.use_cases.1">フォーム送信データのエンコード</li>
+      <li data-i18n="apps.url_encoder.use_cases.2">REST APIでのリソースID指定</li>
+      <li data-i18n="apps.url_encoder.use_cases.3">URLに含まれる予約文字のエスケープ</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.url-encoder {
+  max-width: none;
+  margin: 0;
+}
+
+.tool-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.tool-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.tool-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.tool-section textarea:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.tool-section textarea[readonly] {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.format-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.format-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.format-group select {
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.format-group select:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background: #007acc;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.info-section {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-section ul {
+  margin-bottom: 0;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.success {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const textInput = document.getElementById('textInput');
+  const urlInput = document.getElementById('urlInput');
+  const resultOutput = document.getElementById('resultOutput');
+  const encodeMode = document.getElementById('encodeMode');
+  const decodeMode = document.getElementById('decodeMode');
+  const encodeBtn = document.getElementById('encodeBtn');
+  const decodeBtn = document.getElementById('decodeBtn');
+  const copyResultBtn = document.getElementById('copyResultBtn');
+  const clearTextBtn = document.getElementById('clearTextBtn');
+  const clearUrlBtn = document.getElementById('clearUrlBtn');
+  const clearResultBtn = document.getElementById('clearResultBtn');
+
+  function showMessage(element, message, type = 'success') {
+    const existingMsg = element.parentNode.querySelector('.error, .success');
+    if (existingMsg) existingMsg.remove();
+    const msgDiv = document.createElement('div');
+    msgDiv.className = type;
+    msgDiv.textContent = message;
+    element.parentNode.appendChild(msgDiv);
+    setTimeout(() => {
+      if (msgDiv.parentNode) msgDiv.remove();
+    }, 3000);
+  }
+
+  function encode(text, mode) {
+    switch (mode) {
+      case 'uri':
+        return encodeURI(text);
+      case 'form':
+        return encodeURIComponent(text).replace(/%20/g, '+');
+      case 'component':
+      default:
+        return encodeURIComponent(text);
+    }
+  }
+
+  function decode(text, mode) {
+    switch (mode) {
+      case 'uri':
+        return decodeURI(text);
+      case 'form':
+        return decodeURIComponent(text.replace(/\+/g, '%20'));
+      case 'component':
+      default:
+        return decodeURIComponent(text);
+    }
+  }
+
+  encodeBtn.addEventListener('click', function() {
+    const text = textInput.value;
+    if (!text) {
+      showMessage(resultOutput, window.i18n('apps.url_encoder.encode_empty_error'), 'error');
+      return;
+    }
+    try {
+      resultOutput.value = encode(text, encodeMode.value);
+      showMessage(resultOutput, window.i18n('apps.url_encoder.encode_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('url-encoder', 'encode', text.length);
+      }
+    } catch (error) {
+      showMessage(resultOutput, window.i18n('apps.url_encoder.encode_failed') + error.message, 'error');
+    }
+  });
+
+  decodeBtn.addEventListener('click', function() {
+    const input = urlInput.value.trim();
+    if (!input) {
+      showMessage(resultOutput, window.i18n('apps.url_encoder.decode_empty_error'), 'error');
+      return;
+    }
+    try {
+      resultOutput.value = decode(input, decodeMode.value);
+      showMessage(resultOutput, window.i18n('apps.url_encoder.decode_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('url-encoder', 'decode', input.length);
+      }
+    } catch (error) {
+      showMessage(resultOutput, window.i18n('apps.url_encoder.decode_failed'), 'error');
+    }
+  });
+
+  copyResultBtn.addEventListener('click', function() {
+    if (!resultOutput.value) {
+      showMessage(resultOutput, window.i18n('common.copy_no_result'), 'error');
+      return;
+    }
+    resultOutput.select();
+    resultOutput.setSelectionRange(0, 99999);
+    try {
+      document.execCommand('copy');
+      showMessage(resultOutput, window.i18n('common.copy_success'));
+      if (typeof trackToolEvent === 'function') {
+        trackToolEvent('url-encoder', 'copy_result', resultOutput.value.length);
+      }
+    } catch (err) {
+      showMessage(resultOutput, window.i18n('common.copy_failed'), 'error');
+    }
+  });
+
+  clearTextBtn.addEventListener('click', function() {
+    textInput.value = '';
+    textInput.focus();
+  });
+
+  clearUrlBtn.addEventListener('click', function() {
+    urlInput.value = '';
+    urlInput.focus();
+  });
+
+  clearResultBtn.addEventListener('click', function() {
+    resultOutput.value = '';
+  });
+
+  textInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') encodeBtn.click();
+  });
+  urlInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') decodeBtn.click();
+  });
+})();
+</script>
