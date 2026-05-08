@@ -39,14 +39,25 @@ permalink: /apps/
 ### [<span data-i18n="apps.character_counter.title">文字数カウンター</span>](/character-counter/)
 <span data-i18n="apps.character_counter.description">テキストの文字数、単語数、行数をカウントします。</span>
 
-### [<span data-i18n="apps.base64_tool.title">Base64エンコーダー/デコーダー</span>](/base64-tool/)
-<span data-i18n="apps.base64_tool.description">Base64形式でテキストをエンコード・デコードします。</span>
-
 ### [<span data-i18n="apps.json_formatter.title">JSON整形ツール</span>](/json-formatter/)
 <span data-i18n="apps.json_formatter.description">JSONデータを整形・検証します。</span>
 
 ### [<span data-i18n="apps.jwt_analyzer.title">JWT解析ツール</span>](/jwt-analyzer/)
 <span data-i18n="apps.jwt_analyzer.description">JWT（JSON Web Token）を解析します。</span>
+
+## <span data-i18n="apps.conversion_tools">🔄 変換ツール</span>
+
+### [<span data-i18n="apps.base64_tool.title">Base64エンコーダー/デコーダー</span>](/base64-tool/)
+<span data-i18n="apps.base64_tool.description">Base64形式でテキストをエンコード・デコードします。</span>
+
+### [<span data-i18n="apps.url_encoder.title">URLエンコード/デコード</span>](/url-encoder/)
+<span data-i18n="apps.url_encoder.description">URL用のパーセントエンコーディングを相互変換します。</span>
+
+### [<span data-i18n="apps.unicode_converter.title">Unicode変換ツール</span>](/unicode-converter/)
+<span data-i18n="apps.unicode_converter.description">テキストとUnicodeエスケープシーケンスを相互変換します。</span>
+
+### [<span data-i18n="apps.pfx_pem_converter.title">PFX/PEM変換ツール</span>](/pfx-pem-converter/)
+<span data-i18n="apps.pfx_pem_converter.description">証明書ファイルのPFX(P12)とPEM形式を相互変換します。</span>
 
 ## <span data-i18n="apps.dev_tools">🔧 開発者ツール</span>
 
