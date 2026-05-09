@@ -7,6 +7,11 @@ ja:
     profile: "Profile"
     apps: "Apps"
     tags: "Tags"
+  hero:
+    eyebrow: "Tech Notes & Experiments"
+    title: "日々のメモ、コードと共に。"
+    subtitle: "フロントエンド、インフラ、ツール開発まで。気になったことを記録した技術ブログです。"
+    cta: "最新の投稿を読む"
   common:
     clear: "クリア"
     copy: "コピー"
@@ -436,6 +441,11 @@ en:
     profile: "Profile"
     apps: "Apps"
     tags: "Tags"
+  hero:
+    eyebrow: "Tech Notes & Experiments"
+    title: "Notes from the daily code grind."
+    subtitle: "Frontend, infrastructure, and tools — a personal log of things worth remembering."
+    cta: "Read the latest posts"
   common:
     clear: "Clear"
     copy: "Copy"

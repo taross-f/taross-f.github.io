@@ -2,7 +2,19 @@
 layout: default
 ---
 
-<div class="posts">
+{% if paginator.page == 1 or paginator.page == nil %}
+<section class="hero reveal" data-parallax="0.12">
+  <span class="hero__eyebrow" data-i18n="hero.eyebrow">Tech Notes &amp; Experiments</span>
+  <h1 class="hero__title" data-i18n="hero.title">日々のメモ、コードと共に。</h1>
+  <p class="hero__subtitle" data-i18n="hero.subtitle">
+    フロントエンド、インフラ、ツール開発まで。気になったことを記録した技術ブログです。
+  </p>
+  <a href="#latest" class="hero__cta" data-i18n="hero.cta">最新の投稿を読む</a>
+  <div class="hero__scroll" aria-hidden="true"></div>
+</section>
+{% endif %}
+
+<div class="posts" id="latest">
   {% for post in paginator.posts %}
   <article class="post">
     <h1>
