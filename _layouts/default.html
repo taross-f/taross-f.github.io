@@ -208,7 +208,6 @@
 
       (function initFrontFx() {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        // タッチデバイスやコア数の少ない環境では描画コストの高いパーティクルを省略
         const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
         const lowCores = (navigator.hardwareConcurrency || 4) < 4;
         const enableParticles = !reduceMotion && !isCoarsePointer && !lowCores;
@@ -217,13 +216,12 @@
         if (enableParticles && canvas && canvas.getContext) {
           const ctx = canvas.getContext('2d');
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const LINK_DIST = 110;
-          const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+          const LINK_DIST_SQ = 110 * 110;
           let width = 0;
           let height = 0;
           let particles = [];
           let pointer = null;
-          let visible = true;
+          let running = false;
           let resizeTimer = 0;
 
           function resize() {
@@ -246,10 +244,7 @@
           }
 
           function step() {
-            if (!visible) {
-              requestAnimationFrame(step);
-              return;
-            }
+            if (!running) return;
             ctx.clearRect(0, 0, width, height);
             for (let i = 0; i < particles.length; i++) {
               const p = particles[i];
@@ -310,34 +305,42 @@
           });
           if ('IntersectionObserver' in window) {
             new IntersectionObserver(([entry]) => {
-              visible = entry.isIntersecting;
+              if (entry.isIntersecting && !running) {
+                running = true;
+                requestAnimationFrame(step);
+              } else if (!entry.isIntersecting) {
+                running = false;
+              }
             }).observe(canvas);
           }
           resize();
+          running = true;
           requestAnimationFrame(step);
         }
 
         if (reduceMotion) return;
 
-        const parallaxTargets = Array.from(document.querySelectorAll('[data-parallax]')).map((node) => ({
-          node,
-          factor: parseFloat(node.dataset.parallax) || 0
-        }));
-        const blobTargets = Array.from(document.querySelectorAll('.bg-fx__blob')).map((node, i) => ({
-          node,
-          factor: 0.05 + i * 0.04
-        }));
+        const parallaxTargets = [
+          ...Array.from(document.querySelectorAll('[data-parallax]')).map((node) => ({
+            node,
+            factor: parseFloat(node.dataset.parallax) || 0
+          })),
+          ...Array.from(document.querySelectorAll('.bg-fx__blob')).map((node, i) => ({
+            node,
+            factor: 0.05 + i * 0.04
+          }))
+        ];
         let scrollY = window.scrollY;
+        let lastScrollY = -1;
         let ticking = false;
 
         function applyParallax() {
+          ticking = false;
+          if (scrollY === lastScrollY) return;
+          lastScrollY = scrollY;
           for (const { node, factor } of parallaxTargets) {
             node.style.transform = 'translate3d(0,' + (-scrollY * factor).toFixed(2) + 'px,0)';
           }
-          for (const { node, factor } of blobTargets) {
-            node.style.transform = 'translate3d(0,' + (-scrollY * factor).toFixed(2) + 'px,0)';
-          }
-          ticking = false;
         }
 
         window.addEventListener('scroll', () => {

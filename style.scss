@@ -73,13 +73,13 @@ body {
 .bg-fx__blob--a {
   top: -20vmax;
   left: -15vmax;
-  background: radial-gradient(circle at 30% 30%, #a78bfa, #6366f1 60%, transparent 70%);
+  background: radial-gradient(circle at 30% 30%, #a78bfa, #{$brand-indigo} 60%, transparent 70%);
 }
 
 .bg-fx__blob--b {
   top: 20vh;
   right: -20vmax;
-  background: radial-gradient(circle at 60% 40%, #f472b6, #ec4899 55%, transparent 70%);
+  background: radial-gradient(circle at 60% 40%, #f472b6, #{$brand-pink} 55%, transparent 70%);
   animation-duration: 28s;
   animation-delay: -6s;
 }
@@ -120,7 +120,7 @@ body {
   .bg-fx__blob { animation: none; }
 }
 
-// 高負荷な合成を避けるためモバイルでは1個のブロブとグリッドを抑える
+// blur + screen blend on a 60vmax element tanks mobile FPS — drop one blob and soften the grid.
 @include mobile {
   .bg-fx__blob { filter: blur(50px); }
   .bg-fx__blob--c { display: none; }
@@ -355,7 +355,7 @@ th {
   text-shadow: none;
 
   a {
-    background: linear-gradient(120deg, #6366f1 0%, #ec4899 50%, #06b6d4 100%);
+    background: linear-gradient(120deg, #{$brand-indigo} 0%, #{$brand-pink} 50%, #{$brand-cyan} 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -989,7 +989,7 @@ iframe {
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #6366f1;
+  color: #{$brand-indigo};
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(99, 102, 241, 0.25);
   border-radius: 999px;
@@ -1001,7 +1001,7 @@ iframe {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #ec4899;
+    background: #{$brand-pink};
     box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.25);
     animation: heroPulse 2s ease-in-out infinite;
   }
@@ -1019,7 +1019,7 @@ iframe {
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  background: linear-gradient(120deg, #1e293b 0%, #6366f1 35%, #ec4899 65%, #0ea5e9 100%);
+  background: linear-gradient(120deg, #1e293b 0%, #{$brand-indigo} 35%, #{$brand-pink} 65%, #0ea5e9 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -1045,7 +1045,7 @@ iframe {
   font-size: 15px;
   letter-spacing: 0.4px;
   color: #fff;
-  background: linear-gradient(120deg, #6366f1 0%, #ec4899 100%);
+  background: linear-gradient(120deg, #{$brand-indigo} 0%, #{$brand-pink} 100%);
   background-size: 200% 200%;
   border-radius: 999px;
   box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
@@ -1088,7 +1088,7 @@ iframe {
     height: 7px;
     margin-left: -1.5px;
     border-radius: 2px;
-    background: #6366f1;
+    background: #{$brand-indigo};
     animation: scrollDot 1.6s ease-in-out infinite;
   }
 
