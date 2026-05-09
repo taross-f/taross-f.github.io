@@ -49,7 +49,15 @@
   </head>
 
   <body>
-    <div class="wrapper-masthead">
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-fx__blob bg-fx__blob--a"></div>
+      <div class="bg-fx__blob bg-fx__blob--b"></div>
+      <div class="bg-fx__blob bg-fx__blob--c"></div>
+      <div class="bg-fx__grid"></div>
+      <canvas class="bg-fx__particles" id="bg-particles"></canvas>
+    </div>
+
+    <div class="wrapper-masthead" data-parallax="0.25">
       <div class="container">
         <header class="masthead clearfix">
           <a href="{{ site.baseurl }}/" class="site-avatar">
@@ -197,6 +205,162 @@
       window.i18n = function(key) {
         return window.autoLanguageDetector.getTranslation(key, window.autoLanguageDetector.getCurrentLanguage()) || key;
       };
+
+      (function initFrontFx() {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // タッチデバイスやコア数の少ない環境では描画コストの高いパーティクルを省略
+        const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+        const lowCores = (navigator.hardwareConcurrency || 4) < 4;
+        const enableParticles = !reduceMotion && !isCoarsePointer && !lowCores;
+
+        const canvas = document.getElementById('bg-particles');
+        if (enableParticles && canvas && canvas.getContext) {
+          const ctx = canvas.getContext('2d');
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const LINK_DIST = 110;
+          const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+          let width = 0;
+          let height = 0;
+          let particles = [];
+          let pointer = null;
+          let visible = true;
+          let resizeTimer = 0;
+
+          function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const target = Math.min(60, Math.max(20, Math.floor((width * height) / 32000)));
+            particles = new Array(target).fill(0).map(() => ({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.3,
+              vy: (Math.random() - 0.5) * 0.3,
+              r: Math.random() * 1.6 + 0.6
+            }));
+          }
+
+          function step() {
+            if (!visible) {
+              requestAnimationFrame(step);
+              return;
+            }
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+              const p = particles[i];
+              p.x += p.vx;
+              p.y += p.vy;
+              if (p.x < -10) p.x = width + 10;
+              if (p.x > width + 10) p.x = -10;
+              if (p.y < -10) p.y = height + 10;
+              if (p.y > height + 10) p.y = -10;
+
+              if (pointer) {
+                const dxp = p.x - pointer.x;
+                const dyp = p.y - pointer.y;
+                const dp2 = dxp * dxp + dyp * dyp;
+                if (dp2 < LINK_DIST_SQ) {
+                  const f = (1 - dp2 / LINK_DIST_SQ) * 0.6;
+                  p.x += (dxp / Math.sqrt(dp2 || 1)) * f;
+                  p.y += (dyp / Math.sqrt(dp2 || 1)) * f;
+                }
+              }
+
+              ctx.beginPath();
+              ctx.fillStyle = 'rgba(102, 126, 234, 0.55)';
+              ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            for (let i = 0; i < particles.length; i++) {
+              for (let j = i + 1; j < particles.length; j++) {
+                const a = particles[i];
+                const b = particles[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const d2 = dx * dx + dy * dy;
+                if (d2 < LINK_DIST_SQ) {
+                  const alpha = (1 - d2 / LINK_DIST_SQ) * 0.35;
+                  ctx.strokeStyle = 'rgba(118, 75, 162, ' + alpha.toFixed(3) + ')';
+                  ctx.lineWidth = 1;
+                  ctx.beginPath();
+                  ctx.moveTo(a.x, a.y);
+                  ctx.lineTo(b.x, b.y);
+                  ctx.stroke();
+                }
+              }
+            }
+            requestAnimationFrame(step);
+          }
+
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resize, 150);
+          });
+          window.addEventListener('pointermove', (e) => {
+            pointer = { x: e.clientX, y: e.clientY };
+          });
+          window.addEventListener('pointerleave', () => {
+            pointer = null;
+          });
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(([entry]) => {
+              visible = entry.isIntersecting;
+            }).observe(canvas);
+          }
+          resize();
+          requestAnimationFrame(step);
+        }
+
+        if (reduceMotion) return;
+
+        const parallaxTargets = Array.from(document.querySelectorAll('[data-parallax]')).map((node) => ({
+          node,
+          factor: parseFloat(node.dataset.parallax) || 0
+        }));
+        const blobTargets = Array.from(document.querySelectorAll('.bg-fx__blob')).map((node, i) => ({
+          node,
+          factor: 0.05 + i * 0.04
+        }));
+        let scrollY = window.scrollY;
+        let ticking = false;
+
+        function applyParallax() {
+          for (const { node, factor } of parallaxTargets) {
+            node.style.transform = 'translate3d(0,' + (-scrollY * factor).toFixed(2) + 'px,0)';
+          }
+          for (const { node, factor } of blobTargets) {
+            node.style.transform = 'translate3d(0,' + (-scrollY * factor).toFixed(2) + 'px,0)';
+          }
+          ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+          scrollY = window.scrollY;
+          if (!ticking) {
+            requestAnimationFrame(applyParallax);
+            ticking = true;
+          }
+        }, { passive: true });
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+
+          document.querySelectorAll('.reveal, .posts > .post').forEach((el) => io.observe(el));
+        }
+      })();
 
       // ページ読み込み時にツールページを検出
       window.addEventListener('DOMContentLoaded', function() {
