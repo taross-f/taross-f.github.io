@@ -52,6 +52,10 @@ ja:
     dev_tools: "🔧 開発者ツール"
     design_tools: "🎨 デザインツール"
     conversion_tools: "🔄 変換ツール"
+    games: "🎮 ゲーム"
+    teirei_kaigi:
+      title: "定例会議"
+      description: "8番出口ライクなビデオ会議異変探しゲーム。異変を感じたら退出、なければ最後まで残れ。"
     character_counter:
       title: "文字数カウンター"
       description: "テキストの文字数、単語数、行数をカウントします。"
@@ -486,6 +490,10 @@ en:
     dev_tools: "🔧 Developer Tools"
     design_tools: "🎨 Design Tools"
     conversion_tools: "🔄 Conversion Tools"
+    games: "🎮 Games"
+    teirei_kaigi:
+      title: "Daily Standup"
+      description: "An Exit-8-like anomaly-spotting video meeting game. Leave when something feels off, stay if all is normal."
     character_counter:
       title: "Character Counter"
       description: "Count characters, words, and lines in text."
