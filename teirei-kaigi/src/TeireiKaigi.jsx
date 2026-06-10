@@ -138,7 +138,39 @@ const ANOMALIES = [
     label: "田中さんの顔色がおかしかった",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, skin: "#9fbf8e" } : p); },
   },
+  // ---- 不気味強化系（静的） ----
+  {
+    id: "noblink",
+    label: "佐藤さんが、一度もまばたきをしていなかった",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "sato" ? { ...p, frozenEyes: true } : p); },
+  },
+  // ---- 不気味強化系（時間経過で発生） ----
+  {
+    id: "selftalk",
+    label: "ミュート中なのに、自分の口が動いていた",
+    apply: (v) => { v.selfTalk = true; },
+  },
+  {
+    id: "joiner",
+    label: "会議の途中で、知らない参加者が入ってきた",
+    apply: (v) => { v.lateJoiner = true; },
+  },
+  {
+    id: "silence",
+    label: "途中から、全員が動きを止めてこちらを見ていた",
+    apply: (v) => { v.silenceAt = 0.55; },
+  },
+  {
+    id: "timerup",
+    label: "残り時間が、途中から増えていった",
+    apply: (v) => { v.timerReverse = true; },
+  },
   // ---- じわじわ系（時間経過で進行） ----
+  {
+    id: "approach",
+    label: "高橋さんの背景の人影が、だんだん近づいてきていた",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "takahashi" ? { ...p, shadow: true, approach: true } : p); },
+  },
   {
     id: "grow",
     label: "佐藤さんの顔が、だんだん大きくなっていた",
@@ -164,6 +196,10 @@ function buildView(anomalyId) {
     captions: CAPTIONS,
     closing: CLOSING,
     leaveLabel: "退出",
+    selfTalk: false,
+    lateJoiner: false,
+    silenceAt: null,
+    timerReverse: false,
   };
   if (anomalyId) {
     const a = ANOMALIES.find(a => a.id === anomalyId);
@@ -173,7 +209,7 @@ function buildView(anomalyId) {
 }
 
 // ---------- Avatar ----------
-function Avatar({ p, talking, syncBlink, idx }) {
+function Avatar({ p, talking, syncBlink, idx, frozen }) {
   if (p.cameraOff) {
     return (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -183,7 +219,7 @@ function Avatar({ p, talking, syncBlink, idx }) {
       </div>
     );
   }
-  const blinkStyle = {
+  const blinkStyle = frozen ? {} : {
     animation: `tk-blink ${syncBlink ? "2.4s" : (3.6 + (idx % 4) * 0.7) + "s"} infinite`,
     animationDelay: syncBlink ? "0s" : `${(idx * 1.13) % 3}s`,
     transformOrigin: "center",
@@ -210,13 +246,22 @@ function Avatar({ p, talking, syncBlink, idx }) {
   );
 }
 
-function TileBackground({ p }) {
+function TileBackground({ p, progress }) {
   if (p.bgType === "door") {
+    // approach: 人影が二乗カーブで手前に近づく(序盤はほぼ気づけない)
+    const ap = p.approach ? progress * progress : 0;
+    const shadowTransform = p.approach
+      ? `translateX(${-34 * ap}%) scale(${1 + 2.6 * ap})`
+      : "none";
     return (
       <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${p.bgA}, ${p.bgB})` }}>
         <div style={{ position: "absolute", right: "12%", top: "10%", width: "22%", height: "78%", background: "#1c1a16", borderRadius: 2, border: "1px solid #4a4438" }} />
         {p.shadow && (
-          <div style={{ position: "absolute", right: "15%", top: "26%", width: "16%", height: "62%" }}>
+          <div style={{
+            position: "absolute", right: "15%", top: "26%", width: "16%", height: "62%",
+            transform: shadowTransform, transformOrigin: "50% 100%",
+            transition: "transform 1.1s linear",
+          }}>
             <div style={{ width: "46%", aspectRatio: "1", borderRadius: "50%", background: "rgba(5,5,8,0.9)", margin: "0 auto" }} />
             <div style={{ width: "100%", height: "70%", background: "rgba(5,5,8,0.9)", borderRadius: "40% 40% 0 0", marginTop: -2 }} />
           </div>
@@ -237,24 +282,25 @@ function MicIcon({ muted }) {
   );
 }
 
-function Tile({ p, talking, syncBlink, idx, selfName, progress }) {
+function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
   const name = p.isSelf ? selfName : p.name;
   // じわじわ系: 序盤は気づけないよう二乗カーブで進行させる
   const growScale = p.grow ? 1 + 1.6 * progress * progress : 1;
   const redOpacity = p.redden ? 0.65 * Math.pow(progress, 1.5) : 0;
+  const frozen = !!p.frozenEyes || silenced;
   return (
     <div style={{
       position: "relative", borderRadius: 8, overflow: "hidden", aspectRatio: "4/3",
       border: talking ? "2px solid #5ad65a" : "2px solid #2c2f35", background: "#222",
     }}>
-      <TileBackground p={p} />
+      <TileBackground p={p} progress={progress} />
       <div style={{
         position: "absolute", inset: 0,
         transform: `scale(${growScale})`,
         transformOrigin: "50% 40%",
         transition: "transform 1.1s linear",
       }}>
-        <Avatar p={p} talking={talking} syncBlink={syncBlink} idx={idx} />
+        <Avatar p={p} talking={talking} syncBlink={syncBlink} idx={idx} frozen={frozen} />
       </div>
       {p.redden && (
         <div style={{
@@ -365,13 +411,28 @@ export default function TeireiKaigi() {
     else fail("wrong");
   }
 
+  const progress = (MEETING_SECONDS - timeLeft) / MEETING_SECONDS;
+  const silenced = !!(view && view.silenceAt != null && progress >= view.silenceAt);
+  const joinerVisible = !!(view && view.lateJoiner && progress >= 0.45);
+
+  const LATE_JOINER = { id: "late_joiner", name: "user_039", skin: "#777", shirt: "#222", bgType: "dark", bgA: "#0a0a0c", bgB: "#000000", muted: true, cameraOff: true };
+
   const tiles = view
-    ? [...view.participants.slice(0, 3), SELF, ...view.participants.slice(3)]
+    ? [
+        ...view.participants.slice(0, 3),
+        SELF,
+        ...view.participants.slice(3),
+        ...(joinerVisible ? [LATE_JOINER] : []),
+      ]
     : [];
 
   const currentCaption = view
-    ? (timeLeft <= 5 ? view.closing : view.captions[captionIdx % view.captions.length])
+    ? (silenced ? "……" : (timeLeft <= 5 ? view.closing : view.captions[captionIdx % view.captions.length]))
     : "";
+
+  // timerup異変: 実時間は進み続けるが、表示だけが0:17で折り返して増えていく
+  const displayTime = view && view.timerReverse && timeLeft < 17 ? 34 - timeLeft : timeLeft;
+  const displayCount = view ? (joinerVisible ? view.count + 1 : view.count) : 0;
 
   return (
     <div style={{
@@ -424,16 +485,18 @@ export default function TeireiKaigi() {
                 レコーディング中
               </span>
             )}
-            <span style={{ marginLeft: "auto", fontVariantNumeric: "tabular-nums", color: timeLeft <= 10 ? "#ff8a8a" : "#aab0ba" }}>
-              会議終了まで 0:{String(timeLeft).padStart(2, "0")}
+            <span style={{ marginLeft: "auto", fontVariantNumeric: "tabular-nums", color: timeLeft <= 10 && !view.timerReverse ? "#ff8a8a" : "#aab0ba" }}>
+              会議終了まで 0:{String(displayTime).padStart(2, "0")}
             </span>
           </div>
 
           {/* grid */}
           <div style={{ flex: 1, padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", alignContent: "center" }}>
             {tiles.map((p, i) => (
-              <Tile key={p.id} p={p} idx={i} talking={p.host === true} syncBlink={view.syncBlink} selfName={view.selfName}
-                progress={(MEETING_SECONDS - timeLeft) / MEETING_SECONDS} />
+              <Tile key={p.id} p={p} idx={i}
+                talking={silenced ? false : (p.host === true || (view.selfTalk && p.isSelf && progress > 0.4))}
+                syncBlink={view.syncBlink} selfName={view.selfName}
+                progress={progress} silenced={silenced} />
             ))}
           </div>
 
@@ -448,7 +511,7 @@ export default function TeireiKaigi() {
           <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px 16px", borderTop: "1px solid #23262c", flexWrap: "wrap" }}>
             <button className="tk-btn" style={{ background: "#23262c", color: "#8a8f99" }} disabled>ミュート</button>
             <button className="tk-btn" style={{ background: "#23262c", color: "#8a8f99" }} disabled>ビデオ</button>
-            <button className="tk-btn" style={{ background: "#23262c", color: "#8a8f99" }} disabled>参加者 {view.count}</button>
+            <button className="tk-btn" style={{ background: "#23262c", color: "#8a8f99" }} disabled>参加者 {displayCount}</button>
             <div style={{ flex: 1 }} />
             <button className="tk-btn" onClick={onLeave} style={{ background: "#d64545", color: "#fff", padding: "10px 28px" }}>
               {view.leaveLabel}
