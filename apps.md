@@ -84,3 +84,8 @@ permalink: /apps/
 ### [<span data-i18n="apps.quote_generator.title">引用画像生成ツール</span>](/quote-generator/)
 <span data-i18n="apps.quote_generator.description">ソーシャルメディア用の美しい引用画像を作成します。</span>
 
+## <span data-i18n="apps.games">🎮 ゲーム</span>
+
+### [<span data-i18n="apps.teirei_kaigi.title">定例会議</span>](/apps/teirei-kaigi/)
+<span data-i18n="apps.teirei_kaigi.description">8番出口ライクなビデオ会議異変探しゲーム。異変を感じたら退出、なければ最後まで残れ。</span>
+

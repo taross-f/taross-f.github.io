@@ -93,3 +93,4 @@ exclude:
   - .tool-versions
   - .github/
   - node_modules/
+  - teirei-kaigi/
