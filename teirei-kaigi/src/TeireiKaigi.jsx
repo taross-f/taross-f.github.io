@@ -290,7 +290,8 @@ function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
   const frozen = !!p.frozenEyes || silenced;
   return (
     <div style={{
-      position: "relative", borderRadius: 8, overflow: "hidden", aspectRatio: "4/3",
+      position: "relative", borderRadius: 8, overflow: "hidden",
+      width: "100%", height: "100%", minHeight: 0, aspectRatio: "4/3",
       border: talking ? "2px solid #5ad65a" : "2px solid #2c2f35", background: "#222",
     }}>
       <TileBackground p={p} progress={progress} />
@@ -435,12 +436,14 @@ export default function TeireiKaigi() {
   const displayCount = view ? (joinerVisible ? view.count + 1 : view.count) : 0;
 
   return (
-    <div style={{
-      minHeight: "100vh", background: "#141619", color: "#e6e6e8",
+    <div className="tk-root" style={{
+      background: "#141619", color: "#e6e6e8",
       fontFamily: "'Hiragino Sans','Noto Sans JP',system-ui,sans-serif",
       display: "flex", flexDirection: "column",
     }}>
       <style>{`
+        /* dvh で実際の表示領域に合わせ、画面外スクロールを防ぐ(モバイルのアドレスバー対策) */
+        .tk-root { height: 100vh; height: 100dvh; overflow: hidden; }
         @keyframes tk-blink { 0%, 92% { transform: scaleY(1); } 94%, 97% { transform: scaleY(0.08); } 100% { transform: scaleY(1); } }
         @keyframes tk-talk { from { transform: scaleY(0.45); } to { transform: scaleY(1.3); } }
         @keyframes tk-fadein { from { opacity: 0; } to { opacity: 1; } }
@@ -491,7 +494,7 @@ export default function TeireiKaigi() {
           </div>
 
           {/* grid */}
-          <div style={{ flex: 1, padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", alignContent: "center" }}>
+          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
             {tiles.map((p, i) => (
               <Tile key={p.id} p={p} idx={i}
                 talking={silenced ? false : (p.host === true || (view.selfTalk && p.isSelf && progress > 0.4))}
