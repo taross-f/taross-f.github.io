@@ -261,7 +261,7 @@ function Avatar({ p, talking, syncBlink, idx, frozen }) {
     transformOrigin: "center",
   };
   return (
-    <svg viewBox="0 0 120 90" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
+    <svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
       <rect x="35" y="62" width="50" height="34" rx="12" fill={p.shirt} />
       <circle cx="60" cy="42" r="19" fill={p.skin} />
       <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e" />
@@ -530,7 +530,7 @@ export default function TeireiKaigi() {
           </div>
 
           {/* grid */}
-          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
+          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
             {tiles.map((p, i) => (
               <Tile key={p.id} p={p} idx={i}
                 talking={silenced ? false : (p.host === true || (view.selfTalk && p.isSelf && progress > 0.4))}
