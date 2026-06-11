@@ -8,7 +8,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const MEETING_SECONDS = 35;
 const DAYS = ["月", "火", "水", "木", "金"];
-const ANOMALY_RATE = 0.55;
+const ANOMALY_RATE = 0.6;
+const USED_STORAGE_KEY = "tk_used_anomalies";
 
 const BASE_PARTICIPANTS = [
   { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
@@ -183,6 +184,41 @@ const ANOMALIES = [
   },
 ];
 
+// 出現済み異変の永続化。全種類が出るまで被らせず、出揃ったらリセットして再びランダムに。
+function loadUsedAnomalies() {
+  try {
+    const raw = localStorage.getItem(USED_STORAGE_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    const valid = new Set(ANOMALIES.map(a => a.id));
+    return arr.filter(id => valid.has(id)); // 定義から消えたIDは除外
+  } catch {
+    return [];
+  }
+}
+
+function saveUsedAnomalies(used) {
+  try {
+    localStorage.setItem(USED_STORAGE_KEY, JSON.stringify(used));
+  } catch {
+    /* localStorage非対応・プライベートモード等は黙って無視 */
+  }
+}
+
+// 未出現の異変から1つ選ぶ。全て出揃っていたらリセットして全異変から選ぶ。
+// 戻り値: { anomalyId, used } — usedは保存・反映用の更新後リスト。
+function pickAnomaly(used) {
+  let pool = ANOMALIES.filter(a => !used.includes(a.id));
+  let nextUsed = used;
+  if (pool.length === 0) {
+    pool = ANOMALIES;
+    nextUsed = [];
+  }
+  const id = pool[Math.floor(Math.random() * pool.length)].id;
+  return { anomalyId: id, used: [...nextUsed, id] };
+}
+
 function buildView(anomalyId) {
   const v = {
     participants: BASE_PARTICIPANTS.map(p => ({ ...p })),
@@ -225,7 +261,7 @@ function Avatar({ p, talking, syncBlink, idx, frozen }) {
     transformOrigin: "center",
   };
   return (
-    <svg viewBox="0 0 120 90" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
+    <svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
       <rect x="35" y="62" width="50" height="34" rx="12" fill={p.shirt} />
       <circle cx="60" cy="42" r="19" fill={p.skin} />
       <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e" />
@@ -327,7 +363,7 @@ export default function TeireiKaigi() {
   const [dayIdx, setDayIdx] = useState(0);
   const [view, setView] = useState(null);
   const [anomalyId, setAnomalyId] = useState(null);
-  const [usedAnomalies, setUsedAnomalies] = useState([]);
+  const [usedAnomalies, setUsedAnomalies] = useState(loadUsedAnomalies);
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
@@ -335,12 +371,14 @@ export default function TeireiKaigi() {
   const stateRef = useRef({});
   stateRef.current = { anomalyId, dayIdx, usedAnomalies };
 
-  const startMeeting = useCallback((day, used) => {
+  const startMeeting = useCallback((day) => {
     let nextAnomaly = null;
     if (Math.random() < ANOMALY_RATE) {
-      const pool = ANOMALIES.filter(a => !used.includes(a.id));
-      const src = pool.length > 0 ? pool : ANOMALIES;
-      nextAnomaly = src[Math.floor(Math.random() * src.length)].id;
+      // 出現済みリストは最新の永続値から読む(失敗で月曜に戻っても引き継ぐ)
+      const picked = pickAnomaly(loadUsedAnomalies());
+      nextAnomaly = picked.anomalyId;
+      saveUsedAnomalies(picked.used);
+      setUsedAnomalies(picked.used);
     }
     setAnomalyId(nextAnomaly);
     setView(buildView(nextAnomaly));
@@ -352,21 +390,19 @@ export default function TeireiKaigi() {
 
   function fail(kind) {
     clearInterval(timerRef.current);
-    setUsedAnomalies([]);
+    // 出現済みリストは永続化したまま月曜へ(全種類出るまでリセットしない)
     setTransition({
       kind: "fail",
       title: kind === "stayed" ? "異変のある会議に、最後まで残ってしまった" : "接続が切断されました",
       sub: "月曜日に戻ります",
     });
     setPhase("transition");
-    setTimeout(() => startMeeting(0, []), 2400);
+    setTimeout(() => startMeeting(0), 2400);
   }
 
   function succeed(byLeaving) {
     clearInterval(timerRef.current);
-    const { anomalyId: aId, dayIdx: d, usedAnomalies: used } = stateRef.current;
-    const newUsed = aId ? [...used, aId] : used;
-    setUsedAnomalies(newUsed);
+    const { anomalyId: aId, dayIdx: d } = stateRef.current;
     if (d >= DAYS.length - 1) {
       setPhase("clear");
       return;
@@ -379,7 +415,7 @@ export default function TeireiKaigi() {
       detail: label,
     });
     setPhase("transition");
-    setTimeout(() => startMeeting(d + 1, newUsed), 2400);
+    setTimeout(() => startMeeting(d + 1), 2400);
   }
 
   // timer — 0になったら「最後まで残った」判定
@@ -462,7 +498,7 @@ export default function TeireiKaigi() {
             <p style={{ margin: "0 0 8px" }}>異変を感じたら、すぐに <b style={{ color: "#ff8a8a" }}>退出</b>。<br />異変がなければ、<b style={{ color: "#fff" }}>最後まで残る</b>。</p>
             <p style={{ margin: 0 }}>月曜から金曜まで判断を間違えなければクリア。<br />異変のある会議に残り続けてはいけない。</p>
           </div>
-          <button className="tk-btn" onClick={() => { setUsedAnomalies([]); startMeeting(0, []); }}
+          <button className="tk-btn" onClick={() => startMeeting(0)}
             style={{ marginTop: 36, background: "#3a6df0", color: "#fff", padding: "14px 48px", fontSize: 15 }}>
             会議に参加
           </button>
@@ -494,7 +530,7 @@ export default function TeireiKaigi() {
           </div>
 
           {/* grid */}
-          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
+          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
             {tiles.map((p, i) => (
               <Tile key={p.id} p={p} idx={i}
                 talking={silenced ? false : (p.host === true || (view.selfTalk && p.isSelf && progress > 0.4))}
