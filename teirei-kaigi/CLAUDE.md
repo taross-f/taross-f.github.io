@@ -26,6 +26,22 @@
 
 進行カーブを二乗/1.5乗にしているのは意図的。線形だと序盤で気づけてしまう。前半「気のせいか?」→後半加速、が狙い。2層・3層の存在により「異変がなさそうでも最後まで疑い続ける」緊張が生まれ、異変なしの日の待ち時間が退屈にならない。**バランス調整時はこの構造を壊さないこと。**
 
+## アナリティクス(GA4)
+
+`index.html` で gtag.js(`G-HHQ0669BP8`)を読み込み、`TeireiKaigi.jsx` の `track(name, params)` ヘルパからイベントを送信する。`window.gtag` が無い環境(vite開発時・トラッキング拒否)では黙って無視される。送信イベント:
+
+- `game_start` — タイトルの「会議に参加」でゲーム開始
+- `leave_click` — 退出ボタンタップ(`day_index`, `has_anomaly`)
+- `meeting_result` — 1日の判定結果(`result`=success/fail, success時 `method`=leave/stay, fail時 `reason`=stayed/wrong, `day_index`, `anomaly_id`)
+- `anomaly_discovered` — 異変を初めて見破った(`anomaly_id`)
+- `all_discovered` — 図鑑コンプリート(全異変制覇)の瞬間
+- `game_clear` — 金曜まで到達してクリア
+- `sound_toggle` — サウンドON/OFF(`state`)
+- `view_anomalies` — 異変図鑑を開いた
+- `back_to_title` — タイトルへ戻る(`from`=clear/anomalies)
+
+**注意**: 新しいボタン・状態遷移を足したら、対応する `track()` 呼び出しも追加する。デプロイには `index.html` 同様、ビルド成果物の差し替えが必要(下記)。
+
 ## デプロイ
 
 - 公開先: `taross-f/taross-f.github.io` の `apps/teirei-kaigi/`(URL: https://taross-f.github.io/apps/teirei-kaigi/)
