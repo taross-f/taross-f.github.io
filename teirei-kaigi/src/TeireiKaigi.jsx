@@ -25,6 +25,8 @@ const ANOMALY_RATE = 0.66;
 const USED_STORAGE_KEY = "tk_used_anomalies";
 // 図鑑用: 一度でも見破った異変の永続記録。USED と違いリセットしない(全制覇トロフィー判定に使う)。
 const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
+// クリア済みフラグ: 一度でも金曜まで完走したか。異変図鑑の解放条件に使う(永続)。
+const CLEARED_STORAGE_KEY = "tk_cleared";
 
 const BASE_PARTICIPANTS = [
   { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
@@ -240,6 +242,22 @@ const saveUsedAnomalies = (used) => saveAnomalyIdList(USED_STORAGE_KEY, used);
 const loadDiscovered = () => loadAnomalyIdList(DISCOVERED_STORAGE_KEY);
 const saveDiscovered = (discovered) => saveAnomalyIdList(DISCOVERED_STORAGE_KEY, discovered);
 
+// クリア済みフラグの読み書き(localStorage非対応・プライベートモード等は黙って無視)。
+function loadCleared() {
+  try {
+    return localStorage.getItem(CLEARED_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function saveCleared() {
+  try {
+    localStorage.setItem(CLEARED_STORAGE_KEY, "1");
+  } catch {
+    /* 黙って無視 */
+  }
+}
+
 // 異変IDを永続リスト(+対応するReact state)に重複なく追記する。
 function recordAnomalyId(id, load, save, setState) {
   const list = load();
@@ -454,6 +472,7 @@ export default function TeireiKaigi() {
   const [anomalyId, setAnomalyId] = useState(null);
   const [usedAnomalies, setUsedAnomalies] = useState(loadUsedAnomalies);
   const [discovered, setDiscovered] = useState(loadDiscovered);
+  const [cleared, setCleared] = useState(loadCleared); // 金曜まで完走済みか(図鑑の解放条件)
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
@@ -546,6 +565,8 @@ export default function TeireiKaigi() {
     if (d >= DAYS.length - 1) {
       playClear();
       track("game_clear");
+      saveCleared();   // 金曜まで完走 → 図鑑を解放
+      setCleared(true);
       setPhase("clear");
       return;
     }
@@ -678,11 +699,14 @@ export default function TeireiKaigi() {
             style={{ marginTop: 36, background: "#3a6df0", color: "#fff", padding: "14px 48px", fontSize: 15 }}>
             会議に参加
           </button>
-          <button className="tk-btn" onClick={() => { playClick(); track("view_anomalies"); setPhase("anomalies"); }}
-            style={{ marginTop: 16, background: "#23262c", color: "#e6e6e8", display: "flex", alignItems: "center", gap: 7, padding: "10px 24px" }}>
-            <StarIcon size={15} filled={allDiscovered} /> 異変図鑑
-            <span style={{ color: "#8a8f99", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{discoveredCount} / {totalAnomalies}</span>
-          </button>
+          {/* 異変図鑑は金曜まで完走(クリア)した人にだけ解放する */}
+          {cleared && (
+            <button className="tk-btn" onClick={() => { playClick(); track("view_anomalies"); setPhase("anomalies"); }}
+              style={{ marginTop: 16, background: "#23262c", color: "#e6e6e8", display: "flex", alignItems: "center", gap: 7, padding: "10px 24px" }}>
+              <StarIcon size={15} filled={allDiscovered} /> 異変図鑑
+              <span style={{ color: "#8a8f99", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{discoveredCount} / {totalAnomalies}</span>
+            </button>
+          )}
           <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
             aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
             style={{ marginTop: 12, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
