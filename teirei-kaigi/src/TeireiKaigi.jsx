@@ -184,7 +184,7 @@ const ANOMALIES = [
   },
 ];
 
-// 出現済み異変の永続化。全種類が出るまで被らせず、出揃ったらリセットして再びランダムに。
+// 見破り済み(正しく退出できた)異変の永続化。全種類を見破るまで被らせず、揃ったらリセット。
 function loadUsedAnomalies() {
   try {
     const raw = localStorage.getItem(USED_STORAGE_KEY);
@@ -206,17 +206,18 @@ function saveUsedAnomalies(used) {
   }
 }
 
-// 未出現の異変から1つ選ぶ。全て出揃っていたらリセットして全異変から選ぶ。
-// 戻り値: { anomalyId, used } — usedは保存・反映用の更新後リスト。
-function pickAnomaly(used) {
-  let pool = ANOMALIES.filter(a => !used.includes(a.id));
-  let nextUsed = used;
+// 未見破りの異変から1つ選ぶ(出現させるだけ。記録は正しく退出できたときに行う)。
+// 全種類見破り済みならリセットして全異変から選ぶ。
+// 戻り値: { anomalyId, recorded } — recordedはリセット反映後の見破り済みリスト。
+function pickAnomaly(recorded) {
+  let pool = ANOMALIES.filter(a => !recorded.includes(a.id));
+  let nextRecorded = recorded;
   if (pool.length === 0) {
     pool = ANOMALIES;
-    nextUsed = [];
+    nextRecorded = [];
   }
   const id = pool[Math.floor(Math.random() * pool.length)].id;
-  return { anomalyId: id, used: [...nextUsed, id] };
+  return { anomalyId: id, recorded: nextRecorded };
 }
 
 function buildView(anomalyId) {
@@ -374,11 +375,12 @@ export default function TeireiKaigi() {
   const startMeeting = useCallback((day) => {
     let nextAnomaly = null;
     if (Math.random() < ANOMALY_RATE) {
-      // 出現済みリストは最新の永続値から読む(失敗で月曜に戻っても引き継ぐ)
+      // 見破り済みリストは最新の永続値から読む(失敗で月曜に戻っても引き継ぐ)
+      // 出現時点では記録せず、全種類見破り済みだった場合のリセットのみ反映する
       const picked = pickAnomaly(loadUsedAnomalies());
       nextAnomaly = picked.anomalyId;
-      saveUsedAnomalies(picked.used);
-      setUsedAnomalies(picked.used);
+      saveUsedAnomalies(picked.recorded);
+      setUsedAnomalies(picked.recorded);
     }
     setAnomalyId(nextAnomaly);
     setView(buildView(nextAnomaly));
@@ -390,7 +392,7 @@ export default function TeireiKaigi() {
 
   function fail(kind) {
     clearInterval(timerRef.current);
-    // 出現済みリストは永続化したまま月曜へ(全種類出るまでリセットしない)
+    // 見破り済みリストは永続化したまま月曜へ(見逃した異変は再挑戦できる)
     setTransition({
       kind: "fail",
       title: kind === "stayed" ? "異変のある会議に、最後まで残ってしまった" : "接続が切断されました",
@@ -403,6 +405,15 @@ export default function TeireiKaigi() {
   function succeed(byLeaving) {
     clearInterval(timerRef.current);
     const { anomalyId: aId, dayIdx: d } = stateRef.current;
+    // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する
+    if (byLeaving && aId) {
+      const recorded = loadUsedAnomalies();
+      if (!recorded.includes(aId)) {
+        const next = [...recorded, aId];
+        saveUsedAnomalies(next);
+        setUsedAnomalies(next);
+      }
+    }
     if (d >= DAYS.length - 1) {
       setPhase("clear");
       return;
