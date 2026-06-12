@@ -503,16 +503,17 @@ export default function TeireiKaigi() {
     if (next) playClick();
   }, []);
 
+  // 1日の判定結果を計測。fail/success 共通の day_index・anomaly_id を補い、meta で固有値を渡す。
+  function trackMeetingResult(result, meta) {
+    const { anomalyId: aId, dayIdx: d } = stateRef.current;
+    track("meeting_result", { result, day_index: d + 1, anomaly_id: aId || "none", ...meta });
+  }
+
   function fail(kind) {
     clearInterval(timerRef.current);
     playFail();
-    const { anomalyId: aId, dayIdx: d } = stateRef.current;
-    track("meeting_result", {
-      result: "fail",
-      reason: kind, // "stayed"(異変ありに残った) | "wrong"(異変なしで退出)
-      day_index: d + 1,
-      anomaly_id: aId || "none",
-    });
+    // reason: "stayed"(異変ありに残った) | "wrong"(異変なしで退出)
+    trackMeetingResult("fail", { reason: kind });
     // 見破り済みリストは永続化したまま月曜へ(見逃した異変は再挑戦できる)
     setTransition({
       kind: "fail",
@@ -530,20 +531,18 @@ export default function TeireiKaigi() {
     // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
       recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
-      const isNewlyDiscovered = !loadDiscovered().includes(aId);
+      const discoveredBefore = loadDiscovered();
+      const isNewlyDiscovered = !discoveredBefore.includes(aId);
       recordAnomalyId(aId, loadDiscovered, saveDiscovered, setDiscovered);
       if (isNewlyDiscovered) {
         track("anomaly_discovered", { anomaly_id: aId });
-        // 図鑑コンプリート(全異変制覇)の瞬間を一度だけ計測する
-        if (loadDiscovered().length >= ANOMALIES.length) track("all_discovered");
+        // 図鑑コンプリート(全異変制覇)の瞬間を一度だけ計測する。
+        // 今回の1件を足して全種到達なら制覇(記録後の再読込を避ける)。
+        if (discoveredBefore.length + 1 >= ANOMALIES.length) track("all_discovered");
       }
     }
-    track("meeting_result", {
-      result: "success",
-      method: byLeaving ? "leave" : "stay", // 退出して正解 / 残って正解
-      day_index: d + 1,
-      anomaly_id: aId || "none",
-    });
+    // method: 退出して正解("leave") / 残って正解("stay")
+    trackMeetingResult("success", { method: byLeaving ? "leave" : "stay" });
     if (d >= DAYS.length - 1) {
       playClear();
       track("game_clear");
