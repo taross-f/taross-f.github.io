@@ -11,6 +11,14 @@ import {
 // 月曜から金曜まで判断を間違えなければクリア。
 // ============================================================
 
+// Google Analytics(gtag)イベント送信。index.html で gtag を読み込み済み。
+// 開発時(vite)やトラッキング拒否環境では gtag が無いので黙って無視する。
+function track(name, params) {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", name, params || {});
+  }
+}
+
 const MEETING_SECONDS = 35;
 const DAYS = ["月", "火", "水", "木", "金"];
 const ANOMALY_RATE = 0.66;
@@ -482,6 +490,7 @@ export default function TeireiKaigi() {
   // タイトル/クリア画面からの参加: ユーザー操作中にAudioContextを起こす。
   const joinFromTitle = useCallback(() => {
     ensureAudio();
+    track("game_start");
     startMeeting(0);
   }, [startMeeting]);
 
@@ -490,12 +499,20 @@ export default function TeireiKaigi() {
     const next = !isSoundEnabled();
     setSoundEnabled(next);
     setSoundOn(next);
+    track("sound_toggle", { state: next ? "on" : "off" });
     if (next) playClick();
   }, []);
 
   function fail(kind) {
     clearInterval(timerRef.current);
     playFail();
+    const { anomalyId: aId, dayIdx: d } = stateRef.current;
+    track("meeting_result", {
+      result: "fail",
+      reason: kind, // "stayed"(異変ありに残った) | "wrong"(異変なしで退出)
+      day_index: d + 1,
+      anomaly_id: aId || "none",
+    });
     // 見破り済みリストは永続化したまま月曜へ(見逃した異変は再挑戦できる)
     setTransition({
       kind: "fail",
@@ -513,10 +530,23 @@ export default function TeireiKaigi() {
     // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
       recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
+      const isNewlyDiscovered = !loadDiscovered().includes(aId);
       recordAnomalyId(aId, loadDiscovered, saveDiscovered, setDiscovered);
+      if (isNewlyDiscovered) {
+        track("anomaly_discovered", { anomaly_id: aId });
+        // 図鑑コンプリート(全異変制覇)の瞬間を一度だけ計測する
+        if (loadDiscovered().length >= ANOMALIES.length) track("all_discovered");
+      }
     }
+    track("meeting_result", {
+      result: "success",
+      method: byLeaving ? "leave" : "stay", // 退出して正解 / 残って正解
+      day_index: d + 1,
+      anomaly_id: aId || "none",
+    });
     if (d >= DAYS.length - 1) {
       playClear();
+      track("game_clear");
       setPhase("clear");
       return;
     }
@@ -559,6 +589,10 @@ export default function TeireiKaigi() {
 
   function onLeave() {
     playLeave();
+    track("leave_click", {
+      day_index: stateRef.current.dayIdx + 1,
+      has_anomaly: stateRef.current.anomalyId ? "yes" : "no",
+    });
     if (stateRef.current.anomalyId !== null) succeed(true);
     else fail("wrong");
   }
@@ -645,7 +679,7 @@ export default function TeireiKaigi() {
             style={{ marginTop: 36, background: "#3a6df0", color: "#fff", padding: "14px 48px", fontSize: 15 }}>
             会議に参加
           </button>
-          <button className="tk-btn" onClick={() => { playClick(); setPhase("anomalies"); }}
+          <button className="tk-btn" onClick={() => { playClick(); track("view_anomalies"); setPhase("anomalies"); }}
             style={{ marginTop: 16, background: "#23262c", color: "#e6e6e8", display: "flex", alignItems: "center", gap: 7, padding: "10px 24px" }}>
             <StarIcon size={15} filled={allDiscovered} /> 異変図鑑
             <span style={{ color: "#8a8f99", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{discoveredCount} / {totalAnomalies}</span>
@@ -732,7 +766,7 @@ export default function TeireiKaigi() {
           <div style={{ fontSize: 13, letterSpacing: "0.3em", color: "#8a8f99", marginBottom: 14 }}>FRIDAY 10:30</div>
           <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 10 }}>金曜日の定例が終了しました</div>
           <div style={{ fontSize: 14, color: "#b8bcc4", lineHeight: 2 }}>今週も、何事もなく終わった。<br />良い週末を。</div>
-          <button className="tk-btn" onClick={() => { playClick(); setPhase("title"); }}
+          <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "clear" }); setPhase("title"); }}
             style={{ marginTop: 32, background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
             タイトルへ
           </button>
@@ -743,7 +777,7 @@ export default function TeireiKaigi() {
         <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", animation: "tk-fadein 0.4s" }}>
           {/* header */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderBottom: "1px solid #23262c" }}>
-            <button className="tk-btn" onClick={() => { playClick(); setPhase("title"); }}
+            <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "anomalies" }); setPhase("title"); }}
               aria-label="タイトルへ戻る"
               style={{ background: "#23262c", color: "#e6e6e8", padding: "6px 12px" }}>
               ← 戻る
