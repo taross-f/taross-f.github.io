@@ -13,20 +13,20 @@ import {
 
 const MEETING_SECONDS = 35;
 const DAYS = ["月", "火", "水", "木", "金"];
-const ANOMALY_RATE = 0.6;
+const ANOMALY_RATE = 0.66;
 const USED_STORAGE_KEY = "tk_used_anomalies";
 // 図鑑用: 一度でも見破った異変の永続記録。USED と違いリセットしない(全制覇トロフィー判定に使う)。
 const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
 
 const BASE_PARTICIPANTS = [
-  { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true, hair: "short", hairColor: "#2b2b2e", brow: "straight" },
-  { id: "sato", name: "佐藤", skin: "#e3a982", shirt: "#6b4f8c", bgType: "plain", bgA: "#3a3f4b", bgB: "#2b2f38", muted: true, glasses: true, hair: "parted", hairColor: "#262024", brow: "soft" },
-  { id: "suzuki", name: "鈴木", skin: "#f0c4a0", shirt: "#4a7a5c", bgType: "plain", bgA: "#33383f", bgB: "#23272d", muted: true, hair: "bob", hairColor: "#33282a", brow: "straight", beauty: true },
-  { id: "takahashi", name: "高橋", skin: "#dba47e", shirt: "#8c6b3a", bgType: "door", bgA: "#3d3a35", bgB: "#28251f", muted: true, hair: "buzz", hairColor: "#1f1c1a", brow: "thick" },
-  { id: "watanabe", name: "渡辺", skin: "#ecb28e", shirt: "#7a4a4a", bgType: "plain", bgA: "#2f3a3f", bgB: "#1f282c", muted: true, glasses: true, hair: "long", hairColor: "#2e2622", brow: "soft" },
+  { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
+  { id: "sato", name: "佐藤", skin: "#e3a982", shirt: "#6b4f8c", bgType: "plain", bgA: "#3a3f4b", bgB: "#2b2f38", muted: true, glasses: true },
+  { id: "suzuki", name: "鈴木", skin: "#f0c4a0", shirt: "#4a7a5c", bgType: "plain", bgA: "#33383f", bgB: "#23272d", muted: true },
+  { id: "takahashi", name: "高橋", skin: "#dba47e", shirt: "#8c6b3a", bgType: "door", bgA: "#3d3a35", bgB: "#28251f", muted: true },
+  { id: "watanabe", name: "渡辺", skin: "#ecb28e", shirt: "#7a4a4a", bgType: "plain", bgA: "#2f3a3f", bgB: "#1f282c", muted: true, glasses: true },
 ];
 
-const SELF = { id: "self", name: "あなた", skin: "#ecbf9b", shirt: "#444b55", bgType: "plain", bgA: "#26292e", bgB: "#191b1f", muted: true, isSelf: true, hair: "short", hairColor: "#2a2622", brow: "straight" };
+const SELF = { id: "self", name: "あなた", skin: "#ecbf9b", shirt: "#444b55", bgType: "plain", bgA: "#26292e", bgB: "#191b1f", muted: true, isSelf: true };
 
 const CAPTIONS = [
   "では、本日の定例を始めます。",
@@ -146,31 +146,10 @@ const ANOMALIES = [
     label: "田中さんの顔色がおかしかった",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, skin: "#9fbf8e" } : p); },
   },
-  // ---- 顔の描き込みにちなんだ系（静的） ----
-  {
-    id: "nobrows",
-    label: "鈴木さんの眉毛が、なくなっていた",
-    apply: (v) => { v.participants = v.participants.map(p => p.id === "suzuki" ? { ...p, noBrows: true } : p); },
-  },
-  {
-    id: "pointedears",
-    label: "高橋さんの耳が、とがっていた",
-    apply: (v) => { v.participants = v.participants.map(p => p.id === "takahashi" ? { ...p, pointedEars: true } : p); },
-  },
   {
     id: "eyecolor",
     label: "渡辺さんの目が、赤かった",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "watanabe" ? { ...p, eyeColor: "#c01818" } : p); },
-  },
-  {
-    id: "grin",
-    label: "佐藤さんが、ずっと歯を見せて笑っていた",
-    apply: (v) => { v.participants = v.participants.map(p => p.id === "sato" ? { ...p, grin: true } : p); },
-  },
-  {
-    id: "lipstick",
-    label: "田中さんが、口紅をつけていた",
-    apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, lipstick: "#b81e3a" } : p); },
   },
   // ---- 不気味強化系（静的） ----
   {
@@ -302,64 +281,6 @@ function buildView(anomalyId) {
   return v;
 }
 
-// ---------- Avatar parts ----------
-// 髪型バリエーション。人物ごとの描き分け（hair / hairColor）。
-function Hair({ hair, color }) {
-  const c = color || "#2b2b2e";
-  switch (hair) {
-    case "buzz": // 刈り上げ・短髪。生え際が低い。
-      return <path d="M 43 41 a 17 17 0 0 1 34 0 l 0 -3 a 17 13 0 0 0 -34 0 z" fill={c} opacity="0.92" />;
-    case "parted": // 七三分け。
-      return (
-        <g fill={c}>
-          <path d="M 41 41 a 19 19 0 0 1 38 0 l 0 -7 a 19 16 0 0 0 -38 0 z" />
-          <path d="M 60 23 q 5 7 3.5 16 q 3 -1 4 -4 q 0.5 -8 -3 -12 z" />
-        </g>
-      );
-    case "bob": // ボブ。顔の横を覆う。
-      return (
-        <path fill={c} d="M 39 44 a 21 21 0 0 1 42 0 l 0 -6 a 21 20 0 0 0 -42 0 z
-          M 39 38 l 0 14 q 1.5 4 5 4 l 1.5 -2.5 q -4 -1 -4.5 -7 l 0 -9 z
-          M 81 38 l 0 14 q -1.5 4 -5 4 l -1.5 -2.5 q 4 -1 4.5 -7 l 0 -9 z" />
-      );
-    case "long": // ロング。耳の後ろから肩へ。
-      return (
-        <g fill={c}>
-          <path d="M 38 41 l 0 21 q 4 3 8 2 l 0 -23 z M 82 41 l 0 21 q -4 3 -8 2 l 0 -23 z" />
-          <path d="M 40 42 a 20 20 0 0 1 40 0 l 0 -8 a 20 17 0 0 0 -40 0 z" />
-        </g>
-      );
-    case "short":
-    default:
-      return <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill={c} />;
-  }
-}
-
-// 眉。straight / soft / thick で描き分け。noBrows 異変時は呼ばれない。
-function Brows({ brow, color }) {
-  const c = color || "#2b2b2e";
-  if (brow === "thick")
-    return (
-      <g stroke={c} strokeWidth="2.4" strokeLinecap="round">
-        <line x1="48.5" y1="35.2" x2="57" y2="34.6" />
-        <line x1="63" y1="34.6" x2="71.5" y2="35.2" />
-      </g>
-    );
-  if (brow === "soft")
-    return (
-      <g stroke={c} strokeWidth="1.3" strokeLinecap="round" fill="none">
-        <path d="M 49.5 35.6 q 3.5 -1.6 7 -0.4" />
-        <path d="M 63.5 35.2 q 3.5 -1.2 7 0.4" />
-      </g>
-    );
-  return ( // straight
-    <g stroke={c} strokeWidth="1.7" strokeLinecap="round">
-      <line x1="49.5" y1="35.4" x2="56.5" y2="35" />
-      <line x1="63.5" y1="35" x2="70.5" y2="35.4" />
-    </g>
-  );
-}
-
 // ---------- Avatar ----------
 function Avatar({ p, talking, syncBlink, idx, frozen, progress = 0 }) {
   if (p.cameraOff) {
@@ -376,40 +297,15 @@ function Avatar({ p, talking, syncBlink, idx, frozen, progress = 0 }) {
     animationDelay: syncBlink ? "0s" : `${(idx * 1.13) % 3}s`,
     transformOrigin: "center",
   };
+  // eyeColor 異変: 目の色を差し替える(既定は黒)。
   const eyeFill = p.eyeColor || "#222";
-  // thirdEye 異変: 額の目が二乗カーブでゆっくり開く（じわじわ系）。
+  // thirdEye 異変: 額の目が二乗カーブでゆっくり開く(じわじわ系)。
   const thirdOpen = p.thirdEye ? Math.min(1, progress * progress * 1.5) : 0;
-  // 頬の影（描き込み）。肌よりわずかに濃い色で立体感を出す。
-  const cheek = "rgba(170,110,90,0.18)";
   return (
     <svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
       <rect x="35" y="62" width="50" height="34" rx="12" fill={p.shirt} />
-      {/* 襟元のハイライト */}
-      <path d="M 50 64 q 10 8 20 0" stroke="rgba(255,255,255,0.08)" strokeWidth="2" fill="none" />
-      {/* 首 */}
-      <rect x="54" y="55" width="12" height="10" rx="3" fill={p.skin} />
-      <rect x="54" y="55" width="12" height="4" fill="rgba(0,0,0,0.12)" />
-      {/* 耳（pointedEars 異変でとがる） */}
-      {p.pointedEars ? (
-        <g fill={p.skin} stroke="rgba(120,80,70,0.5)" strokeWidth="0.6">
-          <path d="M 43 40 L 38.5 28 L 46 45 Z" />
-          <path d="M 77 40 L 81.5 28 L 74 45 Z" />
-        </g>
-      ) : (
-        <g fill={p.skin}>
-          <ellipse cx="41.5" cy="44" rx="3.2" ry="5" />
-          <ellipse cx="78.5" cy="44" rx="3.2" ry="5" />
-          <path d="M 41 41 q -1.6 3 0 6" stroke="rgba(120,80,70,0.4)" strokeWidth="0.7" fill="none" />
-          <path d="M 79 41 q 1.6 3 0 6" stroke="rgba(120,80,70,0.4)" strokeWidth="0.7" fill="none" />
-        </g>
-      )}
-      {/* 顔 */}
       <circle cx="60" cy="42" r="19" fill={p.skin} />
-      <ellipse cx="52" cy="50" rx="4" ry="2.6" fill={cheek} />
-      <ellipse cx="68" cy="50" rx="4" ry="2.6" fill={cheek} />
-      <Hair hair={p.hair} color={p.hairColor} />
-      {!p.noBrows && <Brows brow={p.brow} color={p.hairColor} />}
-      {/* 額の第三の目（thirdEye 異変） */}
+      <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e" />
       {thirdOpen > 0 && (
         <g>
           <ellipse cx="60" cy="32" rx="3.6" ry={3.6 * thirdOpen} fill="#f1eae6" stroke="rgba(90,60,60,0.6)" strokeWidth="0.5" />
@@ -417,41 +313,18 @@ function Avatar({ p, talking, syncBlink, idx, frozen, progress = 0 }) {
         </g>
       )}
       <g style={blinkStyle}>
-        <ellipse cx="53" cy="42" rx="2.6" ry="3.2" fill="#fff" />
-        <ellipse cx="67" cy="42" rx="2.6" ry="3.2" fill="#fff" />
-        <circle cx="53.2" cy="42" r="1.9" fill={eyeFill} />
-        <circle cx="67.2" cy="42" r="1.9" fill={eyeFill} />
-        <circle cx="52.4" cy="41.2" r="0.7" fill="#fff" />
-        <circle cx="66.4" cy="41.2" r="0.7" fill="#fff" />
+        <ellipse cx="53" cy="42" rx="2.4" ry="3" fill={eyeFill} />
+        <ellipse cx="67" cy="42" rx="2.4" ry="3" fill={eyeFill} />
       </g>
-      {/* 鼻 */}
-      <path d="M 60 44 q -1.6 3.4 -2.4 4.6 q 1.4 1.2 3 0.4" stroke="rgba(150,95,80,0.55)" strokeWidth="1" fill="none" strokeLinecap="round" />
       {p.glasses && (
         <g stroke="#222" strokeWidth="1.4" fill="none">
           <circle cx="53" cy="42" r="5.6" />
           <circle cx="67" cy="42" r="5.6" />
           <line x1="58.6" y1="42" x2="61.4" y2="42" />
-          <line x1="47.4" y1="41" x2="44" y2="40" />
-          <line x1="72.6" y1="41" x2="76" y2="40" />
         </g>
       )}
-      {/* 口（grin 異変で歯をむき出した笑み） */}
-      {p.grin ? (
-        <g>
-          <path d="M 50 49 q 10 11 20 0 q -10 4 -20 0 z" fill="#efe9e6" stroke="#3a2b2b" strokeWidth="0.7" />
-          <path d="M 50 49 q 10 11 20 0" fill="none" stroke="#3a2b2b" strokeWidth="0.8" />
-          <line x1="56" y1="51.4" x2="56" y2="54" stroke="#b8b0ac" strokeWidth="0.5" />
-          <line x1="60" y1="52" x2="60" y2="55" stroke="#b8b0ac" strokeWidth="0.5" />
-          <line x1="64" y1="51.4" x2="64" y2="54" stroke="#b8b0ac" strokeWidth="0.5" />
-        </g>
-      ) : (
-        <ellipse cx="60" cy="52" rx="4" ry={talking ? 3 : 1.2} fill="#8a5a4a"
-          style={talking ? { animation: "tk-talk 0.32s infinite alternate", transformOrigin: "60px 52px" } : {}} />
-      )}
-      {/* メイク（beauty: 鈴木）。lipstick 異変フックも兼ねる。 */}
-      {(p.beauty || p.lipstick) && !p.grin && (
-        <path d="M 56 52 q 4 2.4 8 0" stroke={p.lipstick || "#c85a6a"} strokeWidth={p.lipstick ? 2 : 1.2} fill="none" strokeLinecap="round" />
-      )}
+      <ellipse cx="60" cy="52" rx="4" ry={talking ? 3 : 1.2} fill="#8a5a4a"
+        style={talking ? { animation: "tk-talk 0.32s infinite alternate", transformOrigin: "60px 52px" } : {}} />
     </svg>
   );
 }
