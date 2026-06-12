@@ -1,4 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  ensureAudio, loadSoundEnabled, isSoundEnabled, setSoundEnabled,
+  playClick, playLeave, playCaption, playSilence,
+  playStart, playSuccess, playFail, playClear, playTick,
+} from "./sound";
 
 // ============================================================
 // 定例会議 — 8番出口ライク・ビデオ会議異変探し プロトタイプ v2
@@ -319,6 +324,19 @@ function MicIcon({ muted }) {
   );
 }
 
+function SpeakerIcon({ on }) {
+  return (
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+      <path d="M 3 6 L 6 6 L 9 3 L 9 13 L 6 10 L 3 10 Z" fill="currentColor" />
+      {on ? (
+        <path d="M 11 5 a 4 4 0 0 1 0 6 M 12.5 3.5 a 6.5 6.5 0 0 1 0 9" stroke="currentColor" strokeWidth="1.2" fill="none" />
+      ) : (
+        <path d="M 11 5.5 L 14 10.5 M 14 5.5 L 11 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
+      )}
+    </svg>
+  );
+}
+
 function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
   const name = p.isSelf ? selfName : p.name;
   // じわじわ系: 序盤は気づけないよう二乗カーブで進行させる
@@ -368,6 +386,7 @@ export default function TeireiKaigi() {
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
+  const [soundOn, setSoundOn] = useState(loadSoundEnabled);
   const timerRef = useRef(null);
   const stateRef = useRef({});
   stateRef.current = { anomalyId, dayIdx, usedAnomalies };
@@ -388,10 +407,26 @@ export default function TeireiKaigi() {
     setTimeLeft(MEETING_SECONDS);
     setCaptionIdx(0);
     setPhase("meeting");
+    playStart();
+  }, []);
+
+  // タイトル/クリア画面からの参加: ユーザー操作中にAudioContextを起こす。
+  const joinFromTitle = useCallback(() => {
+    ensureAudio();
+    startMeeting(0);
+  }, [startMeeting]);
+
+  const toggleSound = useCallback(() => {
+    ensureAudio();
+    const next = !isSoundEnabled();
+    setSoundEnabled(next);
+    setSoundOn(next);
+    if (next) playClick();
   }, []);
 
   function fail(kind) {
     clearInterval(timerRef.current);
+    playFail();
     // 見破り済みリストは永続化したまま月曜へ(見逃した異変は再挑戦できる)
     setTransition({
       kind: "fail",
@@ -415,9 +450,11 @@ export default function TeireiKaigi() {
       }
     }
     if (d >= DAYS.length - 1) {
+      playClear();
       setPhase("clear");
       return;
     }
+    playSuccess();
     const label = byLeaving && aId ? ANOMALIES.find(a => a.id === aId)?.label : null;
     setTransition({
       kind: "advance",
@@ -455,6 +492,7 @@ export default function TeireiKaigi() {
   }, [phase, dayIdx]);
 
   function onLeave() {
+    playLeave();
     if (stateRef.current.anomalyId !== null) succeed(true);
     else fail("wrong");
   }
@@ -481,6 +519,23 @@ export default function TeireiKaigi() {
   // timerup異変: 実時間は進み続けるが、表示だけが0:17で折り返して増えていく
   const displayTime = view && view.timerReverse && timeLeft < 17 ? 34 - timeLeft : timeLeft;
   const displayCount = view ? (joinerVisible ? view.count + 1 : view.count) : 0;
+
+  // 字幕に合わせた効果音: 字幕が変わるたびにファミコン風テキスト送り音。
+  // 「……」の沈黙時は送り音の代わりに低い不穏な単音を鳴らす。
+  const prevCaptionRef = useRef("");
+  useEffect(() => {
+    if (phase !== "meeting") { prevCaptionRef.current = ""; return; }
+    if (currentCaption === prevCaptionRef.current) return;
+    prevCaptionRef.current = currentCaption;
+    if (silenced) playSilence();
+    else if (currentCaption) playCaption(currentCaption);
+  }, [phase, currentCaption, silenced]);
+
+  // 終了間際のカウントダウン音(残り3秒)。
+  useEffect(() => {
+    if (phase !== "meeting") return;
+    if (timeLeft > 0 && timeLeft <= 3) playTick();
+  }, [phase, timeLeft]);
 
   return (
     <div className="tk-root" style={{
@@ -509,9 +564,14 @@ export default function TeireiKaigi() {
             <p style={{ margin: "0 0 8px" }}>異変を感じたら、すぐに <b style={{ color: "#ff8a8a" }}>退出</b>。<br />異変がなければ、<b style={{ color: "#fff" }}>最後まで残る</b>。</p>
             <p style={{ margin: 0 }}>月曜から金曜まで判断を間違えなければクリア。<br />異変のある会議に残り続けてはいけない。</p>
           </div>
-          <button className="tk-btn" onClick={() => startMeeting(0)}
+          <button className="tk-btn" onClick={joinFromTitle}
             style={{ marginTop: 36, background: "#3a6df0", color: "#fff", padding: "14px 48px", fontSize: 15 }}>
             会議に参加
+          </button>
+          <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
+            aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
+            style={{ marginTop: 16, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
+            <SpeakerIcon on={soundOn} /> サウンド {soundOn ? "ON" : "OFF"}
           </button>
           <a href="https://x.com/taross__f" target="_blank" rel="noopener noreferrer"
             style={{ marginTop: 40, fontSize: 12, color: "#5f6570", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
@@ -538,6 +598,11 @@ export default function TeireiKaigi() {
             <span style={{ marginLeft: "auto", fontVariantNumeric: "tabular-nums", color: timeLeft <= 10 && !view.timerReverse ? "#ff8a8a" : "#aab0ba" }}>
               会議終了まで 0:{String(displayTime).padStart(2, "0")}
             </span>
+            <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
+              aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
+              style={{ background: "transparent", color: "#8a8f99", padding: "4px 6px", display: "flex", alignItems: "center" }}>
+              <SpeakerIcon on={soundOn} />
+            </button>
           </div>
 
           {/* grid */}
@@ -585,7 +650,7 @@ export default function TeireiKaigi() {
           <div style={{ fontSize: 13, letterSpacing: "0.3em", color: "#8a8f99", marginBottom: 14 }}>FRIDAY 10:30</div>
           <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 10 }}>金曜日の定例が終了しました</div>
           <div style={{ fontSize: 14, color: "#b8bcc4", lineHeight: 2 }}>今週も、何事もなく終わった。<br />良い週末を。</div>
-          <button className="tk-btn" onClick={() => setPhase("title")}
+          <button className="tk-btn" onClick={() => { playClick(); setPhase("title"); }}
             style={{ marginTop: 32, background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
             タイトルへ
           </button>
