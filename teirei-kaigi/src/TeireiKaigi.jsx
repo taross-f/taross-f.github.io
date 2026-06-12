@@ -191,32 +191,11 @@ const ANOMALIES = [
   },
 ];
 
-// 見破り済み(正しく退出できた)異変の永続化。全種類を見破るまで被らせず、揃ったらリセット。
-function loadUsedAnomalies() {
+// localStorage上の異変IDリストを読み書きする共通ヘルパ。
+// 読み込み時に定義から消えたID・配列以外の不正値を除外する。
+function loadAnomalyIdList(key) {
   try {
-    const raw = localStorage.getItem(USED_STORAGE_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr)) return [];
-    const valid = new Set(ANOMALIES.map(a => a.id));
-    return arr.filter(id => valid.has(id)); // 定義から消えたIDは除外
-  } catch {
-    return [];
-  }
-}
-
-function saveUsedAnomalies(used) {
-  try {
-    localStorage.setItem(USED_STORAGE_KEY, JSON.stringify(used));
-  } catch {
-    /* localStorage非対応・プライベートモード等は黙って無視 */
-  }
-}
-
-// 図鑑(永続)。リセットされる USED と独立。全種類揃ったら「全制覇」トロフィーを表示する。
-function loadDiscovered() {
-  try {
-    const raw = localStorage.getItem(DISCOVERED_STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return [];
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return [];
@@ -227,11 +206,29 @@ function loadDiscovered() {
   }
 }
 
-function saveDiscovered(discovered) {
+function saveAnomalyIdList(key, ids) {
   try {
-    localStorage.setItem(DISCOVERED_STORAGE_KEY, JSON.stringify(discovered));
+    localStorage.setItem(key, JSON.stringify(ids));
   } catch {
     /* localStorage非対応・プライベートモード等は黙って無視 */
+  }
+}
+
+// 見破り済み(正しく退出できた)異変。全種類を見破るまで被らせず、揃ったらリセット。
+const loadUsedAnomalies = () => loadAnomalyIdList(USED_STORAGE_KEY);
+const saveUsedAnomalies = (used) => saveAnomalyIdList(USED_STORAGE_KEY, used);
+
+// 図鑑(永続)。リセットされる USED と独立。全種類揃ったら「全制覇」トロフィーを表示する。
+const loadDiscovered = () => loadAnomalyIdList(DISCOVERED_STORAGE_KEY);
+const saveDiscovered = (discovered) => saveAnomalyIdList(DISCOVERED_STORAGE_KEY, discovered);
+
+// 異変IDを永続リスト(+対応するReact state)に重複なく追記する。
+function recordAnomalyId(id, load, save, setState) {
+  const list = load();
+  if (!list.includes(id)) {
+    const next = [...list, id];
+    save(next);
+    setState(next);
   }
 }
 
@@ -438,8 +435,9 @@ export default function TeireiKaigi() {
   stateRef.current = { anomalyId, dayIdx, usedAnomalies };
 
   const totalAnomalies = ANOMALIES.length;
-  const discoveredSet = new Set(discovered);
-  const discoveredCount = ANOMALIES.filter(a => discoveredSet.has(a.id)).length;
+  // discovered は loadAnomalyIdList で検証・重複排除済みなので件数はそのまま長さでよい。
+  const discoveredSet = new Set(discovered); // 図鑑リストの一覧表示で使う
+  const discoveredCount = discovered.length;
   const allDiscovered = discoveredCount >= totalAnomalies;
 
   const startMeeting = useCallback((day) => {
@@ -491,21 +489,11 @@ export default function TeireiKaigi() {
   function succeed(byLeaving) {
     clearInterval(timerRef.current);
     const { anomalyId: aId, dayIdx: d } = stateRef.current;
-    // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する
+    // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する。
+    // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
-      const recorded = loadUsedAnomalies();
-      if (!recorded.includes(aId)) {
-        const next = [...recorded, aId];
-        saveUsedAnomalies(next);
-        setUsedAnomalies(next);
-      }
-      // 図鑑(永続)にも記録。こちらはリセットされない。
-      const seen = loadDiscovered();
-      if (!seen.includes(aId)) {
-        const nextSeen = [...seen, aId];
-        saveDiscovered(nextSeen);
-        setDiscovered(nextSeen);
-      }
+      recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
+      recordAnomalyId(aId, loadDiscovered, saveDiscovered, setDiscovered);
     }
     if (d >= DAYS.length - 1) {
       playClear();
