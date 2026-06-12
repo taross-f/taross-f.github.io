@@ -15,6 +15,8 @@ const MEETING_SECONDS = 35;
 const DAYS = ["月", "火", "水", "木", "金"];
 const ANOMALY_RATE = 0.6;
 const USED_STORAGE_KEY = "tk_used_anomalies";
+// 図鑑用: 一度でも見破った異変の永続記録。USED と違いリセットしない(全制覇トロフィー判定に使う)。
+const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
 
 const BASE_PARTICIPANTS = [
   { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true, hair: "short", hairColor: "#2b2b2e", brow: "straight" },
@@ -220,25 +222,44 @@ const ANOMALIES = [
   },
 ];
 
-// 見破り済み(正しく退出できた)異変の永続化。全種類を見破るまで被らせず、揃ったらリセット。
-function loadUsedAnomalies() {
+// localStorage上の異変IDリストを読み書きする共通ヘルパ。
+// 読み込み時に定義から消えたID・配列以外の不正値を除外する。
+function loadAnomalyIdList(key) {
   try {
-    const raw = localStorage.getItem(USED_STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return [];
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return [];
     const valid = new Set(ANOMALIES.map(a => a.id));
-    return arr.filter(id => valid.has(id)); // 定義から消えたIDは除外
+    return arr.filter(id => valid.has(id));
   } catch {
     return [];
   }
 }
 
-function saveUsedAnomalies(used) {
+function saveAnomalyIdList(key, ids) {
   try {
-    localStorage.setItem(USED_STORAGE_KEY, JSON.stringify(used));
+    localStorage.setItem(key, JSON.stringify(ids));
   } catch {
     /* localStorage非対応・プライベートモード等は黙って無視 */
+  }
+}
+
+// 見破り済み(正しく退出できた)異変。全種類を見破るまで被らせず、揃ったらリセット。
+const loadUsedAnomalies = () => loadAnomalyIdList(USED_STORAGE_KEY);
+const saveUsedAnomalies = (used) => saveAnomalyIdList(USED_STORAGE_KEY, used);
+
+// 図鑑(永続)。リセットされる USED と独立。全種類揃ったら「全制覇」トロフィーを表示する。
+const loadDiscovered = () => loadAnomalyIdList(DISCOVERED_STORAGE_KEY);
+const saveDiscovered = (discovered) => saveAnomalyIdList(DISCOVERED_STORAGE_KEY, discovered);
+
+// 異変IDを永続リスト(+対応するReact state)に重複なく追記する。
+function recordAnomalyId(id, load, save, setState) {
+  const list = load();
+  if (!list.includes(id)) {
+    const next = [...list, id];
+    save(next);
+    setState(next);
   }
 }
 
@@ -484,6 +505,27 @@ function SpeakerIcon({ on }) {
   );
 }
 
+function TrophyIcon({ size = 22 }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+      <path d="M6 3h12v3a6 6 0 0 1-12 0V3z" fill="#ffd35a" stroke="#caa12e" strokeWidth="0.8" />
+      <path d="M6 4H3v2a3 3 0 0 0 3 3M18 4h3v2a3 3 0 0 1-3 3" fill="none" stroke="#caa12e" strokeWidth="1.4" />
+      <path d="M9 11h6l-.5 4h-5L9 11z" fill="#ffd35a" />
+      <rect x="9.5" y="15" width="5" height="2" rx="0.6" fill="#caa12e" />
+      <rect x="7.5" y="17" width="9" height="2.4" rx="1" fill="#e0b94a" />
+    </svg>
+  );
+}
+
+function StarIcon({ size = 16, filled }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+      <path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.58 1.1 6.47L12 17.4l-5.8 3.0 1.1-6.47-4.7-4.58 6.5-.95z"
+        fill={filled ? "#ffd35a" : "none"} stroke={filled ? "#caa12e" : "#4a4f58"} strokeWidth="1.2" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
   const name = p.isSelf ? selfName : p.name;
   // じわじわ系: 序盤は気づけないよう二乗カーブで進行させる
@@ -525,11 +567,12 @@ function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
 
 // ---------- Main ----------
 export default function TeireiKaigi() {
-  const [phase, setPhase] = useState("title"); // title | meeting | transition | clear
+  const [phase, setPhase] = useState("title"); // title | meeting | transition | clear | anomalies
   const [dayIdx, setDayIdx] = useState(0);
   const [view, setView] = useState(null);
   const [anomalyId, setAnomalyId] = useState(null);
   const [usedAnomalies, setUsedAnomalies] = useState(loadUsedAnomalies);
+  const [discovered, setDiscovered] = useState(loadDiscovered);
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
@@ -537,6 +580,12 @@ export default function TeireiKaigi() {
   const timerRef = useRef(null);
   const stateRef = useRef({});
   stateRef.current = { anomalyId, dayIdx, usedAnomalies };
+
+  const totalAnomalies = ANOMALIES.length;
+  // discovered は loadAnomalyIdList で検証・重複排除済みなので件数はそのまま長さでよい。
+  const discoveredSet = new Set(discovered); // 図鑑リストの一覧表示で使う
+  const discoveredCount = discovered.length;
+  const allDiscovered = discoveredCount >= totalAnomalies;
 
   const startMeeting = useCallback((day) => {
     let nextAnomaly = null;
@@ -587,14 +636,11 @@ export default function TeireiKaigi() {
   function succeed(byLeaving) {
     clearInterval(timerRef.current);
     const { anomalyId: aId, dayIdx: d } = stateRef.current;
-    // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する
+    // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する。
+    // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
-      const recorded = loadUsedAnomalies();
-      if (!recorded.includes(aId)) {
-        const next = [...recorded, aId];
-        saveUsedAnomalies(next);
-        setUsedAnomalies(next);
-      }
+      recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
+      recordAnomalyId(aId, loadDiscovered, saveDiscovered, setDiscovered);
     }
     if (d >= DAYS.length - 1) {
       playClear();
@@ -697,6 +743,7 @@ export default function TeireiKaigi() {
         @keyframes tk-talk { from { transform: scaleY(0.45); } to { transform: scaleY(1.3); } }
         @keyframes tk-fadein { from { opacity: 0; } to { opacity: 1; } }
         @keyframes tk-recblink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+        @keyframes tk-trophyglow { 0%,100% { box-shadow: 0 0 12px rgba(255,211,90,0.18); } 50% { box-shadow: 0 0 22px rgba(255,211,90,0.4); } }
         @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01s !important; } }
         .tk-btn { border: none; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
         .tk-btn:focus-visible { outline: 2px solid #7ab8ff; outline-offset: 2px; }
@@ -705,7 +752,17 @@ export default function TeireiKaigi() {
       {phase === "title" && (
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center", animation: "tk-fadein 0.6s" }}>
           <div style={{ fontSize: 13, letterSpacing: "0.4em", color: "#8a8f99", marginBottom: 12 }}>DAILY MEETING</div>
-          <h1 style={{ fontSize: 44, fontWeight: 800, margin: "0 0 28px", letterSpacing: "0.12em" }}>定例会議</h1>
+          <h1 style={{ fontSize: 44, fontWeight: 800, margin: "0 0 16px", letterSpacing: "0.12em" }}>定例会議</h1>
+          {allDiscovered && (
+            <div style={{
+              display: "flex", alignItems: "center", gap: 8, marginBottom: 16,
+              background: "linear-gradient(180deg,#2a2410,#1c1a12)", border: "1px solid #6b561e",
+              borderRadius: 999, padding: "6px 16px", color: "#ffd35a", fontWeight: 700, fontSize: 13,
+              boxShadow: "0 0 18px rgba(255,211,90,0.25)", animation: "tk-trophyglow 2.4s ease-in-out infinite",
+            }}>
+              <TrophyIcon size={20} /> 全異変 制覇
+            </div>
+          )}
           <div style={{ maxWidth: 420, fontSize: 14, lineHeight: 2, color: "#b8bcc4", textAlign: "left" }}>
             <p style={{ margin: "0 0 8px" }}>毎日の定例会議。だが、何かがおかしい日がある。</p>
             <p style={{ margin: "0 0 8px" }}>異変を感じたら、すぐに <b style={{ color: "#ff8a8a" }}>退出</b>。<br />異変がなければ、<b style={{ color: "#fff" }}>最後まで残る</b>。</p>
@@ -715,9 +772,14 @@ export default function TeireiKaigi() {
             style={{ marginTop: 36, background: "#3a6df0", color: "#fff", padding: "14px 48px", fontSize: 15 }}>
             会議に参加
           </button>
+          <button className="tk-btn" onClick={() => { playClick(); setPhase("anomalies"); }}
+            style={{ marginTop: 16, background: "#23262c", color: "#e6e6e8", display: "flex", alignItems: "center", gap: 7, padding: "10px 24px" }}>
+            <StarIcon size={15} filled={allDiscovered} /> 異変図鑑
+            <span style={{ color: "#8a8f99", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{discoveredCount} / {totalAnomalies}</span>
+          </button>
           <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
             aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
-            style={{ marginTop: 16, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
+            style={{ marginTop: 12, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
             <SpeakerIcon on={soundOn} /> サウンド {soundOn ? "ON" : "OFF"}
           </button>
           <a href="https://x.com/taross__f" target="_blank" rel="noopener noreferrer"
@@ -801,6 +863,81 @@ export default function TeireiKaigi() {
             style={{ marginTop: 32, background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
             タイトルへ
           </button>
+        </div>
+      )}
+
+      {phase === "anomalies" && (
+        <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", animation: "tk-fadein 0.4s" }}>
+          {/* header */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderBottom: "1px solid #23262c" }}>
+            <button className="tk-btn" onClick={() => { playClick(); setPhase("title"); }}
+              aria-label="タイトルへ戻る"
+              style={{ background: "#23262c", color: "#e6e6e8", padding: "6px 12px" }}>
+              ← 戻る
+            </button>
+            <span style={{ fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 7 }}>
+              <StarIcon size={16} filled={allDiscovered} /> 異変図鑑
+            </span>
+            <span style={{ marginLeft: "auto", fontSize: 13, color: "#8a8f99", fontVariantNumeric: "tabular-nums" }}>
+              {discoveredCount} / {totalAnomalies}
+            </span>
+          </div>
+
+          {/* completion banner */}
+          {allDiscovered && (
+            <div style={{
+              margin: "14px 16px 0", padding: "14px 16px", borderRadius: 10, textAlign: "center",
+              background: "linear-gradient(180deg,#2a2410,#1c1a12)", border: "1px solid #6b561e", color: "#ffd35a",
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+              boxShadow: "0 0 18px rgba(255,211,90,0.2)",
+            }}>
+              <TrophyIcon size={40} />
+              <div style={{ fontWeight: 800, fontSize: 16 }}>全異変 制覇</div>
+              <div style={{ fontSize: 12, color: "#caa66a" }}>すべての異変を見破りました。お見事です。</div>
+            </div>
+          )}
+
+          {/* progress bar */}
+          <div style={{ margin: "14px 16px 0" }}>
+            <div style={{ height: 6, borderRadius: 3, background: "#23262c", overflow: "hidden" }}>
+              <div style={{
+                width: `${(discoveredCount / totalAnomalies) * 100}%`, height: "100%",
+                background: allDiscovered ? "linear-gradient(90deg,#caa12e,#ffd35a)" : "#3a6df0",
+                transition: "width 0.4s",
+              }} />
+            </div>
+          </div>
+
+          {/* list */}
+          <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: 16, display: "grid", gap: 8, gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", alignContent: "start" }}>
+            {ANOMALIES.map((a, i) => {
+              const found = discoveredSet.has(a.id);
+              return (
+                <div key={a.id} style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8,
+                  background: found ? "#1d2128" : "#191b1f",
+                  border: found ? "1px solid #2c3b58" : "1px solid #23262c",
+                }}>
+                  <span style={{
+                    flexShrink: 0, width: 26, textAlign: "right", fontSize: 12,
+                    color: "#5f6570", fontVariantNumeric: "tabular-nums",
+                  }}>{String(i + 1).padStart(2, "0")}</span>
+                  <StarIcon size={16} filled={found} />
+                  <span style={{
+                    fontSize: 13, lineHeight: 1.5,
+                    color: found ? "#e6e6e8" : "#5f6570",
+                    fontStyle: found ? "normal" : "italic",
+                  }}>
+                    {found ? a.label : "？？？（未発見）"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{ textAlign: "center", padding: "8px 16px 14px", fontSize: 11, color: "#5f6570" }}>
+            異変を正しく見破る（退出する）と図鑑に記録されます。
+          </div>
         </div>
       )}
     </div>
