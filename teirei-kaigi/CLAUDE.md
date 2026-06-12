@@ -14,7 +14,7 @@
 - `src/TeireiKaigi.jsx` に全実装(単一コンポーネント、依存はReactのみ)。
 - `src/sound.js` にサウンドエンジン。**Web Audio APIでファミコン風効果音を都度合成**(矩形波/三角波オシレータ)。音声ファイルは持たない=依存・アセットゼロを維持。ブラウザの自動再生制限のため `ensureAudio()` をユーザー操作中(「会議に参加」/サウンドトグル)に呼んで初期化する。ON/OFFは `localStorage`(`tk_sound`)に永続化。効果音: ボタンクリック/退出/会議参加/正解/失敗/全クリア/カウントダウン、および**字幕に同期したテキスト送り音**(`playCaption`、沈黙「……」時は `playSilence` の不穏な単音)。字幕音は異変の有無で変えない(早期に異変を悟らせないため)。
 - 異変は `ANOMALIES` 配列で宣言的に定義。各異変は `buildView()` が生成するビューモデル(参加者リスト、会議名、字幕、時計、退出ボタンのラベル等)への変換関数 `apply(v)` として実装する。**新しい異変はこの配列に追加するだけで組み込まれる。**
-- 1ランで同じ異変は再出現しない(`usedAnomalies`)。異変出現率は `ANOMALY_RATE = 0.55`。
+- 1ランで同じ異変は再出現しない(`usedAnomalies`)。異変出現率は `ANOMALY_RATE = 0.66`。
 - **異変図鑑(コレクション)**: 一度でも正しく見破った異変を `localStorage`(`tk_discovered_anomalies`)に永続記録する。`usedAnomalies`(全種揃うとローテーションのためリセットされる)とは独立で、図鑑はリセットしない。読み書きは `loadAnomalyIdList`/`saveAnomalyIdList` に集約し、追記は `recordAnomalyId` ヘルパで used/discovered 両方に行う。タイトル画面の「異変図鑑」ボタンから一覧(`phase === "anomalies"`)へ遷移し、未発見は「？？？」で伏せる。**全種類(`ANOMALIES.length`)を見破ると `allDiscovered` が真になり、タイトルと図鑑にトロフィー(`TrophyIcon`)の「全異変 制覇」表示が出る。**
 - アバターはSVG手描き(プレースホルダ品質)。まばたき・口パクはCSSアニメーション。
 

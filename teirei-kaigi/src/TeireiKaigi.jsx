@@ -13,7 +13,7 @@ import {
 
 const MEETING_SECONDS = 35;
 const DAYS = ["月", "火", "水", "木", "金"];
-const ANOMALY_RATE = 0.6;
+const ANOMALY_RATE = 0.66;
 const USED_STORAGE_KEY = "tk_used_anomalies";
 // 図鑑用: 一度でも見破った異変の永続記録。USED と違いリセットしない(全制覇トロフィー判定に使う)。
 const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
