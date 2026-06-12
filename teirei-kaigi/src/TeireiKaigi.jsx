@@ -146,6 +146,11 @@ const ANOMALIES = [
     label: "田中さんの顔色がおかしかった",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, skin: "#9fbf8e" } : p); },
   },
+  {
+    id: "eyecolor",
+    label: "渡辺さんの目が、赤かった",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "watanabe" ? { ...p, eyeColor: "#c01818" } : p); },
+  },
   // ---- 不気味強化系（静的） ----
   {
     id: "noblink",
@@ -188,6 +193,11 @@ const ANOMALIES = [
     id: "redden",
     label: "鈴木さんの画面が、だんだん赤く染まっていた",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "suzuki" ? { ...p, redden: true } : p); },
+  },
+  {
+    id: "thirdeye",
+    label: "田中さんの額に、もう一つ目が開いていた",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, thirdEye: true } : p); },
   },
 ];
 
@@ -272,7 +282,7 @@ function buildView(anomalyId) {
 }
 
 // ---------- Avatar ----------
-function Avatar({ p, talking, syncBlink, idx, frozen }) {
+function Avatar({ p, talking, syncBlink, idx, frozen, progress = 0 }) {
   if (p.cameraOff) {
     return (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -287,14 +297,24 @@ function Avatar({ p, talking, syncBlink, idx, frozen }) {
     animationDelay: syncBlink ? "0s" : `${(idx * 1.13) % 3}s`,
     transformOrigin: "center",
   };
+  // eyeColor 異変: 目の色を差し替える(既定は黒)。
+  const eyeFill = p.eyeColor || "#222";
+  // thirdEye 異変: 額の目が二乗カーブでゆっくり開く(じわじわ系)。
+  const thirdOpen = p.thirdEye ? Math.min(1, progress * progress * 1.5) : 0;
   return (
     <svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
       <rect x="35" y="62" width="50" height="34" rx="12" fill={p.shirt} />
       <circle cx="60" cy="42" r="19" fill={p.skin} />
       <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e" />
+      {thirdOpen > 0 && (
+        <g>
+          <ellipse cx="60" cy="32" rx="3.6" ry={3.6 * thirdOpen} fill="#f1eae6" stroke="rgba(90,60,60,0.6)" strokeWidth="0.5" />
+          <ellipse cx="60" cy="32" rx="1.7" ry={Math.max(0.1, 1.9 * thirdOpen)} fill={eyeFill} />
+        </g>
+      )}
       <g style={blinkStyle}>
-        <ellipse cx="53" cy="42" rx="2.4" ry="3" fill="#222" />
-        <ellipse cx="67" cy="42" rx="2.4" ry="3" fill="#222" />
+        <ellipse cx="53" cy="42" rx="2.4" ry="3" fill={eyeFill} />
+        <ellipse cx="67" cy="42" rx="2.4" ry="3" fill={eyeFill} />
       </g>
       {p.glasses && (
         <g stroke="#222" strokeWidth="1.4" fill="none">
@@ -398,7 +418,7 @@ function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
         transformOrigin: "50% 40%",
         transition: "transform 1.1s linear",
       }}>
-        <Avatar p={p} talking={talking} syncBlink={syncBlink} idx={idx} frozen={frozen} />
+        <Avatar p={p} talking={talking} syncBlink={syncBlink} idx={idx} frozen={frozen} progress={progress} />
       </div>
       {p.redden && (
         <div style={{
