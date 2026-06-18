@@ -25,8 +25,10 @@ const ANOMALY_RATE = 0.66;
 const USED_STORAGE_KEY = "tk_used_anomalies";
 // 図鑑用: 一度でも見破った異変の永続記録。USED と違いリセットしない(全制覇トロフィー判定に使う)。
 const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
-// クリア済みフラグ: 一度でも金曜まで完走したか。異変図鑑の解放条件に使う(永続)。
+// クリア済みフラグ: 一度でも金曜まで完走したか。異変図鑑とエンドレスモードの解放条件に使う(永続)。
 const CLEARED_STORAGE_KEY = "tk_cleared";
+// エンドレスモードの最高連続正解数(永続)。クリア済みの人だけが遊べる。
+const ENDLESS_BEST_KEY = "tk_endless_best";
 
 const BASE_PARTICIPANTS = [
   { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
@@ -258,6 +260,23 @@ function saveCleared() {
   }
 }
 
+// エンドレスモードの自己ベスト(連続正解数)の読み書き。不正値・非対応環境は0扱い。
+function loadEndlessBest() {
+  try {
+    const n = parseInt(localStorage.getItem(ENDLESS_BEST_KEY) || "0", 10);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  } catch {
+    return 0;
+  }
+}
+function saveEndlessBest(n) {
+  try {
+    localStorage.setItem(ENDLESS_BEST_KEY, String(n));
+  } catch {
+    /* 黙って無視 */
+  }
+}
+
 // 異変IDを永続リスト(+対応するReact state)に重複なく追記する。
 function recordAnomalyId(id, load, save, setState) {
   const list = load();
@@ -472,14 +491,17 @@ export default function TeireiKaigi() {
   const [anomalyId, setAnomalyId] = useState(null);
   const [usedAnomalies, setUsedAnomalies] = useState(loadUsedAnomalies);
   const [discovered, setDiscovered] = useState(loadDiscovered);
-  const [cleared, setCleared] = useState(loadCleared); // 金曜まで完走済みか(図鑑の解放条件)
+  const [cleared, setCleared] = useState(loadCleared); // 金曜まで完走済みか(図鑑・エンドレスの解放条件)
+  const [mode, setMode] = useState("campaign"); // campaign(月〜金) | endless(クリア後に解放)
+  const [streak, setStreak] = useState(0);       // エンドレスの連続正解数
+  const [endlessBest, setEndlessBest] = useState(loadEndlessBest);
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
   const [soundOn, setSoundOn] = useState(loadSoundEnabled);
   const timerRef = useRef(null);
   const stateRef = useRef({});
-  stateRef.current = { anomalyId, dayIdx, usedAnomalies };
+  stateRef.current = { anomalyId, dayIdx, usedAnomalies, mode, streak };
 
   const totalAnomalies = ANOMALIES.length;
   // discovered は loadAnomalyIdList で検証・重複排除済みなので件数はそのまま長さでよい。
@@ -509,7 +531,17 @@ export default function TeireiKaigi() {
   // タイトル/クリア画面からの参加: ユーザー操作中にAudioContextを起こす。
   const joinFromTitle = useCallback(() => {
     ensureAudio();
+    setMode("campaign");
     track("game_start");
+    startMeeting(0);
+  }, [startMeeting]);
+
+  // エンドレスモード開始(クリア済みのみ解放)。クリア概念なしで連続正解数を競う。
+  const startEndless = useCallback(() => {
+    ensureAudio();
+    setMode("endless");
+    setStreak(0);
+    track("endless_start");
     startMeeting(0);
   }, [startMeeting]);
 
@@ -533,7 +565,24 @@ export default function TeireiKaigi() {
     playFail();
     // reason: "stayed"(異変ありに残った) | "wrong"(異変なしで退出)
     trackMeetingResult("fail", { reason: kind });
-    // 見破り済みリストは永続化したまま月曜へ(見逃した異変は再挑戦できる)
+    const { mode: m, streak: s } = stateRef.current;
+    if (m === "endless") {
+      // エンドレス終了: 連続正解数を確定し、自己ベストを更新する
+      const best = loadEndlessBest();
+      const isNewBest = s > best;
+      const nextBest = Math.max(s, best);
+      if (isNewBest) { saveEndlessBest(s); setEndlessBest(s); }
+      track("endless_end", { streak: s, best: nextBest });
+      setTransition({
+        kind: "endless_over",
+        title: kind === "stayed" ? "異変のある会議に、最後まで残ってしまった" : "異変のない会議から、退出してしまった",
+        streak: s,
+        isNewBest,
+      });
+      setPhase("endlessover");
+      return;
+    }
+    // 通常モード: 見破り済みは永続化したまま月曜へ(見逃した異変は再挑戦できる)
     setTransition({
       kind: "fail",
       title: kind === "stayed" ? "異変のある会議に、最後まで残ってしまった" : "接続が切断されました",
@@ -545,7 +594,7 @@ export default function TeireiKaigi() {
 
   function succeed(byLeaving) {
     clearInterval(timerRef.current);
-    const { anomalyId: aId, dayIdx: d } = stateRef.current;
+    const { anomalyId: aId, dayIdx: d, mode: m, streak: s } = stateRef.current;
     // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する。
     // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
@@ -562,21 +611,34 @@ export default function TeireiKaigi() {
     }
     // method: 退出して正解("leave") / 残って正解("stay")
     trackMeetingResult("success", { method: byLeaving ? "leave" : "stay" });
+    // エンドレスモード: クリア概念なし。連続正解を伸ばし続ける(失敗で終了)。
+    if (m === "endless") {
+      const nextStreak = s + 1;
+      setStreak(nextStreak);
+      playSuccess();
+      setTransition({
+        kind: "advance",
+        title: byLeaving ? "ミーティングを退出しました" : "会議が終了しました",
+        sub: `連続正解 ${nextStreak}`,
+      });
+      setPhase("transition");
+      setTimeout(() => startMeeting(d + 1), 1800);
+      return;
+    }
     if (d >= DAYS.length - 1) {
       playClear();
       track("game_clear");
-      saveCleared();   // 金曜まで完走 → 図鑑を解放
+      saveCleared();   // 金曜まで完走 → 図鑑とエンドレスを解放
       setCleared(true);
       setPhase("clear");
       return;
     }
     playSuccess();
-    const label = byLeaving && aId ? ANOMALIES.find(a => a.id === aId)?.label : null;
+    // 異変名は伏せる(8番出口同様、答えは教えない)。何だったかは図鑑でのみ開示する。
     setTransition({
       kind: "advance",
       title: byLeaving ? "ミーティングを退出しました" : "会議が終了しました",
       sub: `${DAYS[d + 1]}曜日の定例へ`,
-      detail: label,
     });
     setPhase("transition");
     setTimeout(() => startMeeting(d + 1), 2400);
@@ -707,6 +769,16 @@ export default function TeireiKaigi() {
               <span style={{ color: "#8a8f99", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{discoveredCount} / {totalAnomalies}</span>
             </button>
           )}
+          {/* エンドレスモードも図鑑同様、金曜まで完走(クリア)した人にだけ解放する */}
+          {cleared && (
+            <button className="tk-btn" onClick={startEndless}
+              style={{ marginTop: 12, background: "linear-gradient(180deg,#2a2410,#1c1a12)", color: "#ffd35a", border: "1px solid #6b561e", display: "flex", alignItems: "center", gap: 7, padding: "10px 24px" }}>
+              <span style={{ fontSize: 17, fontWeight: 800, lineHeight: 1 }}>∞</span> エンドレスモード
+              {endlessBest > 0 && (
+                <span style={{ color: "#caa66a", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>最高 {endlessBest}</span>
+              )}
+            </button>
+          )}
           <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
             aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
             style={{ marginTop: 12, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
@@ -726,8 +798,13 @@ export default function TeireiKaigi() {
         <>
           {/* header */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderBottom: "1px solid #23262c", fontSize: 12, color: "#aab0ba" }}>
-            <span style={{ fontWeight: 700, color: "#e6e6e8" }}>{view.title}（{DAYS[dayIdx]}）</span>
+            <span style={{ fontWeight: 700, color: "#e6e6e8" }}>{view.title}（{DAYS[dayIdx % DAYS.length]}）</span>
             <span>{view.clock}</span>
+            {mode === "endless" && (
+              <span style={{ color: "#ffd35a", display: "flex", alignItems: "center", gap: 3, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                <span style={{ fontSize: 14 }}>∞</span>{streak}
+              </span>
+            )}
             {view.recording && (
               <span style={{ color: "#ff6b6b", display: "flex", alignItems: "center", gap: 4 }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5252", animation: "tk-recblink 1.2s infinite" }} />
@@ -778,9 +855,6 @@ export default function TeireiKaigi() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center", animation: "tk-fadein 0.4s", background: transition.kind === "fail" ? "#0c0d0f" : "#141619" }}>
           <div style={{ fontSize: 20, fontWeight: 700, color: transition.kind === "fail" ? "#ff8a8a" : "#e6e6e8", lineHeight: 1.6 }}>{transition.title}</div>
           <div style={{ marginTop: 10, fontSize: 14, color: "#8a8f99" }}>{transition.sub}</div>
-          {transition.detail && (
-            <div style={{ marginTop: 18, fontSize: 12, color: "#5f6570" }}>（{transition.detail}）</div>
-          )}
         </div>
       )}
 
@@ -793,6 +867,28 @@ export default function TeireiKaigi() {
             style={{ marginTop: 32, background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
             タイトルへ
           </button>
+        </div>
+      )}
+
+      {phase === "endlessover" && transition && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center", animation: "tk-fadein 0.6s", background: "#0c0d0f" }}>
+          <div style={{ fontSize: 13, letterSpacing: "0.3em", color: "#8a8f99", marginBottom: 14 }}>ENDLESS — GAME OVER</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: "#ff8a8a", lineHeight: 1.6 }}>{transition.title}</div>
+          <div style={{ marginTop: 26, fontSize: 12, color: "#8a8f99", letterSpacing: "0.3em" }}>連続正解</div>
+          <div style={{ fontSize: 56, fontWeight: 800, color: "#ffd35a", lineHeight: 1.1, fontVariantNumeric: "tabular-nums" }}>{transition.streak}</div>
+          {transition.isNewBest ? (
+            <div style={{ marginTop: 8, fontSize: 13, color: "#ffd35a", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+              <TrophyIcon size={16} /> 自己ベスト更新！
+            </div>
+          ) : (
+            <div style={{ marginTop: 8, fontSize: 13, color: "#8a8f99", fontVariantNumeric: "tabular-nums" }}>最高記録 {endlessBest}</div>
+          )}
+          <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}>
+            <button className="tk-btn" onClick={startEndless}
+              style={{ background: "#3a6df0", color: "#fff", padding: "12px 32px" }}>もう一度</button>
+            <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "endless" }); setPhase("title"); }}
+              style={{ background: "#23262c", color: "#e6e6e8", padding: "12px 32px" }}>タイトルへ</button>
+          </div>
         </div>
       )}
 
