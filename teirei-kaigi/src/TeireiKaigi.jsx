@@ -567,12 +567,11 @@ export default function TeireiKaigi() {
     trackMeetingResult("fail", { reason: kind });
     const { mode: m, streak: s } = stateRef.current;
     if (m === "endless") {
-      // エンドレス終了: 連続正解数を確定し、自己ベストを更新する
-      const best = loadEndlessBest();
-      const isNewBest = s > best;
-      const nextBest = Math.max(s, best);
+      // エンドレス終了: 連続正解数を確定し、自己ベストを更新する。
+      // endlessBest は state とlocalStorageが常に同期しているので state を使う。
+      const isNewBest = s > endlessBest;
       if (isNewBest) { saveEndlessBest(s); setEndlessBest(s); }
-      track("endless_end", { streak: s, best: nextBest });
+      track("endless_end", { streak: s, best: isNewBest ? s : endlessBest });
       setTransition({
         kind: "endless_over",
         title: kind === "stayed" ? "異変のある会議に、最後まで残ってしまった" : "異変のない会議から、退出してしまった",
