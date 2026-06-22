@@ -790,6 +790,23 @@ export default function TeireiKaigi() {
             </svg>
             @taross__f
           </a>
+          {/* Special Thanks: 着想元へのさりげない謝辞(8番出口/8番乗り場のアフィリエイト) */}
+          <div style={{ marginTop: 24, fontSize: 11, color: "#4a4f58", lineHeight: 1.9, textAlign: "center" }}>
+            <div style={{ letterSpacing: "0.25em", marginBottom: 2 }}>SPECIAL THANKS</div>
+            <div>
+              <a href="https://amzn.to/4vZoqfq" target="_blank" rel="noopener noreferrer sponsored"
+                onClick={() => track("affiliate_click", { product: "exit8" })}
+                style={{ color: "#6b7280", textDecoration: "none", borderBottom: "1px dotted #3a3f47" }}>
+                8番出口
+              </a>
+              {" ・ "}
+              <a href="https://amzn.to/4vZoqfq" target="_blank" rel="noopener noreferrer sponsored"
+                onClick={() => track("affiliate_click", { product: "platform8" })}
+                style={{ color: "#6b7280", textDecoration: "none", borderBottom: "1px dotted #3a3f47" }}>
+                8番乗り場
+              </a>
+            </div>
+          </div>
         </div>
       )}
 
