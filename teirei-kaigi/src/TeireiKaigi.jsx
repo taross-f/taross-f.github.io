@@ -4,6 +4,14 @@ import {
   playClick, playLeave, playCaption, playSilence,
   playStart, playSuccess, playFail, playClear, playTick,
 } from "./sound";
+import { generateSequence, ANOMALY_IDS } from "./endlessCore";
+
+// エンドレスランキングのAPIエンドポイント(Cloudflare Worker)。
+// ビルド時に VITE_RANKING_API で指定する。未設定ならランキングは無効化され、
+// ゲームは従来どおり自己ベストのみで動作する(後方互換)。
+const RANKING_API = (import.meta.env && import.meta.env.VITE_RANKING_API) || "";
+// 先読み生成するエンドレスの最大ラウンド数(人間が到達しない十分大きな値)。
+const ENDLESS_MAX_ROUNDS = 600;
 
 // ============================================================
 // 定例会議 — 8番出口ライク・ビデオ会議異変探し プロトタイプ v2
@@ -29,6 +37,8 @@ const DISCOVERED_STORAGE_KEY = "tk_discovered_anomalies";
 const CLEARED_STORAGE_KEY = "tk_cleared";
 // エンドレスモードの最高連続正解数(永続)。クリア済みの人だけが遊べる。
 const ENDLESS_BEST_KEY = "tk_endless_best";
+// ランキング登録名(永続)。
+const PLAYER_NAME_KEY = "tk_player_name";
 
 const BASE_PARTICIPANTS = [
   { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
@@ -213,6 +223,20 @@ const ANOMALIES = [
   },
 ];
 
+// 決定論コア(endlessCore)が持つ異変ID正本と、実際のANOMALIES定義の一致を起動時に検証する。
+// ズレるとサーバ側のスコア再生検証と食い違うため、開発中に必ず気づけるようにする。
+if (import.meta.env && import.meta.env.DEV) {
+  const ids = ANOMALIES.map((a) => a.id);
+  const same = ids.length === ANOMALY_IDS.length && ids.every((id, i) => id === ANOMALY_IDS[i]);
+  if (!same) {
+    console.error(
+      "[teirei-kaigi] ANOMALIES と endlessCore.ANOMALY_IDS が不一致です。" +
+        "endlessCore.js の ANOMALY_IDS を更新し、Workerも再デプロイしてください。",
+      { anomalies: ids, core: ANOMALY_IDS }
+    );
+  }
+}
+
 // localStorage上の異変IDリストを読み書きする共通ヘルパ。
 // 読み込み時に定義から消えたID・配列以外の不正値を除外する。
 function loadAnomalyIdList(key) {
@@ -272,6 +296,22 @@ function loadEndlessBest() {
 function saveEndlessBest(n) {
   try {
     localStorage.setItem(ENDLESS_BEST_KEY, String(n));
+  } catch {
+    /* 黙って無視 */
+  }
+}
+
+// ランキング登録名の読み書き。
+function loadPlayerName() {
+  try {
+    return (localStorage.getItem(PLAYER_NAME_KEY) || "").slice(0, 12);
+  } catch {
+    return "";
+  }
+}
+function savePlayerName(name) {
+  try {
+    localStorage.setItem(PLAYER_NAME_KEY, name);
   } catch {
     /* 黙って無視 */
   }
@@ -503,6 +543,14 @@ export default function TeireiKaigi() {
   const stateRef = useRef({});
   stateRef.current = { anomalyId, dayIdx, usedAnomalies, mode, streak };
 
+  // エンドレスの決定論実行用。seqRef が非nullの間はエンドレス進行中(=seed列で出題)。
+  const seqRef = useRef(null);   // generateSequence の結果(先読み列)
+  const runRef = useRef(null);   // { seed, sid, iat, sig, inputs[], roundStartMs } / オフライン時はsessionなし
+  // ランキングUI
+  const [playerName, setPlayerName] = useState(loadPlayerName);
+  const [ranking, setRanking] = useState(null);            // { streak, rank, top[] }
+  const [submitState, setSubmitState] = useState("idle");  // idle|submitting|done|error|offline|invalid
+
   const totalAnomalies = ANOMALIES.length;
   // discovered は loadAnomalyIdList で検証・重複排除済みなので件数はそのまま長さでよい。
   const discoveredSet = new Set(discovered); // 図鑑リストの一覧表示で使う
@@ -511,8 +559,12 @@ export default function TeireiKaigi() {
 
   const startMeeting = useCallback((day) => {
     let nextAnomaly = null;
-    if (Math.random() < ANOMALY_RATE) {
-      // 見破り済みリストは最新の永続値から読む(失敗で月曜に戻っても引き継ぐ)
+    const seq = seqRef.current;
+    if (seq) {
+      // エンドレス: seed由来の先読み列から決定論的に出題する(localStorageのプールには依存しない)。
+      nextAnomaly = seq[day] ? seq[day].anomalyId : null;
+    } else if (Math.random() < ANOMALY_RATE) {
+      // 通常モード: 見破り済みリストは最新の永続値から読む(失敗で月曜に戻っても引き継ぐ)
       // 出現時点では記録せず、全種類見破り済みだった場合のリセットのみ反映する
       const picked = pickAnomaly(loadUsedAnomalies());
       nextAnomaly = picked.anomalyId;
@@ -525,23 +577,58 @@ export default function TeireiKaigi() {
     setTimeLeft(MEETING_SECONDS);
     setCaptionIdx(0);
     setPhase("meeting");
+    // 操作ログ用にラウンド開始時刻を記録(オンラインのエンドレス時のみ使う)。
+    if (runRef.current) runRef.current.roundStartMs = Date.now();
     playStart();
   }, []);
 
   // タイトル/クリア画面からの参加: ユーザー操作中にAudioContextを起こす。
   const joinFromTitle = useCallback(() => {
     ensureAudio();
+    seqRef.current = null;   // 通常モードは決定論列を使わない(Math.random出題に戻す)
+    runRef.current = null;
     setMode("campaign");
     track("game_start");
     startMeeting(0);
   }, [startMeeting]);
 
   // エンドレスモード開始(クリア済みのみ解放)。クリア概念なしで連続正解数を競う。
-  const startEndless = useCallback(() => {
+  // サーバから署名付き seed を受け取り、その seed の決定論列で出題する。操作ログを記録して
+  // ゲームオーバー時にサーバへ送信し、再生検証を経てランキングに登録する。
+  // サーバが無い/到達不能なら、ローカル乱数seedで遊べるが順位送信はしない(後方互換)。
+  const startEndless = useCallback(async () => {
     ensureAudio();
     setMode("endless");
     setStreak(0);
+    setRanking(null);
+    setSubmitState("idle");
     track("endless_start");
+
+    let session = null;
+    if (RANKING_API) {
+      try {
+        const res = await fetch(`${RANKING_API}/session`, { method: "GET" });
+        if (res.ok) session = await res.json();
+      } catch {
+        /* オフライン: ローカルseedにフォールバック */
+      }
+    }
+    if (session && Number.isFinite(session.seed)) {
+      runRef.current = {
+        seed: session.seed >>> 0,
+        sid: session.sid,
+        iat: session.iat,
+        sig: session.sig,
+        inputs: [],
+        roundStartMs: 0,
+      };
+      seqRef.current = generateSequence(session.seed >>> 0, ENDLESS_MAX_ROUNDS);
+    } else {
+      // オフライン: 送信はしないが、決定論列でゲームは成立させる。
+      const localSeed = (Math.random() * 0xffffffff) >>> 0;
+      runRef.current = null;
+      seqRef.current = generateSequence(localSeed, ENDLESS_MAX_ROUNDS);
+    }
     startMeeting(0);
   }, [startMeeting]);
 
@@ -560,6 +647,55 @@ export default function TeireiKaigi() {
     track("meeting_result", { result, day_index: d + 1, anomaly_id: aId || "none", ...meta });
   }
 
+  // エンドレスの操作ログに1ラウンド分を追記する(オンライン実行時のみ)。
+  // action: "leave"(退出した) | "stay"(最後まで残った)。elapsedMsはラウンド開始からの経過。
+  function recordEndlessInput(action) {
+    const run = runRef.current;
+    if (!run) return;
+    const elapsedMs = Date.now() - (run.roundStartMs || Date.now());
+    run.inputs.push({ action, elapsedMs });
+  }
+
+  // ゲームオーバー時に操作ログをサーバへ送信し、再生検証を経てランキング登録する。
+  async function submitScore() {
+    const run = runRef.current;
+    if (!RANKING_API || !run) {
+      setSubmitState("offline");
+      return;
+    }
+    setSubmitState("submitting");
+    const nm = (playerName || "").trim().slice(0, 12);
+    savePlayerName(nm);
+    try {
+      const res = await fetch(`${RANKING_API}/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          seed: run.seed,
+          sid: run.sid,
+          iat: run.iat,
+          sig: run.sig,
+          name: nm,
+          inputs: run.inputs,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setRanking({ streak: data.streak, rank: data.rank, top: data.top || [] });
+        setSubmitState("done");
+        track("ranking_submit", { result: "ok", streak: data.streak, rank: data.rank });
+      } else {
+        // 検証で弾かれた(改ざん・時間不整合など)場合も含めて失敗扱い。
+        const invalid = data && data.error === "invalid_play";
+        setSubmitState(invalid ? "invalid" : "error");
+        track("ranking_submit", { result: invalid ? "invalid" : "error" });
+      }
+    } catch {
+      setSubmitState("error");
+      track("ranking_submit", { result: "error" });
+    }
+  }
+
   function fail(kind) {
     clearInterval(timerRef.current);
     playFail();
@@ -567,6 +703,9 @@ export default function TeireiKaigi() {
     trackMeetingResult("fail", { reason: kind });
     const { mode: m, streak: s } = stateRef.current;
     if (m === "endless") {
+      // 失敗したラウンドも操作ログに含める(末尾=不正解 が正規のゲームオーバー)。
+      // wrong=異変なしで退出した("leave") / stayed=異変ありに残った("stay")。
+      recordEndlessInput(kind === "wrong" ? "leave" : "stay");
       // エンドレス終了: 連続正解数を確定し、自己ベストを更新する。
       // endlessBest は state とlocalStorageが常に同期しているので state を使う。
       const isNewBest = s > endlessBest;
@@ -579,6 +718,16 @@ export default function TeireiKaigi() {
         isNewBest,
       });
       setPhase("endlessover");
+      // streak 0 は登録対象外。サーバ無しはオフライン。登録名があれば自動送信、無ければ入力を促す。
+      if (!runRef.current) {
+        setSubmitState("offline");
+      } else if (s <= 0) {
+        setSubmitState("idle");
+      } else if ((playerName || "").trim()) {
+        submitScore();
+      } else {
+        setSubmitState("idle");
+      }
       return;
     }
     // 通常モード: 見破り済みは永続化したまま月曜へ(見逃した異変は再挑戦できる)
@@ -612,6 +761,8 @@ export default function TeireiKaigi() {
     trackMeetingResult("success", { method: byLeaving ? "leave" : "stay" });
     // エンドレスモード: クリア概念なし。連続正解を伸ばし続ける(失敗で終了)。
     if (m === "endless") {
+      // 正解したラウンドを操作ログに追記(byLeaving=退出して正解 / それ以外=残って正解)。
+      recordEndlessInput(byLeaving ? "leave" : "stay");
       const nextStreak = s + 1;
       setStreak(nextStreak);
       playSuccess();
@@ -899,6 +1050,54 @@ export default function TeireiKaigi() {
           ) : (
             <div style={{ marginTop: 8, fontSize: 13, color: "#8a8f99", fontVariantNumeric: "tabular-nums" }}>最高記録 {endlessBest}</div>
           )}
+
+          {transition.streak > 0 && (
+            <div style={{ marginTop: 26, width: "100%", maxWidth: 360 }}>
+              {submitState === "offline" && (
+                <div style={{ fontSize: 12, color: "#6b7079" }}>ランキングはオフラインです</div>
+              )}
+              {submitState === "idle" && (
+                <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+                  <input
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value.slice(0, 12))}
+                    placeholder="なまえ(12字まで)"
+                    maxLength={12}
+                    style={{ flex: 1, minWidth: 0, padding: "10px 12px", borderRadius: 6, border: "1px solid #2c2f36", background: "#141518", color: "#e6e6e8", fontSize: 14 }}
+                  />
+                  <button className="tk-btn" onClick={() => { playClick(); submitScore(); }}
+                    style={{ background: "#caa66a", color: "#1a1a1a", padding: "10px 18px", whiteSpace: "nowrap", fontWeight: 700 }}>登録</button>
+                </div>
+              )}
+              {submitState === "submitting" && (
+                <div style={{ fontSize: 12, color: "#8a8f99" }}>送信中…</div>
+              )}
+              {(submitState === "error" || submitState === "invalid") && (
+                <div style={{ fontSize: 12, color: "#ff8a8a" }}>
+                  {submitState === "invalid" ? "スコアを検証できませんでした" : "送信に失敗しました"}
+                  <button className="tk-btn" onClick={() => { playClick(); submitScore(); }}
+                    style={{ marginLeft: 8, background: "#23262c", color: "#e6e6e8", padding: "4px 12px", fontSize: 12 }}>再試行</button>
+                </div>
+              )}
+              {submitState === "done" && ranking && (
+                <div>
+                  <div style={{ fontSize: 13, color: "#caa66a", marginBottom: 10 }}>
+                    あなたの順位 <strong style={{ fontSize: 18 }}>{ranking.rank}</strong> 位
+                  </div>
+                  <ol style={{ listStyle: "none", padding: 0, margin: 0, textAlign: "left" }}>
+                    {ranking.top.slice(0, 10).map((r, i) => (
+                      <li key={i} style={{ display: "flex", gap: 8, padding: "5px 10px", fontSize: 13, color: "#cdd0d6", background: i % 2 ? "transparent" : "#141518", borderRadius: 4 }}>
+                        <span style={{ color: "#8a8f99", width: 24, fontVariantNumeric: "tabular-nums" }}>{i + 1}</span>
+                        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.name}</span>
+                        <span style={{ color: "#ffd35a", fontVariantNumeric: "tabular-nums" }}>{r.streak}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}>
             <button className="tk-btn" onClick={startEndless}
               style={{ background: "#3a6df0", color: "#fff", padding: "12px 32px" }}>もう一度</button>
