@@ -521,6 +521,7 @@ export default function TeireiKaigi() {
   const [cleared, setCleared] = useState(loadCleared); // 金曜まで完走済みか(図鑑・エンドレスの解放条件)
   const [mode, setMode] = useState("campaign"); // campaign(月〜金) | endless(クリア後に解放)
   const [streak, setStreak] = useState(0);       // エンドレスの連続正解数
+  const [runSpotted, setRunSpotted] = useState(0); // 今回のランで見破った異変数(結果画面のシェア文言用)
   const [endlessBest, setEndlessBest] = useState(loadEndlessBest);
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
@@ -548,6 +549,8 @@ export default function TeireiKaigi() {
     }
     setAnomalyId(nextAnomaly);
     setView(buildView(nextAnomaly));
+    // day 0 = ランの開始(ゲーム開始・失敗による月曜リスタート)。見破りカウンタを仕切り直す。
+    if (day === 0) setRunSpotted(0);
     setDayIdx(day);
     setTimeLeft(MEETING_SECONDS);
     setCaptionIdx(0);
@@ -624,6 +627,7 @@ export default function TeireiKaigi() {
     // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する。
     // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
+      setRunSpotted(n => n + 1);
       recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
       const discoveredBefore = loadDiscovered();
       const isNewlyDiscovered = !discoveredBefore.includes(aId);
@@ -909,7 +913,7 @@ export default function TeireiKaigi() {
           <div style={{ fontSize: 14, color: "#b8bcc4", lineHeight: 2 }}>今週も、何事もなく終わった。<br />良い週末を。</div>
           <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap", justifyContent: "center" }}>
             <ShareButton from="clear"
-              text={`ビデオ会議異変探しゲーム「定例会議」を金曜までクリアしました。異変図鑑 ${discoveredCount}/${totalAnomalies}`}
+              text={`ビデオ会議異変探しゲーム「定例会議」を金曜までクリアしました。今週見破った異変は${runSpotted}件。異変図鑑 ${discoveredCount}/${totalAnomalies}`}
               style={{ padding: "12px 32px" }} />
             <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "clear" }); setPhase("title"); }}
               style={{ background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
@@ -936,7 +940,7 @@ export default function TeireiKaigi() {
             <button className="tk-btn" onClick={startEndless}
               style={{ background: "#3a6df0", color: "#fff", padding: "12px 32px" }}>もう一度</button>
             <ShareButton from="endless"
-              text={`ビデオ会議異変探しゲーム「定例会議」のエンドレスモードで連続正解 ${transition.streak}${transition.isNewBest ? "（自己ベスト更新！）" : `（自己ベスト ${endlessBest}）`}`}
+              text={`ビデオ会議異変探しゲーム「定例会議」のエンドレスモードで連続正解 ${transition.streak}${transition.isNewBest ? "（自己ベスト更新！）" : `（自己ベスト ${endlessBest}）`}。見破った異変は${runSpotted}件。`}
               style={{ padding: "12px 32px" }} />
             <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "endless" }); setPhase("title"); }}
               style={{ background: "#23262c", color: "#e6e6e8", padding: "12px 32px" }}>タイトルへ</button>
