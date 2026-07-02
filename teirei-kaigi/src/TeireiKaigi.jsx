@@ -443,19 +443,32 @@ function XIcon({ size = 14 }) {
   );
 }
 
-// Xシェアボタン。intent URLへの素のリンクを新規タブで開く(SDK不要・依存ゼロを維持)。
-// window.open(features付き)は環境によりポップアップ扱いで二重遷移になったり
-// アプリ内WebViewで抑止されたりするため、アンカーのネイティブ遷移に任せる。
-// エンドポイントは twitter.com/intent/tweet を使う: x.com/intent/post だと
-// XアプリがWebView(ログイン画面等)で開いてしまい投稿画面に届かない既知バグがある。
+// Xシェアボタン(SDK不要・依存ゼロを維持)。
+// モバイルではOSのシェアシート(navigator.share)を使う: intent URLは
+// エンドポイント(x.com/twitter.com)を問わずXアプリがユニバーサルリンクを
+// 横取りしてアプリ内WebView(未ログインのログイン画面)で開いてしまう既知バグがあり、
+// アプリのネイティブ投稿画面に確実に届くのはシェアシート経由のみのため。
+// シェアシートが使えない環境(主にデスクトップ)はintentリンクにフォールバック。
 const SHARE_URL = "https://blog.taross-f.dev/apps/teirei-kaigi/";
+const SHARE_HASHTAG = "定例会議";
 function ShareButton({ text, from, style }) {
-  const href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text)
+  const intentHref = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text)
     + "&url=" + encodeURIComponent(SHARE_URL)
-    + "&hashtags=" + encodeURIComponent("定例会議");
+    + "&hashtags=" + encodeURIComponent(SHARE_HASHTAG);
+  const onClick = (e) => {
+    playClick();
+    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    const useNative = isMobile && typeof navigator.share === "function";
+    track("share_click", { from, method: useNative ? "native" : "intent" });
+    if (useNative) {
+      e.preventDefault();
+      // シェアシートにはhashtagsパラメータがないため本文側に含める。
+      // キャンセル(AbortError)等は握りつぶす。
+      navigator.share({ text: `${text} #${SHARE_HASHTAG}`, url: SHARE_URL }).catch(() => {});
+    }
+  };
   return (
-    <a className="tk-btn" href={href} target="_blank" rel="noopener noreferrer"
-      onClick={() => { playClick(); track("share_click", { from }); }}
+    <a className="tk-btn" href={intentHref} target="_blank" rel="noopener noreferrer" onClick={onClick}
       style={{ background: "#000", color: "#fff", border: "1px solid #333", display: "flex", alignItems: "center", gap: 8, padding: "10px 24px", textDecoration: "none", boxSizing: "border-box", ...style }}>
       <XIcon size={14} /> シェア
     </a>
