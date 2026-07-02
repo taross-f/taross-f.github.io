@@ -43,7 +43,7 @@
 - `endless_start` — エンドレスモード開始(タイトル/終了画面の「もう一度」)
 - `endless_end` — エンドレス終了(`streak`=連続正解数, `best`=自己ベスト)
 - `back_to_title` — タイトルへ戻る(`from`=clear/anomalies/endless)
-- `share_click` — Xシェアボタンタップ(`from`=title/clear/endless)
+- `share_click` — Xシェアボタンタップ(`from`=title/clear/endless, `method`=native(モバイルのシェアシート)/intent(intentリンク))
 - `affiliate_click` — タイトル下部 Special Thanks の着想元リンク(8番出口/8番乗り場)タップ(`product`=exit8/platform8)
 
 **注意**: 新しいボタン・状態遷移を足したら、対応する `track()` 呼び出しも追加する。デプロイには `index.html` 同様、ビルド成果物の差し替えが必要(下記)。
