@@ -457,7 +457,10 @@ function ShareButton({ text, from, style }) {
     + "&hashtags=" + encodeURIComponent(SHARE_HASHTAG);
   const onClick = (e) => {
     playClick();
-    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    // UA正規表現だけだとiOSの「デスクトップ用Webサイトを表示」(UAがMac扱い)で
+    // モバイル判定を外れてしまうため、タッチデバイス判定も併用する。
+    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent)
+      || (navigator.maxTouchPoints || 0) > 0;
     const useNative = isMobile && typeof navigator.share === "function";
     track("share_click", { from, method: useNative ? "native" : "intent" });
     if (useNative) {
