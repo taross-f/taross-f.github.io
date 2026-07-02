@@ -446,9 +446,11 @@ function XIcon({ size = 14 }) {
 // Xシェアボタン。intent URLへの素のリンクを新規タブで開く(SDK不要・依存ゼロを維持)。
 // window.open(features付き)は環境によりポップアップ扱いで二重遷移になったり
 // アプリ内WebViewで抑止されたりするため、アンカーのネイティブ遷移に任せる。
+// エンドポイントは twitter.com/intent/tweet を使う: x.com/intent/post だと
+// XアプリがWebView(ログイン画面等)で開いてしまい投稿画面に届かない既知バグがある。
 const SHARE_URL = "https://blog.taross-f.dev/apps/teirei-kaigi/";
 function ShareButton({ text, from, style }) {
-  const href = "https://x.com/intent/post?text=" + encodeURIComponent(text)
+  const href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text)
     + "&url=" + encodeURIComponent(SHARE_URL)
     + "&hashtags=" + encodeURIComponent("定例会議");
   return (
