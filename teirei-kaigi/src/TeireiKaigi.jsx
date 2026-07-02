@@ -443,22 +443,20 @@ function XIcon({ size = 14 }) {
   );
 }
 
-// Xシェアボタン。intent URLを新規タブで開く(SDK不要・依存ゼロを維持)。
+// Xシェアボタン。intent URLへの素のリンクを新規タブで開く(SDK不要・依存ゼロを維持)。
+// window.open(features付き)は環境によりポップアップ扱いで二重遷移になったり
+// アプリ内WebViewで抑止されたりするため、アンカーのネイティブ遷移に任せる。
 const SHARE_URL = "https://blog.taross-f.dev/apps/teirei-kaigi/";
 function ShareButton({ text, from, style }) {
-  const open = () => {
-    playClick();
-    track("share_click", { from });
-    const url = "https://x.com/intent/post?text=" + encodeURIComponent(text)
-      + "&url=" + encodeURIComponent(SHARE_URL)
-      + "&hashtags=" + encodeURIComponent("定例会議");
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
+  const href = "https://x.com/intent/post?text=" + encodeURIComponent(text)
+    + "&url=" + encodeURIComponent(SHARE_URL)
+    + "&hashtags=" + encodeURIComponent("定例会議");
   return (
-    <button className="tk-btn" onClick={open}
-      style={{ background: "#000", color: "#fff", border: "1px solid #333", display: "flex", alignItems: "center", gap: 8, padding: "10px 24px", ...style }}>
+    <a className="tk-btn" href={href} target="_blank" rel="noopener noreferrer"
+      onClick={() => { playClick(); track("share_click", { from }); }}
+      style={{ background: "#000", color: "#fff", border: "1px solid #333", display: "flex", alignItems: "center", gap: 8, padding: "10px 24px", textDecoration: "none", boxSizing: "border-box", ...style }}>
       <XIcon size={14} /> シェア
-    </button>
+    </a>
   );
 }
 
