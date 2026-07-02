@@ -435,6 +435,33 @@ function TrophyIcon({ size = 22 }) {
   );
 }
 
+function XIcon({ size = 14 }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z" />
+    </svg>
+  );
+}
+
+// Xシェアボタン。intent URLを新規タブで開く(SDK不要・依存ゼロを維持)。
+const SHARE_URL = "https://blog.taross-f.dev/apps/teirei-kaigi/";
+function ShareButton({ text, from, style }) {
+  const open = () => {
+    playClick();
+    track("share_click", { from });
+    const url = "https://x.com/intent/post?text=" + encodeURIComponent(text)
+      + "&url=" + encodeURIComponent(SHARE_URL)
+      + "&hashtags=" + encodeURIComponent("定例会議");
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+  return (
+    <button className="tk-btn" onClick={open}
+      style={{ background: "#000", color: "#fff", border: "1px solid #333", display: "flex", alignItems: "center", gap: 8, padding: "10px 24px", ...style }}>
+      <XIcon size={14} /> シェア
+    </button>
+  );
+}
+
 function StarIcon({ size = 16, filled }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -494,6 +521,7 @@ export default function TeireiKaigi() {
   const [cleared, setCleared] = useState(loadCleared); // 金曜まで完走済みか(図鑑・エンドレスの解放条件)
   const [mode, setMode] = useState("campaign"); // campaign(月〜金) | endless(クリア後に解放)
   const [streak, setStreak] = useState(0);       // エンドレスの連続正解数
+  const [runSpotted, setRunSpotted] = useState(0); // 今回のランで見破った異変数(結果画面のシェア文言用)
   const [endlessBest, setEndlessBest] = useState(loadEndlessBest);
   const [timeLeft, setTimeLeft] = useState(MEETING_SECONDS);
   const [captionIdx, setCaptionIdx] = useState(0);
@@ -521,6 +549,8 @@ export default function TeireiKaigi() {
     }
     setAnomalyId(nextAnomaly);
     setView(buildView(nextAnomaly));
+    // day 0 = ランの開始(ゲーム開始・失敗による月曜リスタート)。見破りカウンタを仕切り直す。
+    if (day === 0) setRunSpotted(0);
     setDayIdx(day);
     setTimeLeft(MEETING_SECONDS);
     setCaptionIdx(0);
@@ -597,6 +627,7 @@ export default function TeireiKaigi() {
     // 異変ありの会議を正しく退出できたときだけ「見破った」として記録する。
     // ローテーション用(リセットあり)と図鑑用(永続)の両方に追記する。
     if (byLeaving && aId) {
+      setRunSpotted(n => n + 1);
       recordAnomalyId(aId, loadUsedAnomalies, saveUsedAnomalies, setUsedAnomalies);
       const discoveredBefore = loadDiscovered();
       const isNewlyDiscovered = !discoveredBefore.includes(aId);
@@ -778,6 +809,9 @@ export default function TeireiKaigi() {
               )}
             </button>
           )}
+          <ShareButton from="title"
+            text="ビデオ会議異変探しゲーム「定例会議」 — 異変を感じたら、すぐに退出。異変がなければ、最後まで残る。"
+            style={{ marginTop: 12 }} />
           <button className="tk-btn" onClick={toggleSound} aria-pressed={soundOn}
             aria-label={soundOn ? "サウンドをオフにする" : "サウンドをオンにする"}
             style={{ marginTop: 12, background: "transparent", color: "#8a8f99", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
@@ -785,9 +819,7 @@ export default function TeireiKaigi() {
           </button>
           <a href="https://x.com/taross__f" target="_blank" rel="noopener noreferrer"
             style={{ marginTop: 40, fontSize: 12, color: "#5f6570", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z" />
-            </svg>
+            <XIcon size={14} />
             @taross__f
           </a>
           {/* Special Thanks: 着想元へのさりげない謝辞(8番出口/8番乗り場のアフィリエイト) */}
@@ -879,10 +911,15 @@ export default function TeireiKaigi() {
           <div style={{ fontSize: 13, letterSpacing: "0.3em", color: "#8a8f99", marginBottom: 14 }}>FRIDAY 10:30</div>
           <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 10 }}>金曜日の定例が終了しました</div>
           <div style={{ fontSize: 14, color: "#b8bcc4", lineHeight: 2 }}>今週も、何事もなく終わった。<br />良い週末を。</div>
-          <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "clear" }); setPhase("title"); }}
-            style={{ marginTop: 32, background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
-            タイトルへ
-          </button>
+          <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap", justifyContent: "center" }}>
+            <ShareButton from="clear"
+              text={`ビデオ会議異変探しゲーム「定例会議」を金曜までクリアしました。今週見破った異変は${runSpotted}件。異変図鑑 ${discoveredCount}/${totalAnomalies}`}
+              style={{ padding: "12px 32px" }} />
+            <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "clear" }); setPhase("title"); }}
+              style={{ background: "#23262c", color: "#e6e6e8", padding: "12px 36px" }}>
+              タイトルへ
+            </button>
+          </div>
         </div>
       )}
 
@@ -902,6 +939,9 @@ export default function TeireiKaigi() {
           <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}>
             <button className="tk-btn" onClick={startEndless}
               style={{ background: "#3a6df0", color: "#fff", padding: "12px 32px" }}>もう一度</button>
+            <ShareButton from="endless"
+              text={`ビデオ会議異変探しゲーム「定例会議」のエンドレスモードで連続正解 ${transition.streak}${transition.isNewBest ? "（自己ベスト更新！）" : `（自己ベスト ${endlessBest}）`}。見破った異変は${runSpotted}件。`}
+              style={{ padding: "12px 32px" }} />
             <button className="tk-btn" onClick={() => { playClick(); track("back_to_title", { from: "endless" }); setPhase("title"); }}
               style={{ background: "#23262c", color: "#e6e6e8", padding: "12px 32px" }}>タイトルへ</button>
           </div>
