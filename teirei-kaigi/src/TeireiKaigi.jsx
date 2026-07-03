@@ -464,7 +464,7 @@ function bindTweetTracking(t) {
 }
 
 function ShareButton({ text, from, style }) {
-  const ref = useRef(null);
+  const overlayRef = useRef(null);
   // widgets.js はアンカーのクエリパラメータからも設定を読むので、
   // フォールバック(未変換のリンク)でも同じ内容でポスト画面が開く。
   const href = "https://twitter.com/share?ref_src=twsrc%5Etfw"
@@ -473,23 +473,47 @@ function ShareButton({ text, from, style }) {
     + "&hashtags=" + encodeURIComponent(SHARE_HASHTAG);
   useEffect(() => {
     const t = window.twttr;
-    if (t && typeof t.ready === "function") {
-      t.ready((tw) => {
-        bindTweetTracking(tw);
-        // Reactが後からマウントしたアンカーを公式ボタンに変換させる
-        if (ref.current) tw.widgets.load(ref.current);
-      });
-    }
+    if (!t || typeof t.ready !== "function") return;
+    t.ready((tw) => {
+      bindTweetTracking(tw);
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+      // 公式ボタン(iframe)は見た目を変えられないため、透明にしてボタン全面に
+      // 引き伸ばして重ねる。見えるのは自前デザイン、クリックが届くのは公式ボタン。
+      const fit = () => {
+        const iframe = overlay.querySelector("iframe");
+        if (!iframe) return;
+        const or = overlay.getBoundingClientRect();
+        const w = iframe.offsetWidth || 1;
+        const h = iframe.offsetHeight || 1;
+        iframe.style.transform = `scale(${or.width / w}, ${or.height / h})`;
+        iframe.style.transformOrigin = "center";
+      };
+      // Reactが後からマウントしたアンカーを公式ボタンに変換させる。
+      // widgets.load は変換完了で解決するPromiseを返す(古い実装向けにタイマーでも保険)。
+      const p = tw.widgets.load(overlay);
+      if (p && typeof p.then === "function") p.then(fit);
+      setTimeout(fit, 1500);
+    });
   }, []);
   return (
-    <div ref={ref} data-share-from={from}
-      style={{ minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center", ...style }}>
-      <a href={href} className="twitter-share-button" target="_blank" rel="noopener noreferrer"
-        data-text={text} data-url={SHARE_URL} data-hashtags={SHARE_HASHTAG} data-lang="ja" data-size="large"
-        onClick={() => track("share_click", { from, method: "plain_link" })}
-        style={{ color: "#8a8f99", fontSize: 13 }}>
-        ポストする
-      </a>
+    <div className="tk-btn" style={{
+      position: "relative", overflow: "hidden",
+      background: "#000", color: "#fff", border: "1px solid #333",
+      display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 24px",
+      ...style,
+    }}>
+      <XIcon size={14} /> シェア
+      <div ref={overlayRef} data-share-from={from}
+        style={{ position: "absolute", inset: 0, opacity: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <a href={href} className="twitter-share-button" target="_blank" rel="noopener noreferrer"
+          data-text={text} data-url={SHARE_URL} data-hashtags={SHARE_HASHTAG} data-lang="ja" data-size="large"
+          onClick={() => track("share_click", { from, method: "plain_link" })}
+          style={{ position: "absolute", inset: 0 }}
+          aria-label="Xでシェアする">
+          ポストする
+        </a>
+      </div>
     </div>
   );
 }
