@@ -32,6 +32,21 @@
     <meta name="twitter:image" content="https://blog.taross-f.dev/apps/teirei-kaigi/ogp.png" />
     <meta name="twitter:image:alt" content="定例会議のビデオ会議画面。参加者のうち1人が見知らぬ「user_039」になっている。" />
 
+    <!-- X公式ウィジェット(シェアボタン)。ブログ本文のシェアバーと同じ方式。
+         twttr.ready() を先に使えるようにする公式の初期化シム。 -->
+    <script>
+      window.twttr = (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s); js.id = id; js.async = true;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function (f) { t._e.push(f); };
+        return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHQ0669BP8"></script>
     <script>
@@ -42,7 +57,7 @@
     </script>
 
     <style>html,body{margin:0;padding:0;background:#141619}</style>
-    <script type="module" crossorigin src="/apps/teirei-kaigi/assets/index-CYKXU-YB.js"></script>
+    <script type="module" crossorigin src="/apps/teirei-kaigi/assets/index-Dkzt220j.js"></script>
   </head>
   <body>
     <div id="root"></div>

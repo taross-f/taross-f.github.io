@@ -443,38 +443,54 @@ function XIcon({ size = 14 }) {
   );
 }
 
-// Xシェアボタン(SDK不要・依存ゼロを維持)。
-// モバイルではOSのシェアシート(navigator.share)を使う: intent URLは
-// エンドポイント(x.com/twitter.com)を問わずXアプリがユニバーサルリンクを
-// 横取りしてアプリ内WebView(未ログインのログイン画面)で開いてしまう既知バグがあり、
-// アプリのネイティブ投稿画面に確実に届くのはシェアシート経由のみのため。
-// シェアシートが使えない環境(主にデスクトップ)はintentリンクにフォールバック。
+// Xシェアボタン。ブログ本文(_includes/share_bar.html)と同じ公式ウィジェット方式:
+// twitter.com/share へのアンカーを widgets.js(index.htmlで読み込み)が公式ボタンに変換する。
+// 素のintentリンクやnavigator.shareで自前実装するとXアプリのWebView横取りバグを踏むため、
+// 実機で動作実績のあるこの方式に揃えている。
+// widgets.jsが読み込めない環境では、同じパラメータを持つ素のリンクとしてそのまま動く。
 const SHARE_URL = "https://blog.taross-f.dev/apps/teirei-kaigi/";
 const SHARE_HASHTAG = "定例会議";
+
+// 公式ウィジェットはiframeになるためonClickでは計測できない。
+// widgets.jsのtweetイベントに一度だけバインドし、data-share-fromで画面を特定する。
+let tweetTrackingBound = false;
+function bindTweetTracking(t) {
+  if (tweetTrackingBound || !t || !t.events) return;
+  tweetTrackingBound = true;
+  t.events.bind("tweet", (e) => {
+    const wrap = e && e.target && e.target.closest ? e.target.closest("[data-share-from]") : null;
+    track("share_click", { from: (wrap && wrap.getAttribute("data-share-from")) || "unknown", method: "widget" });
+  });
+}
+
 function ShareButton({ text, from, style }) {
-  const intentHref = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text)
+  const ref = useRef(null);
+  // widgets.js はアンカーのクエリパラメータからも設定を読むので、
+  // フォールバック(未変換のリンク)でも同じ内容でポスト画面が開く。
+  const href = "https://twitter.com/share?ref_src=twsrc%5Etfw"
+    + "&text=" + encodeURIComponent(text)
     + "&url=" + encodeURIComponent(SHARE_URL)
     + "&hashtags=" + encodeURIComponent(SHARE_HASHTAG);
-  const onClick = (e) => {
-    playClick();
-    // UA正規表現だけだとiOSの「デスクトップ用Webサイトを表示」(UAがMac扱い)で
-    // モバイル判定を外れてしまうため、タッチデバイス判定も併用する。
-    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent)
-      || (navigator.maxTouchPoints || 0) > 0;
-    const useNative = isMobile && typeof navigator.share === "function";
-    track("share_click", { from, method: useNative ? "native" : "intent" });
-    if (useNative) {
-      e.preventDefault();
-      // シェアシートにはhashtagsパラメータがないため本文側に含める。
-      // キャンセル(AbortError)等は握りつぶす。
-      navigator.share({ text: `${text} #${SHARE_HASHTAG}`, url: SHARE_URL }).catch(() => {});
+  useEffect(() => {
+    const t = window.twttr;
+    if (t && typeof t.ready === "function") {
+      t.ready((tw) => {
+        bindTweetTracking(tw);
+        // Reactが後からマウントしたアンカーを公式ボタンに変換させる
+        if (ref.current) tw.widgets.load(ref.current);
+      });
     }
-  };
+  }, []);
   return (
-    <a className="tk-btn" href={intentHref} target="_blank" rel="noopener noreferrer" onClick={onClick}
-      style={{ background: "#000", color: "#fff", border: "1px solid #333", display: "flex", alignItems: "center", gap: 8, padding: "10px 24px", textDecoration: "none", boxSizing: "border-box", ...style }}>
-      <XIcon size={14} /> シェア
-    </a>
+    <div ref={ref} data-share-from={from}
+      style={{ minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center", ...style }}>
+      <a href={href} className="twitter-share-button" target="_blank" rel="noopener noreferrer"
+        data-text={text} data-url={SHARE_URL} data-hashtags={SHARE_HASHTAG} data-lang="ja" data-size="large"
+        onClick={() => track("share_click", { from, method: "plain_link" })}
+        style={{ color: "#8a8f99", fontSize: 13 }}>
+        ポストする
+      </a>
+    </div>
   );
 }
 
