@@ -980,40 +980,8 @@ iframe {
   }
 }
 
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #{$brand-indigo};
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  border-radius: 999px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.12);
-
-  &::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #{$brand-pink};
-    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.25);
-    animation: heroPulse 2s ease-in-out infinite;
-  }
-}
-
-@keyframes heroPulse {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.25); }
-  50% { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
-}
-
 .hero__title {
-  margin: 24px auto 18px;
+  margin: 0 auto 18px;
   max-width: 880px;
   font-size: clamp(36px, 6vw, 64px);
   font-weight: 800;
