@@ -45,8 +45,19 @@
 - `back_to_title` — タイトルへ戻る(`from`=clear/anomalies/endless)
 - `share_click` — Xシェアボタン(公式ウィジェット)でポスト(`from`=title/clear/endless, `method`=widget(widgets.js変換後)/plain_link(未変換のフォールバックリンク))
 - `affiliate_click` — タイトル下部 Special Thanks の着想元リンク(8番出口/8番乗り場)タップ(`product`=exit8/platform8)
+- `donate_click` — 投げ銭リンク(`DonateLink`)タップ(`from`=clear/anomalies)
+- `ad_reward` — エンドレスのリワード広告コンティニュー(`status`=available(在庫ありでボタン表示)/click(ボタンタップ)/viewed(視聴完了=復帰)/dismissed(途中で閉じた))
+- `ad_interstitial` — 週失敗→月曜リスタート時のインタースティシャル(`name`=restart_week, `status`=shown または breakStatus)
 
 **注意**: 新しいボタン・状態遷移を足したら、対応する `track()` 呼び出しも追加する。デプロイには `index.html` 同様、ビルド成果物の差し替えが必要(下記)。
+
+## マネタイズ
+
+- **原則: 会議中(`phase === "meeting"`)には広告も投げ銭導線も一切出さない。** ホラーの没入感がゲームの本体なので、収益導線は「ゲームの外」の画面(タイトル・クリア・ゲームオーバー・図鑑)に限定する。
+- **H5 Games Ads(AdSense Ad Placement API)**: `index.html` で adsbygoogle.js(`ca-pub-2459475264623596`)と `window.adBreak`/`adConfig` シムを読み込み、`src/ads.js` のラッパ経由で呼ぶ。**広告ブロッカー・vite開発時・H5 Games Ads未承認の環境ではコールバックが呼ばれないため、すべての導線は「広告が出なければ何も起きず通常フローが進む」設計を守ること**(AdSense管理画面でのH5 Games Ads有効化が表示の前提)。
+  - **リワード(コンティニュー)**: エンドレスのゲームオーバー画面(`phase === "endlessover"`)で在庫を打診し、あるときだけ「広告を見て、会議に戻る」ボタンを出す。視聴完了で `streak` を維持したまま次の会議へ。**1ラン1回まで**(`revivedThisRunRef`、`startEndless` でリセット)。なお `fail()` の `endless_end` 計測と自己ベスト更新はゲームオーバー画面表示時点で行われるため、コンティニューしたランは `endless_end` が複数回飛ぶ(bestは単調増加なので整合する)。
+  - **インタースティシャル**: 週の失敗→月曜リスタートの遷移でのみ表示(`name: "restart_week"`)。実際に表示されるときだけ2.4秒の自動リスタートを止め、閉じたら月曜を開始する。表示間隔は `index.html` の `data-ad-frequency-hint`(120s)で制御。
+- **投げ銭(`DonateLink`)**: クリア画面と図鑑コンプバナーに設置。飛び先は `DONATE_URL` 定数(現状 GitHub Sponsors)で一元管理し、Ko-fi 等へはURL差し替えだけで切り替えられる。
 
 ## デプロイ
 
