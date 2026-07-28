@@ -47,6 +47,9 @@ ja:
     home: "ホーム"
   apps:
     title: "Apps"
+    github:
+      stars: "スター数"
+      forks: "フォーク数"
     text_tools: "📝 テキストツール"
     dev_tools: "🔧 開発者ツール"
     design_tools: "🎨 デザインツール"
@@ -484,6 +487,9 @@ en:
     home: "Home"
   apps:
     title: "Apps"
+    github:
+      stars: "Stars"
+      forks: "Forks"
     text_tools: "📝 Text Tools"
     dev_tools: "🔧 Developer Tools"
     design_tools: "🎨 Design Tools"

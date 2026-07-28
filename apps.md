@@ -4,34 +4,40 @@ title: Apps
 permalink: /apps/
 ---
 
+{% assign github_owner = "taross-f" %}
+{% assign github_repos = "deco-slack,quotto,google_hjkl,yt2mp3" | split: "," %}
+
 <div class="github-repos">
-  <a href="https://github.com/taross-f/deco-slack" target="_blank" class="repo-card">
-    <img
-      src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=deco-slack&theme=ambient_gradient&show_owner=true"
-      alt="deco-slack – GitHub repo card"
-    />
+{% for repo in github_repos %}
+  <a
+    class="repo-card"
+    href="https://github.com/{{ github_owner }}/{{ repo }}"
+    target="_blank"
+    rel="noopener"
+    data-repo="{{ github_owner }}/{{ repo }}"
+  >
+    <span class="repo-card__head">
+      <svg class="repo-card__icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>
+      <span class="repo-card__title">
+        <span class="repo-card__owner">{{ github_owner }}/</span><span class="repo-card__name">{{ repo }}</span>
+      </span>
+    </span>
+    <span class="repo-card__description" data-role="description" hidden></span>
+    <span class="repo-card__meta">
+      <span class="repo-card__lang" data-role="language" hidden>
+        <span class="repo-card__lang-dot"></span><span data-role="language-name"></span>
+      </span>
+      <span class="repo-card__stat" data-role="stars" hidden data-i18n-title="apps.github.stars" title="Stars">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+        <span data-role="count"></span>
+      </span>
+      <span class="repo-card__stat" data-role="forks" hidden data-i18n-title="apps.github.forks" title="Forks">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>
+        <span data-role="count"></span>
+      </span>
+    </span>
   </a>
-
-  <a href="https://github.com/taross-f/quotto" target="_blank" class="repo-card">
-    <img
-      src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=quotto&theme=ambient_gradient&show_owner=true"
-      alt="quotto – GitHub repo card"
-    />
-  </a>
-
-  <a href="https://github.com/taross-f/google_hjkl" target="_blank" class="repo-card">
-    <img
-      src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=google_hjkl&theme=ambient_gradient&show_owner=true"
-      alt="google_hjkl – GitHub repo card"
-    />
-  </a>
-
-  <a href="https://github.com/taross-f/yt2mp3" target="_blank" class="repo-card">
-    <img
-      src="https://github-readme-stats.vercel.app/api/pin/?username=taross-f&repo=yt2mp3&theme=ambient_gradient&show_owner=true"
-      alt="yt2mp3 – GitHub repo card"
-    />
-  </a>
+{% endfor %}
 </div>
 
 ## <span data-i18n="apps.text_tools">📝 テキストツール</span>
@@ -88,4 +94,6 @@ permalink: /apps/
 
 ### [<span data-i18n="apps.teirei_kaigi.title">定例会議</span>](/apps/teirei-kaigi/)
 <span data-i18n="apps.teirei_kaigi.description">8番出口ライクなビデオ会議異変探しゲーム。異変を感じたら退出、なければ最後まで残れ。</span>
+
+<script src="{{ site.baseurl }}/assets/js/github-repo-cards.js" defer></script>
 
