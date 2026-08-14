@@ -8,7 +8,7 @@ ja:
     apps: "Apps"
     tags: "Tags"
   hero:
-    title: "技術メモ"
+    title: "T=>"
     subtitle: "フロントエンド、インフラ、ツール開発まで。気になったことを記録した技術ブログです。"
     cta: "最新の投稿を読む"
   common:
@@ -448,7 +448,7 @@ en:
     apps: "Apps"
     tags: "Tags"
   hero:
-    title: "Tech Notes"
+    title: "T=>"
     subtitle: "Frontend, infrastructure, and tools — a personal log of things worth remembering."
     cta: "Read the latest posts"
   common:
