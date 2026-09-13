@@ -3,9 +3,9 @@ tags: macOS Network Swift Tools
 title: Wi-Fiの定期的なレイテンシスパイクの犯人はawdl0だった、のでhawdlを作った
 ---
 
-自宅の Mac だけ Wi-Fi のレイテンシが定期的に跳ねる、という問題をずっと抱えていた。Meet が止まるし SSH も固まる。でも同じネットワークの他の端末は平気。
+自宅で接続するときに、wifi のレイテンシが定期的に大きくなって web 会議に支障をきたすことが続いていた。でも同じネットワークの他の端末は平気。
 
-Claude に協力してもらいながら、ちゃんと測って切り分けていったら犯人は `awdl0` で、AirDrop や Handoff の土台になっている Apple Wireless Direct Link のインターフェースだった。ついでに「誰がそれを上げ続けているのか」まで辿れたので、同じ気持ちになる人を減らすためにも手順ごと残してみる。
+Claude に協力してもらいながら、ちゃんと測って切り分けていったら原因は `awdl0` だった。AirDrop や Handoff の土台になっている Apple Wireless Direct Link のインターフェースです。同じ気持ちになる人を減らすためにも手順ごと残してみる。
 
 最終的に作った [hawdl](https://github.com/taross-f/hawdl) というツールの話も後半に書きます。
 
@@ -96,9 +96,7 @@ join seq_rtt.txt slot_bytes.txt | awk '$2>150{h+=$3;hn++} $2<50{l+=$3;ln++} END{
 
 ## Step 5 ドライバの内部指標を読む
 
-ここからは `airportd` が持ってる内部指標を見ていく。`cca`(チャンネル占有率)、`interferenceTotal`、`p95-lat`、`beaconRecv` / `beaconSched` あたり。
-
-<!-- TODO: ここで使ったコマンドを入れる -->
+ここからは `airportd` が持ってる内部指標も見ていく。`cca`(チャンネル占有率)、`interferenceTotal`、`p95-lat`、`beaconRecv` / `beaconSched` あたりで、Step 7 で出す比較表もこれらの値です。
 
 beacon は AP が一定間隔で送ってるので、受信数が予定数に届いてなければその間は受信できてなかったということになる。これが後で効いてきます。
 
@@ -124,7 +122,7 @@ Master Channel    : 6/0
 
 Step 2 で分離できてなかった「Mac 側か AP 側か」もこれで Mac 側に確定。AP は ch48 から動いてない。
 
-無線チップは 1 つしかないので、Wi-Fi と AWDL は同じアンテナを時分割で使うしかない。出てくる症状はキュー詰まりと同じでも原因はチャンネル離席なので、ルーター側で AQM を入れても直りません。プロトコルの詳細は Stute らの AWDL リバースエンジニアリング論文(MobiCom '18)が詳しいです。
+無線チップは 1 つしかないので、Wi-Fi と AWDL は同じアンテナを時分割で使うしかない。出てくる症状はキュー詰まりと同じでも原因はチャンネル離席なので、ルーター側で AQM を入れても直りません。
 
 ## Step 7 A/B で確定させる
 
@@ -158,8 +156,6 @@ beacon の取りこぼしもゼロになった。AP は最初から正しく送�
 | バックグラウンドスキャン | `log stream` 40 秒で scan 要求を数える | 0 件 |
 | アプリ | Zoom / Slack / krisp / Music / Teams を順に終了 | 全部変化なし |
 | 近くの MacBook Air | Wi-Fi オフでピアを消す | leak 警告は消えたが cca 不変 |
-
-Bluetooth の行が個人的には嬉しいところ。この手の話で真っ先に切られがちなものを、つないだまま stddev 0.851ms まで持っていけた。切らなくていいものを切らずに済むのが、ちゃんと切り分けする理由かなと思います。
 
 # 一度落としても戻ってくる
 
@@ -234,6 +230,6 @@ open "$(brew --prefix hawdl)/HawdlBar.app"
 
 # まとめ
 
-「Mac だけ遅い」「電波はよいのに会議が止まる」なら、まず `ifconfig awdl0` と `sudo wdutil info` の `Channel Sequence` を見てみるといいです。無線機が接続先のチャンネルにいなければ、それが答え。
+「Mac だけ遅い」「電波はよいのに会議が止まる」なら、まず `ifconfig awdl0` と `sudo wdutil info` の `Channel Sequence` を見てみるといいです。無線機が接続先のチャンネルにいなければ、それが答えになるはず。
 
 とはいえ hawdl は対症療法でしかないし、Continuity 機能を日常的に使ってる人にはおすすめしません。AirDrop などが使えなくなるのと引き換えにレイテンシを取る、というトレードオフの道具です。
