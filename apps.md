@@ -5,7 +5,7 @@ permalink: /apps/
 ---
 
 {% assign github_owner = "taross-f" %}
-{% assign github_repos = "deco-slack,quotto,google_hjkl,yt2mp3" | split: "," %}
+{% assign github_repos = "deco-slack,quotto,google_hjkl,yt2mp3,hawdl" | split: "," %}
 
 <div class="github-repos">
 {% for repo in github_repos %}
