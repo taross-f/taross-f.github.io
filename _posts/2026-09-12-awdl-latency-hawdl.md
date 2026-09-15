@@ -117,10 +117,11 @@ OSが短時間に何度も有効に戻す場合は、停止するまでの待ち
 ## インストール
 
 ```sh
-brew tap taross-f/hawdl
-brew install --HEAD taross-f/hawdl/hawdl
+brew install taross-f/hawdl/hawdl
 sudo brew services start hawdl
 ```
+
+完全修飾名で指定すればtapも一緒に追加されるので、先に`brew tap taross-f/hawdl`を打つ必要はありません。最新リリースをソースからビルドします。リリースではなく`main`を追いたい場合は`brew install --HEAD taross-f/hawdl/hawdl`です。
 
 CLIやメニューバーアプリを使うにはデーモンの起動が必要なので、`sudo brew services start hawdl`まで実行してください。
 
