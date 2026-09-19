@@ -11,6 +11,13 @@
 - **正解時に異変名は伏せる**(8番出口同様、答えは教えない)。何の異変だったかは図鑑でのみ開示する。
 - **エンドレスモード(`mode === "endless"`)**: 金曜まで完走(クリア)した人だけタイトルから解放される。クリア概念なしで会議が続き、連続正解数(`streak`)を競う。1度でも判定を誤るとゲームオーバー。自己ベストは `localStorage`(`tk_endless_best`、`loadEndlessBest`/`saveEndlessBest`)に永続化し、終了画面(`phase === "endlessover"`)で表示する。曜日ラベルは `DAYS[dayIdx % DAYS.length]` で循環表示し、ヘッダに `∞ streak` を出す。`succeed`/`fail` が `stateRef.current.mode` で分岐する(通常: 金曜クリア/月曜リスタート、エンドレス: streak加算/終了)。図鑑への記録はエンドレスでも行う。
 
+- **エンドレスは決定論出題**: 通常モードは `Math.random()` で出題するが、エンドレスは **seed由来の決定論列**で出題する(`src/endlessCore.js` の `generateSequence(seed, n)` を `startEndless` で先読みして `seqRef` に保持、`startMeeting` は `seqRef.current[day]` を参照)。これはサーバ側のスコア検証を可能にするための設計。出題プールはランごとに空から始まる自己完結式で、`localStorage` の `tk_used_anomalies`(通常モードのローテーション)には依存しない。図鑑記録(`tk_discovered_anomalies`)はエンドレスでも従来どおり行う。`startMeeting` は `seqRef.current` の有無で通常/エンドレスを判別する(`mode` stateのタイミングに依存しないため確実)。`joinFromTitle` は `seqRef`/`runRef` を null クリアして通常モードに戻す。
+
+- **オンラインランキング(チート対策つき)**: エンドレスの `streak` を Cloudflare Worker + D1 でランキング化する。**スコア値は送らず、各ラウンドの操作ログ(`{action: "leave"|"stay", elapsedMs}`)を送り、サーバが seed 列に突き合わせて streak を再計算する**ことでチートを防ぐ。実装は `worker/`(`README.md` にデプロイ手順)。決定論コア `src/endlessCore.js`(`generateSequence`/`replay`/`minPlayMs`/`ANOMALY_IDS`)を**クライアントとWorkerで共有**する。`ANOMALY_IDS` は `ANOMALIES.map(a => a.id)` の正本で、起動時(DEV)に一致を検証する — **異変を追加したら `endlessCore.js` の `ANOMALY_IDS` 末尾にも追記し、Workerを再デプロイすること**(順序を変えると乱数列が変わり既存記録と互換が壊れる)。
+  - **クライアント**: `startEndless` で `GET /session`(署名付き seed)を取得 → `runRef = {seed, sid, iat, sig, inputs[], roundStartMs}`。各ラウンドの判定時に `recordEndlessInput()` で操作ログを追記。ゲームオーバー時に `submitScore()` が `POST /submit`。終了画面で名前入力(`tk_player_name`)・自分の順位・上位10件を表示。`submitState`(idle/submitting/done/error/offline/invalid)でUIを出し分ける。`streak === 0` は登録対象外。
+  - **APIエンドポイント**は `import.meta.env.VITE_RANKING_API` で注入(`RANKING_API` 定数)。**未設定なら自動でオフライン**(ローカル乱数seedで遊べるが順位は送らない)。本番反映には Worker デプロイ後の URL で `VITE_RANKING_API=... npm run build` し直し、`apps/teirei-kaigi/` を差し替える必要がある。
+  - **サーバ検証**(`worker/index.js`): ① HMAC署名で seed 改ざんを検出(鍵は Worker のシークレット `HMAC_SECRET` のみ)② `sid` の UNIQUE 制約で二重送信を遮断 ③ `replay()` で操作ログを再生し streak を再計算(途中失敗・末尾以外の不正解・型/範囲を弾く)④ 信頼できる経過時間(発行 `iat` 〜 送信 `now`)と操作ログの所要時間を突き合わせ、瞬間周回(`too_fast`)を拒否。`stay`(完走)は実時間約35秒必須。**限界**: クライアント描画ゲームの性質上、画面データを読む自作ボットは完全には防げない。本実装が潰すのはスコア捏造POSTと瞬間周回(=現実的なチートの大半)。
+
 ## アーキテクチャ
 
 - `src/TeireiKaigi.jsx` に全実装(単一コンポーネント、依存はReactのみ)。
@@ -42,6 +49,7 @@
 - `view_anomalies` — 異変図鑑を開いた
 - `endless_start` — エンドレスモード開始(タイトル/終了画面の「もう一度」)
 - `endless_end` — エンドレス終了(`streak`=連続正解数, `best`=自己ベスト)
+- `ranking_submit` — ランキング送信結果(`result`=ok/error/invalid, ok時 `streak`/`rank`)
 - `back_to_title` — タイトルへ戻る(`from`=clear/anomalies/endless)
 - `share_click` — Xシェアボタン(公式ウィジェット)でポスト(`from`=title/clear/endless, `method`=widget(widgets.js変換後)/plain_link(未変換のフォールバックリンク))
 - `affiliate_click` — タイトル下部 Special Thanks の着想元リンク(8番出口/8番乗り場)タップ(`product`=exit8/platform8)
