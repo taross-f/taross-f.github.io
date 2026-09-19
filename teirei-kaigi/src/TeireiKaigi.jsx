@@ -4,6 +4,7 @@ import {
   playClick, playLeave, playCaption, playSilence,
   playStart, playSuccess, playFail, playClear, playTick,
 } from "./sound";
+import { initAds, requestRewardedAd, showInterstitial } from "./ads";
 
 // ============================================================
 // 定例会議 — 8番出口ライク・ビデオ会議異変探し プロトタイプ v2
@@ -518,6 +519,34 @@ function ShareButton({ text, from, style }) {
   );
 }
 
+// 投げ銭リンクの飛び先。GitHub Sponsors を既定にしている。
+// Ko-fi / Buy Me a Coffee 等に切り替える場合はこのURLだけ差し替えればよい。
+const DONATE_URL = "https://github.com/sponsors/taross-f";
+
+function HeartIcon({ size = 13 }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+      <path d="M12 21C12 21 4 15.5 4 9.8 4 7 6.2 5 8.6 5c1.4 0 2.7.7 3.4 1.8C12.7 5.7 14 5 15.4 5 17.8 5 20 7 20 9.8c0 5.7-8 11.2-8 11.2z" fill="#e05a7a" />
+    </svg>
+  );
+}
+
+// 投げ銭リンク。クリア画面・図鑑コンプ画面など「熱量が高く、かつゲームの外」の
+// 場面にだけ置く(会議中には出さない)。
+function DonateLink({ from, style }) {
+  return (
+    <a href={DONATE_URL} target="_blank" rel="noopener noreferrer"
+      onClick={() => track("donate_click", { from })}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12,
+        color: "#8a8f99", textDecoration: "none", borderBottom: "1px dotted #3a3f47", paddingBottom: 1,
+        ...style,
+      }}>
+      <HeartIcon size={13} /> 開発を支援する
+    </a>
+  );
+}
+
 function StarIcon({ size = 16, filled }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -583,6 +612,9 @@ export default function TeireiKaigi() {
   const [captionIdx, setCaptionIdx] = useState(0);
   const [transition, setTransition] = useState(null);
   const [soundOn, setSoundOn] = useState(loadSoundEnabled);
+  // リワード広告コンティニュー: 在庫があると広告表示関数が入る(nullなら導線を出さない)
+  const [reviveFn, setReviveFn] = useState(null);
+  const revivedThisRunRef = useRef(false); // コンティニューは1ラン1回まで
   const timerRef = useRef(null);
   const stateRef = useRef({});
   stateRef.current = { anomalyId, dayIdx, usedAnomalies, mode, streak };
@@ -617,6 +649,7 @@ export default function TeireiKaigi() {
   // タイトル/クリア画面からの参加: ユーザー操作中にAudioContextを起こす。
   const joinFromTitle = useCallback(() => {
     ensureAudio();
+    initAds(); // ユーザー操作中に広告SDKも初期化(サウンド設定を伝える)
     setMode("campaign");
     track("game_start");
     startMeeting(0);
@@ -625,8 +658,10 @@ export default function TeireiKaigi() {
   // エンドレスモード開始(クリア済みのみ解放)。クリア概念なしで連続正解数を競う。
   const startEndless = useCallback(() => {
     ensureAudio();
+    initAds();
     setMode("endless");
     setStreak(0);
+    revivedThisRunRef.current = false; // 新しいランなのでコンティニュー権を戻す
     track("endless_start");
     startMeeting(0);
   }, [startMeeting]);
@@ -674,7 +709,20 @@ export default function TeireiKaigi() {
       sub: "月曜日に戻ります",
     });
     setPhase("transition");
-    setTimeout(() => startMeeting(0), 2400);
+    // 週の失敗→月曜リスタートは唯一の自然な中断点なので、ここでだけ
+    // インタースティシャル広告を挟む(会議中には絶対に出さない)。
+    // 広告が実際に表示されるときだけ通常の2.4秒タイマーを止め、閉じたら月曜を開始。
+    // 表示されない環境(ブロッカー・頻度制限・H5未承認)では通常フローのまま進む。
+    const restartTimer = setTimeout(() => startMeeting(0), 2400);
+    showInterstitial({
+      name: "restart_week",
+      onShowing: () => clearTimeout(restartTimer),
+      onClosed: () => startMeeting(0),
+      onDone: (info, shown) => track("ad_interstitial", {
+        name: "restart_week",
+        status: shown ? "shown" : ((info && info.breakStatus) || "unknown"),
+      }),
+    });
   }
 
   function succeed(byLeaving) {
@@ -804,6 +852,33 @@ export default function TeireiKaigi() {
     if (phase !== "meeting") return;
     if (timeLeft > 0 && timeLeft <= 3) playTick();
   }, [phase, timeLeft]);
+
+  // エンドレスのゲームオーバー画面でリワード広告(コンティニュー)を打診する。
+  // 在庫があれば「広告を見て、会議に戻る」ボタンが出る(1ラン1回まで)。
+  // 最後まで視聴したときだけ、streakを維持して次の会議から再開する。
+  // 広告が出ない環境では reviveFn が立たず、導線ごと出ない。
+  useEffect(() => {
+    if (phase !== "endlessover" || revivedThisRunRef.current) return;
+    requestRewardedAd({
+      name: "endless_continue",
+      onAvailable: (showAdFn) => {
+        setReviveFn(() => showAdFn);
+        track("ad_reward", { status: "available" });
+      },
+      onViewed: () => {
+        revivedThisRunRef.current = true;
+        setReviveFn(null);
+        track("ad_reward", { status: "viewed" });
+        startMeeting(stateRef.current.dayIdx + 1);
+      },
+      onDismissed: () => {
+        setReviveFn(null);
+        track("ad_reward", { status: "dismissed" });
+      },
+    });
+    // 画面を離れたら導線を消す(「もう一度」「タイトルへ」で古い showAdFn を残さない)
+    return () => setReviveFn(null);
+  }, [phase, startMeeting]);
 
   return (
     <div className="tk-root" style={{
@@ -976,6 +1051,7 @@ export default function TeireiKaigi() {
               タイトルへ
             </button>
           </div>
+          <DonateLink from="clear" style={{ marginTop: 28 }} />
         </div>
       )}
 
@@ -992,7 +1068,20 @@ export default function TeireiKaigi() {
           ) : (
             <div style={{ marginTop: 8, fontSize: 13, color: "#8a8f99", fontVariantNumeric: "tabular-nums" }}>最高記録 {endlessBest}</div>
           )}
-          <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}>
+          {/* リワード広告コンティニュー: 在庫があるときだけ出る(1ラン1回) */}
+          {reviveFn && (
+            <button className="tk-btn"
+              onClick={() => { track("ad_reward", { status: "click" }); reviveFn(); }}
+              style={{
+                marginTop: 28, background: "linear-gradient(180deg,#2a2410,#1c1a12)", color: "#ffd35a",
+                border: "1px solid #6b561e", padding: "12px 28px",
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+              ▶ 広告を見て、会議に戻る
+              <span style={{ color: "#caa66a", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>連続 {transition.streak} を維持</span>
+            </button>
+          )}
+          <div style={{ display: "flex", gap: 12, marginTop: reviveFn ? 14 : 36, flexWrap: "wrap", justifyContent: "center" }}>
             <button className="tk-btn" onClick={startEndless}
               style={{ background: "#3a6df0", color: "#fff", padding: "12px 32px" }}>もう一度</button>
             <ShareButton from="endless"
@@ -1032,6 +1121,7 @@ export default function TeireiKaigi() {
               <TrophyIcon size={40} />
               <div style={{ fontWeight: 800, fontSize: 16 }}>全異変 制覇</div>
               <div style={{ fontSize: 12, color: "#caa66a" }}>すべての異変を見破りました。お見事です。</div>
+              <DonateLink from="anomalies" style={{ marginTop: 4, color: "#caa66a", borderBottomColor: "#6b561e" }} />
             </div>
           )}
 
