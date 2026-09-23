@@ -621,6 +621,87 @@ nav.breadcrumb {
       }
     }
   }
+
+  // 記事内テーブル
+  // display:block + overflow-x で、横幅の広い表はスマホで表ごと横スクロールさせる
+  table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.8em 0;
+    border: 1px solid #e2e8f0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 0.92em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  tr,
+  th,
+  td {
+    border: none;
+  }
+
+  th,
+  td {
+    padding: 0.65em 1.1em;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: top;
+  }
+
+  th + th,
+  td + td {
+    border-left: 1px solid #edf2f7;
+  }
+
+  thead th {
+    background: rgba(66, 153, 225, 0.08);
+    color: #2c5282;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 2px solid rgba(66, 153, 225, 0.35);
+  }
+
+  // kramdown は列揃えを style="text-align" で出すので、未指定時のみ左揃え
+  th:not([style]),
+  td:not([style]) {
+    text-align: left;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f4f7fb;
+  }
+
+  tbody tr:hover {
+    background: rgba(66, 153, 225, 0.05);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  // 表内のインラインコードは少し小さく
+  td code,
+  th code {
+    font-size: 0.9em;
+  }
+
+  @include mobile {
+    table {
+      font-size: 0.85em;
+    }
+
+    th,
+    td {
+      padding: 0.55em 0.8em;
+    }
+  }
 }
 
 .wrapper-footer {
