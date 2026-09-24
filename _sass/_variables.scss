@@ -3,11 +3,7 @@
 //
 
 // Colors
-$Beko-Rebranding-Concept-1-hex: #0487d9;
-$Beko-Rebranding-Concept-2-hex: #14a1d9;
 $Beko-Rebranding-Concept-3-hex: #146a8c;
-$Beko-Rebranding-Concept-4-hex: #88d4f2;
-$Beko-Rebranding-Concept-5-hex: #f27405;
 $blue: #146a8c;
 
 // LP-style accent palette (used for hero, gradient text, particle canvas)
@@ -16,25 +12,9 @@ $brand-pink: #ec4899;
 $brand-cyan: #06b6d4;
 
 // Grays
-$black: #111;
 $darkerGray: #222;
-$darkGray: #333;
 $gray: #666;
 $lightGray: #eee;
-$white: #fff;
-
-/* Color Theme Swatches in Hex */
-$Beko-Rebranding-Concept-1-hex: #0487d9;
-$Beko-Rebranding-Concept-2-hex: #14a1d9;
-$Beko-Rebranding-Concept-3-hex: #146a8c;
-$Beko-Rebranding-Concept-4-hex: #88d4f2;
-$Beko-Rebranding-Concept-5-hex: #f27405;
-
-// Font stacks
-$helvetica: Helvetica, Arial, sans-serif;
-$helveticaNeue: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$georgia: Georgia, serif;
-$google: "Roboto,Lato,游ゴシック体,'Yu Gothic',YuGothic,'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','Hiragino Sans',Meiryo,メイリオ,sans-serif";
 
 // Mobile breakpoints
 @mixin mobile {
