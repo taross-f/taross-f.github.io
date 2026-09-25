@@ -462,8 +462,8 @@ nav.breadcrumb {
   border: 1px solid rgba(203, 213, 224, 0.2);
   will-change: transform;
 
+  // 浮き上がり（transform）は後段の .posts > .post.is-visible:hover で指定
   &:hover {
-    transform: translate3d(0, -5px, 0);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
     background: rgba(255, 255, 255, 0.95);
   }
@@ -1152,6 +1152,21 @@ iframe {
 .posts > .post.is-visible {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+}
+
+// 記事カードのホバー時の浮き上がり。
+// .posts > .post.is-visible の transform と詳細度が並ぶと打ち消されるため、
+// :hover を足して上書きする。表示アニメ用の遅延は付けずに素早く反応させる。
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .posts > .post.is-visible:hover {
+    transform: translate3d(0, -5px, 0);
+    transition:
+      opacity 0.7s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background-color 0.3s ease;
+    transition-delay: 0s;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
