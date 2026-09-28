@@ -56,8 +56,21 @@
       gtag('config', 'G-HHQ0669BP8');
     </script>
 
+    <!-- H5 Games Ads (AdSense Ad Placement API)。src/ads.js から adBreak/adConfig を呼ぶ。
+         SDK読み込み前の呼び出しはキューに積まれ、読み込み後に処理される公式パターン。
+         公式スニペットは const で宣言するが、ES module(ads.js)から参照できるよう
+         window に明示的に生やしている(挙動は同じ)。
+         data-ad-frequency-hint: インタースティシャルの最短表示間隔。 -->
+    <script async data-ad-frequency-hint="120s"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2459475264623596"
+      crossorigin="anonymous"></script>
+    <script>
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adBreak = window.adConfig = function (o) { adsbygoogle.push(o); };
+    </script>
+
     <style>html,body{margin:0;padding:0;background:#141619}</style>
-    <script type="module" crossorigin src="/apps/teirei-kaigi/assets/index-B0Jqbh-I.js"></script>
+    <script type="module" crossorigin src="/apps/teirei-kaigi/assets/index-DOejLP8C.js"></script>
   </head>
   <body>
     <div id="root"></div>
