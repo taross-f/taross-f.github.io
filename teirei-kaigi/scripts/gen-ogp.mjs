@@ -10,9 +10,13 @@
 //
 // 出力: public/ogp.png (1200x630), public/icon-512.png, public/apple-touch-icon.png
 import { Resvg } from '@resvg/resvg-js';
+import { createServer } from 'vite';
+import { createElement, Fragment } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { BASE_PARTICIPANTS, SELF } from '../src/participants.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pub = join(here, '..', 'public');
@@ -32,15 +36,22 @@ const toPng = (svg, width) =>
 const F = `font-family="Noto Sans JP"`;
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-// ゲームの PARTICIPANTS / SELF と同じ配色・並び(自分は4番目)。user_039 はゲーム同様カメラオフ。
+// 並びはゲームと同じ(自分は4番目)。user_039 はゲーム同様カメラオフ。
+const byId = Object.fromEntries(BASE_PARTICIPANTS.map((p) => [p.id, p]));
 const tiles = [
-  { name: '田中',     skin: '#e8b794', shirt: '#3a5a8c', bgA: '#2e3440', bgB: '#3b4252', talking: true },
-  { name: '佐藤',     skin: '#e3a982', shirt: '#6b4f8c', bgA: '#3a3f4b', bgB: '#2b2f38', muted: true, glasses: true },
-  { name: '鈴木',     skin: '#f0c4a0', shirt: '#4a7a5c', bgA: '#33383f', bgB: '#23272d', muted: true },
-  { name: 'あなた',   skin: '#ecbf9b', shirt: '#444b55', bgA: '#26292e', bgB: '#191b1f', muted: true },
-  { name: 'user_039', bgA: '#0a0a0c', bgB: '#000000', muted: true, cameraOff: true },
-  { name: '高橋',     skin: '#dba47e', shirt: '#8c6b3a', bgA: '#3d3a35', bgB: '#28251f', muted: true, door: true },
+  byId.tanaka, byId.sato, byId.suzuki, SELF,
+  { id: 'unknown', name: 'user_039', muted: true, cameraOff: true },
+  byId.takahashi,
 ];
+
+// 人物と部屋は、ゲームの src/scene.jsx をそのままサーバーレンダリングして埋め込む
+// (JSX なので vite 経由で読み込む)。ゲームの見た目を変えれば OGP も追従する。
+const vite = await createServer({
+  root: join(here, '..'), logLevel: 'error', appType: 'custom',
+  server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true }, // ブラウザ向けの依存スキャンは不要
+});
+const { Avatar, RoomBackground, sceneViewBox } = await vite.ssrLoadModule('/src/scene.jsx');
+await vite.close();
 
 // 会議ウィンドウ
 const win = { x: 40, y: 40, w: 700, h: 550 };
@@ -51,20 +62,19 @@ const gridX = win.x + pad, gridY = win.y + headerH + pad;
 const toolbarH = 68;
 const toolbarY = win.y + win.h - toolbarH;
 
-// ゲームの Avatar と同じ形状(viewBox 120x90 を 4:3 タイルに等倍フィット)
-function avatar(t) {
+// タイル内の映像。カメラオフはゲーム同様「?」だけ、それ以外は部屋+人物。
+// gradient の id がタイル間で衝突しないよう、identifierPrefix でタイルごとに useId を分ける。
+function tileArt(t, i) {
   if (t.cameraOff) {
-    return `<circle cx="60" cy="45" r="13" fill="#2a2a30"/>
-      <text x="60" y="50.5" text-anchor="middle" ${F} font-weight="700" font-size="14" fill="#555">?</text>`;
+    return `<rect width="100%" height="100%" fill="#0a0a0c"/>
+      <svg viewBox="0 0 120 90"><circle cx="60" cy="45" r="13" fill="#2a2a30"/>
+      <text x="60" y="50.5" text-anchor="middle" ${F} font-weight="700" font-size="14" fill="#555">?</text></svg>`;
   }
-  return `
-    <rect x="35" y="62" width="50" height="34" rx="12" fill="${t.shirt}"/>
-    <circle cx="60" cy="42" r="19" fill="${t.skin}"/>
-    <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e"/>
-    <ellipse cx="53" cy="42" rx="2.4" ry="3" fill="#222"/>
-    <ellipse cx="67" cy="42" rx="2.4" ry="3" fill="#222"/>
-    ${t.glasses ? `<g stroke="#222" stroke-width="1.4" fill="none"><circle cx="53" cy="42" r="5.6"/><circle cx="67" cy="42" r="5.6"/><line x1="58.6" y1="42" x2="61.4" y2="42"/></g>` : ''}
-    <ellipse cx="60" cy="52" rx="4" ry="${t.talking ? 3 : 1.2}" fill="#8a5a4a"/>`;
+  const viewBox = sceneViewBox(tileW / tileH);
+  return renderToStaticMarkup(createElement(Fragment, null,
+    createElement(RoomBackground, { p: t, viewBox, progress: 0 }),
+    createElement(Avatar, { p: t, viewBox, talking: !!t.host, syncBlink: false, idx: i, frozen: true, still: true }),
+  ), { identifierPrefix: `t${i}-` });
 }
 function micIcon(x, y, s, muted) {
   const c = muted ? '#d65a5a' : '#9adb9a';
@@ -77,20 +87,15 @@ function micIcon(x, y, s, muted) {
 function tileSvg(t, i) {
   const x = gridX + (i % cols) * (tileW + gap);
   const y = gridY + Math.floor(i / cols) * (tileH + gap);
-  const grad = `<linearGradient id="g${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.bgA}"/><stop offset="1" stop-color="${t.bgB}"/></linearGradient>
-    <clipPath id="c${i}"><rect x="${x}" y="${y}" width="${tileW}" height="${tileH}" rx="8"/></clipPath>`;
-  const door = t.door
-    ? `<rect x="${x + tileW * 0.66}" y="${y + tileH * 0.1}" width="${tileW * 0.22}" height="${tileH * 0.78}" rx="2" fill="#1c1a16" stroke="#4a4438"/>` : '';
+  const grad = `<clipPath id="c${i}"><rect x="${x}" y="${y}" width="${tileW}" height="${tileH}" rx="8"/></clipPath>`;
   const fs = 15, labelW = 34 + t.name.length * (/^[\x00-\x7f]+$/.test(t.name) ? 8.6 : 15);
   const label = `
     <rect x="${x + 7}" y="${y + tileH - 33}" width="${labelW}" height="26" rx="5" fill="rgba(0,0,0,0.62)"/>
     ${micIcon(x + 12, y + tileH - 28, 16, t.muted)}
     <text x="${x + 31}" y="${y + tileH - 14.5}" ${F} font-weight="700" font-size="${fs}" fill="#e8e8ea">${esc(t.name)}</text>`;
-  const border = t.talking ? '#5ad65a' : '#2c2f35';
+  const border = t.host ? '#5ad65a' : '#2c2f35';
   const body = `<g clip-path="url(#c${i})">
-      <rect x="${x}" y="${y}" width="${tileW}" height="${tileH}" fill="url(#g${i})"/>
-      ${door}
-      <svg x="${x}" y="${y}" width="${tileW}" height="${tileH}" viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice">${avatar(t)}</svg>
+      <svg x="${x}" y="${y}" width="${tileW}" height="${tileH}">${tileArt(t, i)}</svg>
     </g>
     ${label}
     <rect x="${x + 1}" y="${y + 1}" width="${tileW - 2}" height="${tileH - 2}" rx="8" fill="none" stroke="${border}" stroke-width="2.5"/>`;
