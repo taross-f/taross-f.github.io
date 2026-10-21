@@ -19,6 +19,13 @@ export function sceneViewBox(aspect) {
 
 const MIRROR = "matrix(-1 0 0 1 160 0)"; // x=80 を軸に左右反転(耳・眉・髪の房など左右対称のパーツ用)
 
+// 2色を t(0..1) で補間する(じわじわ系の色の変化用)。a, b は "#rrggbb"。
+function mix(a, b, t) {
+  const ca = parseInt(a.slice(1), 16), cb = parseInt(b.slice(1), 16);
+  const ch = (sh) => Math.round(((ca >> sh) & 255) * (1 - t) + ((cb >> sh) & 255) * t);
+  return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+}
+
 // ---------- 人物 ----------
 // 頭頂(髪の下)y=36・あご y=76。目は頭の高さの中央(y=56.5)に置くと人の顔の比率になる。
 const FACE = "M 80 36 C 88.5 36 94.5 42 94.5 52 C 94.5 58 94.2 62.6 92.2 66.6 C 90.2 72 85.8 75.6 80 75.6 C 74.2 75.6 69.8 72 67.8 66.6 C 65.8 62.6 65.5 58 65.5 52 C 65.5 42 71.5 36 80 36 Z";
@@ -66,7 +73,12 @@ const HAIR = {
 };
 
 // 服。胴体(TORSO)を p.shirt で塗った上に重ねる差分だけを描く。
-function Outfit({ p }) {
+function Outfit({ p, back }) {
+  // 後ろ姿(turnAway 異変)は首の後ろの襟だけ。シャツを着ている人は白い襟が見える。
+  if (back) {
+    const collar = p.outfit === "suit" || p.outfit === "sweater" ? "#e4e5ea" : "rgba(0,0,0,0.3)";
+    return <path d="M 71 85.8 C 74 82.6 86 82.6 89 85.8" fill="none" stroke={collar} strokeWidth="1.8" />;
+  }
   switch (p.outfit) {
     case "suit": // 田中(司会): ジャケット+白シャツ
       return (
@@ -125,6 +137,64 @@ function Glasses() {
   );
 }
 
+// 正面を向いた頭: 耳・顔・眉・目・鼻・口・前髪・眼鏡。
+function FrontHead({ p, hair, hairColor, eyeFill, thirdOpen, blinkStyle, talking }) {
+  const lip = p.lips || "#93574a";
+  return (
+    <g>
+      {!hair.hideEars && (
+        <g>
+          <ellipse cx="65.8" cy="57.4" rx="2.5" ry="4.4" fill={p.skin} />
+          <ellipse cx="94.2" cy="57.4" rx="2.5" ry="4.4" fill={p.skin} />
+          <path d="M 65.4 55 Q 64.4 57.4 65.6 60" fill="none" stroke="rgba(90,40,30,0.3)" strokeWidth="0.6" />
+          <path d="M 65.4 55 Q 64.4 57.4 65.6 60" transform={MIRROR} fill="none" stroke="rgba(90,40,30,0.3)" strokeWidth="0.6" />
+        </g>
+      )}
+      <path d={FACE} fill={p.skin} />
+      <path d={FACE_SHADE} fill="rgba(90,40,25,0.13)" />
+      {thirdOpen > 0 && (
+        <g>
+          <ellipse cx="80" cy="46" rx="2.6" ry={2.4 * thirdOpen} fill="#f1eae6" stroke="rgba(90,60,60,0.6)" strokeWidth="0.4" />
+          <ellipse cx="80" cy="46" rx="1.2" ry={Math.max(0.1, 1.4 * thirdOpen)} fill={eyeFill} />
+        </g>
+      )}
+      {/* 眉 */}
+      <path d="M 70.6 52.2 Q 73.6 50.6 77.2 51.6" fill="none" stroke={hairColor} strokeWidth={p.browWidth || 1.2} strokeLinecap="round" />
+      <path d="M 70.6 52.2 Q 73.6 50.6 77.2 51.6" transform={MIRROR} fill="none" stroke={hairColor} strokeWidth={p.browWidth || 1.2} strokeLinecap="round" />
+      <g style={blinkStyle}>
+        <ellipse cx="74" cy="56.6" rx="1.75" ry="2.2" fill={eyeFill} />
+        <ellipse cx="86" cy="56.6" rx="1.75" ry="2.2" fill={eyeFill} />
+      </g>
+      {/* 鼻 */}
+      <path d="M 80.8 58.6 Q 82.6 62.4 80.4 63.6" fill="none" stroke="rgba(110,55,40,0.42)" strokeWidth="0.9" strokeLinecap="round" />
+      {talking ? (
+        <ellipse cx="80" cy="68.2" rx="2.5" ry="1.7" fill="#5e2f2a"
+          style={{ animation: "tk-talk 0.32s infinite alternate", transformBox: "fill-box", transformOrigin: "center" }} />
+      ) : (
+        <path d="M 76.8 68 Q 80 69.4 83.2 68" fill="none" stroke={lip} strokeWidth="1.15" strokeLinecap="round" />
+      )}
+      <path d={hair.front} fill={hairColor} />
+      {hair.part && <path d={hair.part} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" />}
+      <path d="M 72 35.4 Q 80 32.6 88 35.4" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.6" strokeLinecap="round" />
+      {p.glasses && <Glasses />}
+    </g>
+  );
+}
+
+// turnAway 異変の後ろ姿: 顔は描かず、後頭部の髪と耳だけ(眼鏡の人はつるが耳にかかる)。
+function BackOfHead({ p, hairColor }) {
+  return (
+    <g>
+      <path d="M 80 30 C 92 30 98.6 39 97.6 53 C 97 63 94 70 89 74 C 85 76.6 75 76.6 71 74 C 66 70 63 63 62.4 53 C 61.4 39 68 30 80 30 Z" fill={hairColor} />
+      <path d="M 74 34 Q 80 31.6 86 34" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M 79 41 q 3 -2 3.6 1.4 q -1 3 -4 1.6" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="0.7" />
+      <ellipse cx="62.8" cy="57.4" rx="2.4" ry="4.4" fill={p.skin} />
+      <ellipse cx="97.2" cy="57.4" rx="2.4" ry="4.4" fill={p.skin} />
+      {p.glasses && <path d="M 60.4 54.6 L 65.6 55.2 M 99.6 54.6 L 94.4 55.2" stroke="#1c1c20" strokeWidth="1" />}
+    </g>
+  );
+}
+
 export function Avatar({ p, viewBox, talking, syncBlink, idx, frozen, still, progress = 0 }) {
   if (p.cameraOff) {
     return (
@@ -159,57 +229,36 @@ export function Avatar({ p, viewBox, talking, syncBlink, idx, frozen, still, pro
   const eyeFill = p.eyeColor || "#1f1a19";
   // thirdEye 異変: 額の目が二乗カーブでゆっくり開く(じわじわ系)。
   const thirdOpen = p.thirdEye ? Math.min(1, progress * progress * 1.5) : 0;
-  const lip = p.lips || "#93574a";
+  // neckStretch 異変: 頭が二乗カーブで持ち上がり、そのぶん首が伸びる(じわじわ系)。
+  const stretch = p.neckStretch ? 20 * progress * progress : 0;
+  const lift = p.neckStretch ? { transform: `translateY(${-stretch}px)`, transition: "transform 1.1s linear" } : undefined;
+  // turnAway 異変: 途中から後ろを向く(時間経過で発生)。
+  const turned = p.turnAwayAt != null && progress >= p.turnAwayAt;
   return (
     <svg viewBox={viewBox} preserveAspectRatio="xMidYMid slice" style={{ display: "block", width: "100%", height: "100%" }}>
       {/* 奥から: 後ろ髪 → 首 → 胴体と服 → 頭 → 肩の前に垂れる房。頭まわりは同じ揺れで動かす */}
-      {hair.back && <path className="tk-sway" style={swayStyle} d={hair.back} fill={hairColor} />}
+      {hair.back && !turned && (
+        <g style={lift}><path className="tk-sway" style={swayStyle} d={hair.back} fill={hairColor} /></g>
+      )}
       <path d={NECK} fill={p.skin} />
-      <path d={NECK_SHADE} fill="rgba(70,30,20,0.2)" />
       <path d={TORSO} fill={p.shirt} />
       <path d={TORSO_SHADE} fill="rgba(0,0,0,0.16)" />
-      <Outfit p={p} />
-      <g className="tk-sway" style={swayStyle}>
-        {!hair.hideEars && (
-          <g>
-            <ellipse cx="65.8" cy="57.4" rx="2.5" ry="4.4" fill={p.skin} />
-            <ellipse cx="94.2" cy="57.4" rx="2.5" ry="4.4" fill={p.skin} />
-            <path d="M 65.4 55 Q 64.4 57.4 65.6 60" fill="none" stroke="rgba(90,40,30,0.3)" strokeWidth="0.6" />
-            <path d="M 65.4 55 Q 64.4 57.4 65.6 60" transform={MIRROR} fill="none" stroke="rgba(90,40,30,0.3)" strokeWidth="0.6" />
-          </g>
-        )}
-        <path d={FACE} fill={p.skin} />
-        <path d={FACE_SHADE} fill="rgba(90,40,25,0.13)" />
-        {thirdOpen > 0 && (
-          <g>
-            <ellipse cx="80" cy="46" rx="2.6" ry={2.4 * thirdOpen} fill="#f1eae6" stroke="rgba(90,60,60,0.6)" strokeWidth="0.4" />
-            <ellipse cx="80" cy="46" rx="1.2" ry={Math.max(0.1, 1.4 * thirdOpen)} fill={eyeFill} />
-          </g>
-        )}
-        {/* 眉 */}
-        <path d="M 70.6 52.2 Q 73.6 50.6 77.2 51.6" fill="none" stroke={hairColor} strokeWidth={p.browWidth || 1.2} strokeLinecap="round" />
-        <path d="M 70.6 52.2 Q 73.6 50.6 77.2 51.6" transform={MIRROR} fill="none" stroke={hairColor} strokeWidth={p.browWidth || 1.2} strokeLinecap="round" />
-        <g style={blinkStyle}>
-          <ellipse cx="74" cy="56.6" rx="1.75" ry="2.2" fill={eyeFill} />
-          <ellipse cx="86" cy="56.6" rx="1.75" ry="2.2" fill={eyeFill} />
+      <Outfit p={p} back={turned} />
+      <g style={lift}>
+        {/* 伸びた首。頭と一緒に持ち上がり、下端は動かない首(NECK)と重なって途切れない */}
+        {stretch > 0 && <rect x="73" y="62" width="14" height="22" fill={p.skin} />}
+        {!turned && <path d={NECK_SHADE} fill="rgba(70,30,20,0.2)" />}
+        <g className="tk-sway" style={swayStyle}>
+          {turned ? <BackOfHead p={p} hairColor={hairColor} />
+            : <FrontHead p={p} hair={hair} hairColor={hairColor} eyeFill={eyeFill} thirdOpen={thirdOpen} blinkStyle={blinkStyle} talking={talking} />}
         </g>
-        {/* 鼻 */}
-        <path d="M 80.8 58.6 Q 82.6 62.4 80.4 63.6" fill="none" stroke="rgba(110,55,40,0.42)" strokeWidth="0.9" strokeLinecap="round" />
-        {talking ? (
-          <ellipse cx="80" cy="68.2" rx="2.5" ry="1.7" fill="#5e2f2a"
-            style={{ animation: "tk-talk 0.32s infinite alternate", transformBox: "fill-box", transformOrigin: "center" }} />
-        ) : (
-          <path d="M 76.8 68 Q 80 69.4 83.2 68" fill="none" stroke={lip} strokeWidth="1.15" strokeLinecap="round" />
-        )}
-        <path d={hair.front} fill={hairColor} />
-        {hair.part && <path d={hair.part} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" />}
-        <path d="M 72 35.4 Q 80 32.6 88 35.4" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.6" strokeLinecap="round" />
-        {p.glasses && <Glasses />}
       </g>
-      {hair.strand && (
-        <g className="tk-sway" style={swayStyle} fill={hairColor}>
-          <path d={hair.strand} />
-          <path d={hair.strand} transform={MIRROR} />
+      {hair.strand && !turned && (
+        <g style={lift}>
+          <g className="tk-sway" style={swayStyle} fill={hairColor}>
+            <path d={hair.strand} />
+            <path d={hair.strand} transform={MIRROR} />
+          </g>
         </g>
       )}
     </svg>
@@ -252,8 +301,23 @@ function StudyRoom({ uid }) {
   );
 }
 
+// 観葉植物の葉: [cx, cy, rx, ry, 傾き(度), 奥/手前, 茎あり]。茎の根元は (122, 96)。
+const LEAVES = [
+  [114, 62, 5, 11, -35, "back", false], [126, 56, 5, 12, 10, "back", true],
+  [136, 66, 5, 11, 48, "back", true], [108, 76, 4.5, 10, -62, "back", true],
+  [120, 70, 4.5, 10, -12, "front", true], [131, 76, 4.5, 10, 30, "front", false],
+];
+const LEAF_COLOR = { back: "#3f6448", front: "#4d7a56" };
+const LEAF_WITHERED = { back: "#6f5f3a", front: "#86704a" };
+
 // 佐藤: リビング。左にポスター、右に観葉植物とフロアランプの明かり。
-function LivingRoom({ uid }) {
+// wither 異変: 葉が二乗カーブで茶色く枯れ、根元から外側へ垂れていく(じわじわ系)。
+function LivingRoom({ uid, p, progress }) {
+  const w = p.wither ? progress * progress : 0;
+  // 葉と茎は根元を中心に同じ角度だけ外側へ垂れる
+  const droop = (cx) => p.wither
+    ? { transform: `rotate(${(cx < 122 ? -1 : 1) * 38 * w}deg)`, transformBox: "view-box", transformOrigin: "122px 96px", transition: "transform 1.1s linear" }
+    : undefined;
   return (
     <g>
       <radialGradient id={`${uid}w`} cx="0.85" cy="0.2" r="0.9">
@@ -269,25 +333,25 @@ function LivingRoom({ uid }) {
       <rect x="148.5" y="16" width="1.6" height="110" fill="#2a2420" />
       <path d="M 141 4 L 157 4 L 161 18 L 137 18 Z" fill="#e8d6b0" />
       <path d="M 137 18 L 161 18 L 149 30 Z" fill="rgba(255,220,160,0.10)" />
-      {/* 観葉植物 */}
-      <g fill="#3f6448">
-        <ellipse cx="114" cy="62" rx="5" ry="11" transform="rotate(-35 114 62)" />
-        <ellipse cx="126" cy="56" rx="5" ry="12" transform="rotate(10 126 56)" />
-        <ellipse cx="136" cy="66" rx="5" ry="11" transform="rotate(48 136 66)" />
-        <ellipse cx="108" cy="76" rx="4.5" ry="10" transform="rotate(-62 108 76)" />
-      </g>
-      <g fill="#4d7a56">
-        <ellipse cx="120" cy="70" rx="4.5" ry="10" transform="rotate(-12 120 70)" />
-        <ellipse cx="131" cy="76" rx="4.5" ry="10" transform="rotate(30 131 76)" />
-      </g>
-      <path d="M 122 96 L 120 70 M 122 96 L 126 56 M 122 96 L 136 66 M 122 96 L 108 76" stroke="#355a3e" strokeWidth="0.9" />
+      {/* 観葉植物(茎は葉の上に描く) */}
+      {LEAVES.map(([cx, cy, rx, ry, a, layer], i) => (
+        <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} transform={`rotate(${a} ${cx} ${cy})`} style={droop(cx)}
+          fill={p.wither ? mix(LEAF_COLOR[layer], LEAF_WITHERED[layer], w) : LEAF_COLOR[layer]} />
+      ))}
+      {LEAVES.filter((l) => l[6]).map(([cx, cy], i) => (
+        <path key={i} d={`M 122 96 L ${cx} ${cy}`} style={droop(cx)}
+          stroke={p.wither ? mix("#355a3e", "#5e5034", w) : "#355a3e"} strokeWidth="0.9" />
+      ))}
       <path d="M 112 94 L 132 94 L 129.5 122 L 114.5 122 Z" fill="#7a5a44" />
     </g>
   );
 }
 
 // 鈴木: 窓辺。左にブラインド越しの昼の光、右に小さな棚。
-function WindowRoom({ uid }) {
+// dusk 異変: 窓の外と部屋が二乗カーブで夜のように暗くなっていく(じわじわ系)。
+function WindowRoom({ uid, p, progress }) {
+  const d = p.dusk ? progress * progress : 0;
+  const fade = (opacity) => ({ opacity, transition: "opacity 1.1s linear" });
   return (
     <g>
       <linearGradient id={`${uid}w`} x1="0" y1="0" x2="1" y2="0">
@@ -301,6 +365,7 @@ function WindowRoom({ uid }) {
         <rect key={i} x="-21" y={9 + i * 4.7} width="70" height="3.2" fill="#d9dee2" />
       ))}
       <rect x="13.4" y="9" width="0.6" height="70" fill="rgba(0,0,0,0.12)" />
+      {p.dusk && <rect x="-21" y="9" width="70" height="70" fill="#111727" style={fade(0.9 * d)} />}
       <rect x="-26" y="82" width="80" height="3" fill="#9aa0a6" />
       {/* 窓からの光 */}
       <path d="M 52 9 L 92 30 L 92 120 L 52 85 Z" fill="rgba(255,255,255,0.03)" />
@@ -311,6 +376,7 @@ function WindowRoom({ uid }) {
       <rect x="115.6" y="47" width="3.6" height="7" rx="1.8" fill="#5f8a5a" />
       <rect x="134" y="58" width="7" height="8" rx="1" fill="#d6d2c8" />
       <path d="M 141 60 q 3 2 0 4" fill="none" stroke="#d6d2c8" strokeWidth="1" />
+      {p.dusk && <rect x="-40" y="-10" width="240" height="140" fill="#0a0c14" style={fade(0.42 * d)} />}
     </g>
   );
 }
