@@ -1,0 +1,17 @@
+name = "teirei-kaigi-ranking"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# D1 データベース。`wrangler d1 create teirei-kaigi-ranking` で作成し、
+# 出力された database_id を下に貼る。
+[[d1_databases]]
+binding = "DB"
+database_name = "teirei-kaigi-ranking"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[vars]
+# 本番では GitHub Pages のオリジンに絞る。ローカル確認時は "*" でもよい。
+ALLOW_ORIGIN = "https://taross-f.github.io"
+
+# HMAC_SECRET は vars に書かず、必ずシークレットとして登録すること:
+#   wrangler secret put HMAC_SECRET
