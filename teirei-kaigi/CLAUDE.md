@@ -19,7 +19,8 @@
 - 1ランで同じ異変は再出現しない(`usedAnomalies`)。異変出現率は `ANOMALY_RATE = 0.66`。
 - **異変図鑑(コレクション)**: 一度でも正しく見破った異変を `localStorage`(`tk_discovered_anomalies`)に永続記録する。`usedAnomalies`(全種揃うとローテーションのためリセットされる)とは独立で、図鑑はリセットしない。読み書きは `loadAnomalyIdList`/`saveAnomalyIdList` に集約し、追記は `recordAnomalyId` ヘルパで used/discovered 両方に行う。タイトル画面の「異変図鑑」ボタンから一覧(`phase === "anomalies"`)へ遷移し、未発見は「？？？」で伏せる。**この図鑑ボタンは金曜まで完走(クリア)した人にだけ表示する**。クリア済みは `localStorage`(`tk_cleared`)に永続記録し(`loadCleared`/`saveCleared`、state は `cleared`)、`succeed()` で金曜到達時に立てる。図鑑への入口はこのボタンだけなので、ボタンを隠せば未クリア者は `anomalies` フェーズに到達できない。**全種類(`ANOMALIES.length`)を見破ると `allDiscovered` が真になり、タイトルと図鑑にトロフィー(`TrophyIcon`)の「全異変 制覇」表示が出る。**
 - **会議タイルの映像(`src/scene.jsx`)**: 人物(`Avatar`)と部屋(`RoomBackground`)をSVGのフラットなイラストで描く。依存・アセットゼロは維持。
-  - 人物は輪郭・耳・首・肩・服・前後2層の髪で人の形にしている。参加者ごとの描き分けは `BASE_PARTICIPANTS`/`SELF` の `hair`(髪型)・`hairColor`・`outfit`(服)・`room`(部屋)・`lips`・`browWidth`。肌は `skin`、服の地色は `shirt`。
+  - 人物は輪郭・耳・首・肩・服・前後2層の髪で人の形にしている。参加者ごとの描き分けは `BASE_PARTICIPANTS`/`SELF`(`src/participants.js`)の `hair`(髪型)・`hairColor`・`outfit`(服)・`room`(部屋)・`lips`・`browWidth`。肌は `skin`、服の地色は `shirt`。
+  - OGP画像(`scripts/gen-ogp.mjs`)も同じ `scene.jsx` と `participants.js` を vite 経由でサーバーレンダリングして描く。会議画面の見た目を変えたら `npm run gen:ogp` で OGP も作り直す(アプリアイコンは小さすぎて人物が潰れるため、旧来の丸い頭のまま)。
   - 部屋は参加者ごとに固定: 田中=書斎(本棚)、佐藤=リビング(ポスター・観葉植物・ランプ)、鈴木=窓辺(ブラインド)、高橋=廊下へのドアが半開き(`shadow`/`approach` の人影はこの廊下に立つ)、渡辺=壁付けの棚、あなた=夜の自室(カーテン)。部屋はわずかにぼかし、周辺減光をかけて人物と奥行きを分ける。
   - まばたき・口パク・頭のわずかな揺れ(`tk-sway`)はCSSアニメーション。silence 異変では揺れもその姿勢のまま止まる。目の色(`eyeColor`)と額の第三の目(`thirdEye`)の異変フックを持つ。flip 異変は名前ラベル以外の映像(部屋ごと)を上下反転する。
   - 座標系は高さ120・人物の中心 x=80。タイルの縦横比に合わせて viewBox の横幅だけを変える(`sceneViewBox`)ので、横長タイルでは部屋が左右に広く、縦長タイルでは肩が切れて写る。部屋は x=-30..190 まで描いてあり、`MIN_ASPECT`(3:4)〜`MAX_ASPECT`(16:9)のどの比率でも端が切れない。
@@ -62,7 +63,7 @@
 ## バックログ(優先度順)
 
 1. OGP画像の追加(Xでのシェア導線。index.htmlのog:imageが未設定)
-2. アバターの差し替え: SVGのフラットなイラスト(`src/scene.jsx`)→AI生成の実写風静止画+ループ動画。**不気味さの8割はここで決まる**。なおOGP画像(`scripts/gen-ogp.mjs`)の会議画面はまだ旧アバター(丸い頭+角丸の胴)のままなので、見た目を揃えるなら作り直す
+2. アバターの差し替え: SVGのフラットなイラスト(`src/scene.jsx`)→AI生成の実写風静止画+ループ動画。**不気味さの8割はここで決まる**
 3. ~~サウンド~~ → ファミコン風効果音を実装済み(`src/sound.js`)。残: 司会の声・環境ノイズ・異変時の環境音の違和感など、より没入的な音響は今後の課題
 4. 異変の難易度バランス検証(「まばたき同期」「参加者数表示」は気づきにくすぎる可能性)
 5. 類似先行作の調査(Zoomホラーゲームが既にないかリリース前に確認)
