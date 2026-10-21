@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import { Avatar, RoomBackground, sceneViewBox, MIN_ASPECT, MAX_ASPECT } from "./scene";
 import {
   ensureAudio, loadSoundEnabled, isSoundEnabled, setSoundEnabled,
   playClick, playLeave, playCaption, playSilence,
@@ -30,15 +31,16 @@ const CLEARED_STORAGE_KEY = "tk_cleared";
 // エンドレスモードの最高連続正解数(永続)。クリア済みの人だけが遊べる。
 const ENDLESS_BEST_KEY = "tk_endless_best";
 
+// 見た目: hair(髪型)/outfit(服)/room(部屋の背景)は src/scene.jsx で描き分ける。
 const BASE_PARTICIPANTS = [
-  { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#3a5a8c", bgType: "plain", bgA: "#2e3440", bgB: "#3b4252", muted: false, host: true },
-  { id: "sato", name: "佐藤", skin: "#e3a982", shirt: "#6b4f8c", bgType: "plain", bgA: "#3a3f4b", bgB: "#2b2f38", muted: true, glasses: true },
-  { id: "suzuki", name: "鈴木", skin: "#f0c4a0", shirt: "#4a7a5c", bgType: "plain", bgA: "#33383f", bgB: "#23272d", muted: true },
-  { id: "takahashi", name: "高橋", skin: "#dba47e", shirt: "#8c6b3a", bgType: "door", bgA: "#3d3a35", bgB: "#28251f", muted: true },
-  { id: "watanabe", name: "渡辺", skin: "#ecb28e", shirt: "#7a4a4a", bgType: "plain", bgA: "#2f3a3f", bgB: "#1f282c", muted: true, glasses: true },
+  { id: "tanaka", name: "田中", skin: "#e8b794", shirt: "#2f4568", hair: "sidepart", hairColor: "#262220", outfit: "suit", room: "study", browWidth: 1.4, muted: false, host: true },
+  { id: "sato", name: "佐藤", skin: "#e3a982", shirt: "#5e4a7a", hair: "fringe", hairColor: "#2a2224", outfit: "sweater", room: "living", muted: true, glasses: true },
+  { id: "suzuki", name: "鈴木", skin: "#f0c4a0", shirt: "#4a7a5c", hair: "bob", hairColor: "#3a2a26", outfit: "blouse", room: "window", lips: "#b8655e", browWidth: 1, muted: true },
+  { id: "takahashi", name: "高橋", skin: "#dba47e", shirt: "#8c6b3a", hair: "buzz", hairColor: "#34302c", outfit: "hoodie", room: "door", browWidth: 1.4, muted: true },
+  { id: "watanabe", name: "渡辺", skin: "#ecb28e", shirt: "#7a4a4a", hair: "long", hairColor: "#2e2420", outfit: "cardigan", room: "shelf", lips: "#a85a55", browWidth: 1, muted: true, glasses: true },
 ];
 
-const SELF = { id: "self", name: "あなた", skin: "#ecbf9b", shirt: "#444b55", bgType: "plain", bgA: "#26292e", bgB: "#191b1f", muted: true, isSelf: true };
+const SELF = { id: "self", name: "あなた", skin: "#ecbf9b", shirt: "#3c424b", hair: "messy", hairColor: "#24211f", outfit: "tee", room: "dark", muted: true, isSelf: true };
 
 const CAPTIONS = [
   "では、本日の定例を始めます。",
@@ -124,7 +126,7 @@ const ANOMALIES = [
     label: "知らない参加者が1人増えていた",
     apply: (v) => {
       v.participants = [...v.participants];
-      v.participants.splice(4, 0, { id: "unknown", name: "user_039", skin: "#777", shirt: "#222", bgType: "dark", bgA: "#0a0a0c", bgB: "#000000", muted: true, cameraOff: true });
+      v.participants.splice(4, 0, { id: "unknown", name: "user_039", muted: true, cameraOff: true });
       v.count = 7;
     },
   },
@@ -326,80 +328,6 @@ function buildView(anomalyId) {
   return v;
 }
 
-// ---------- Avatar ----------
-function Avatar({ p, talking, syncBlink, idx, frozen, progress = 0 }) {
-  if (p.cameraOff) {
-    return (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 52, height: 52, borderRadius: "50%", background: "#2a2a30", display: "flex", alignItems: "center", justifyContent: "center", color: "#555", fontSize: 22, fontWeight: 700 }}>
-          ?
-        </div>
-      </div>
-    );
-  }
-  const blinkStyle = frozen ? {} : {
-    animation: `tk-blink ${syncBlink ? "2.4s" : (3.6 + (idx % 4) * 0.7) + "s"} infinite`,
-    animationDelay: syncBlink ? "0s" : `${(idx * 1.13) % 3}s`,
-    transformOrigin: "center",
-  };
-  // eyeColor 異変: 目の色を差し替える(既定は黒)。
-  const eyeFill = p.eyeColor || "#222";
-  // thirdEye 異変: 額の目が二乗カーブでゆっくり開く(じわじわ系)。
-  const thirdOpen = p.thirdEye ? Math.min(1, progress * progress * 1.5) : 0;
-  return (
-    <svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMax slice" style={{ width: "100%", height: "100%", transform: p.flipped ? "rotate(180deg)" : "none" }}>
-      <rect x="35" y="62" width="50" height="34" rx="12" fill={p.shirt} />
-      <circle cx="60" cy="42" r="19" fill={p.skin} />
-      <path d="M 41 40 a 19 19 0 0 1 38 0 l 0 -6 a 19 16 0 0 0 -38 0 z" fill="#2b2b2e" />
-      {thirdOpen > 0 && (
-        <g>
-          <ellipse cx="60" cy="32" rx="3.6" ry={3.6 * thirdOpen} fill="#f1eae6" stroke="rgba(90,60,60,0.6)" strokeWidth="0.5" />
-          <ellipse cx="60" cy="32" rx="1.7" ry={Math.max(0.1, 1.9 * thirdOpen)} fill={eyeFill} />
-        </g>
-      )}
-      <g style={blinkStyle}>
-        <ellipse cx="53" cy="42" rx="2.4" ry="3" fill={eyeFill} />
-        <ellipse cx="67" cy="42" rx="2.4" ry="3" fill={eyeFill} />
-      </g>
-      {p.glasses && (
-        <g stroke="#222" strokeWidth="1.4" fill="none">
-          <circle cx="53" cy="42" r="5.6" />
-          <circle cx="67" cy="42" r="5.6" />
-          <line x1="58.6" y1="42" x2="61.4" y2="42" />
-        </g>
-      )}
-      <ellipse cx="60" cy="52" rx="4" ry={talking ? 3 : 1.2} fill="#8a5a4a"
-        style={talking ? { animation: "tk-talk 0.32s infinite alternate", transformOrigin: "60px 52px" } : {}} />
-    </svg>
-  );
-}
-
-function TileBackground({ p, progress }) {
-  if (p.bgType === "door") {
-    // approach: 人影が二乗カーブで手前に近づく(序盤はほぼ気づけない)
-    const ap = p.approach ? progress * progress : 0;
-    const shadowTransform = p.approach
-      ? `translateX(${-34 * ap}%) scale(${1 + 2.6 * ap})`
-      : "none";
-    return (
-      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${p.bgA}, ${p.bgB})` }}>
-        <div style={{ position: "absolute", right: "12%", top: "10%", width: "22%", height: "78%", background: "#1c1a16", borderRadius: 2, border: "1px solid #4a4438" }} />
-        {p.shadow && (
-          <div style={{
-            position: "absolute", right: "15%", top: "26%", width: "16%", height: "62%",
-            transform: shadowTransform, transformOrigin: "50% 100%",
-            transition: "transform 1.1s linear",
-          }}>
-            <div style={{ width: "46%", aspectRatio: "1", borderRadius: "50%", background: "rgba(5,5,8,0.9)", margin: "0 auto" }} />
-            <div style={{ width: "100%", height: "70%", background: "rgba(5,5,8,0.9)", borderRadius: "40% 40% 0 0", marginTop: -2 }} />
-          </div>
-        )}
-      </div>
-    );
-  }
-  return <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${p.bgA}, ${p.bgB})` }} />;
-}
-
 function MicIcon({ muted }) {
   return (
     <svg viewBox="0 0 16 16" width="12" height="12" style={{ flexShrink: 0 }}>
@@ -527,26 +455,32 @@ function StarIcon({ size = 16, filled }) {
   );
 }
 
-function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
+function Tile({ p, width, height, talking, syncBlink, idx, selfName, progress, silenced }) {
   const name = p.isSelf ? selfName : p.name;
   // じわじわ系: 序盤は気づけないよう二乗カーブで進行させる
   const growScale = p.grow ? 1 + 1.6 * progress * progress : 1;
   const redOpacity = p.redden ? 0.65 * Math.pow(progress, 1.5) : 0;
   const frozen = !!p.frozenEyes || silenced;
+  // 枠線(2px×2)を除いた映像部分の縦横比で、部屋と人物の写る範囲を決める
+  const viewBox = sceneViewBox((width - 4) / (height - 4));
   return (
     <div style={{
-      position: "relative", borderRadius: 8, overflow: "hidden",
-      width: "100%", height: "100%", minHeight: 0, aspectRatio: "4/3",
-      border: talking ? "2px solid #5ad65a" : "2px solid #2c2f35", background: "#222",
+      position: "relative", borderRadius: 8, overflow: "hidden", boxSizing: "border-box", flexShrink: 0,
+      width, height,
+      border: talking ? "2px solid #5ad65a" : "2px solid #2c2f35", background: "#111",
     }}>
-      <TileBackground p={p} progress={progress} />
-      <div style={{
-        position: "absolute", inset: 0,
-        transform: `scale(${growScale})`,
-        transformOrigin: "50% 40%",
-        transition: "transform 1.1s linear",
-      }}>
-        <Avatar p={p} talking={talking} syncBlink={syncBlink} idx={idx} frozen={frozen} progress={progress} />
+      {/* 映像(部屋+人物)。flip 異変は映像ごと上下反転させる(名前ラベルはそのまま) */}
+      <div style={{ position: "absolute", inset: 0, transform: p.flipped ? "rotate(180deg)" : "none" }}>
+        <RoomBackground p={p} viewBox={viewBox} progress={progress} />
+        <div style={{
+          position: "absolute", inset: 0,
+          transform: `scale(${growScale})`,
+          transformOrigin: "50% 47%", // 顔の中心
+          transition: "transform 1.1s linear",
+        }}>
+          <Avatar p={p} viewBox={viewBox} talking={talking} syncBlink={syncBlink} idx={idx}
+            frozen={frozen} still={silenced} progress={progress} />
+        </div>
       </div>
       {p.redden && (
         <div style={{
@@ -562,6 +496,46 @@ function Tile({ p, talking, syncBlink, idx, selfName, progress, silenced }) {
         <MicIcon muted={p.muted} />
         <span>{name}</span>
       </div>
+    </div>
+  );
+}
+
+// ギャラリービュー。Zoom 同様、タイルの縦横比(MIN_ASPECT..MAX_ASPECT)を保ったまま
+// いちばん大きく並べられる列数を選ぶ。CSS grid の 1fr 行で埋めると、横長の画面では
+// タイルが縦に細長く伸びて顔が極端に拡大されてしまうため、実寸を測って決める。
+const TILE_GAP = 10;
+function galleryLayout(W, H, n) {
+  let best = null;
+  for (let cols = 1; cols <= n; cols++) {
+    const rows = Math.ceil(n / cols);
+    const cw = (W - TILE_GAP * (cols - 1)) / cols;
+    const ch = (H - TILE_GAP * (rows - 1)) / rows;
+    if (cw <= 0 || ch <= 0) continue;
+    const aspect = Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, cw / ch));
+    const w = Math.min(cw, ch * aspect);
+    if (!best || w * (w / aspect) > best.w * best.h) best = { w, h: w / aspect };
+  }
+  return best && { width: Math.floor(best.w), height: Math.floor(best.h) };
+}
+
+function Gallery({ count, children }) {
+  const ref = useRef(null);
+  const [box, setBox] = useState(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const size = box && galleryLayout(box.w, box.h, count);
+  return (
+    <div ref={ref} style={{
+      flex: 1, minHeight: 0, overflow: "hidden", margin: 12,
+      display: "flex", flexWrap: "wrap", justifyContent: "center", alignContent: "center", gap: TILE_GAP,
+    }}>
+      {size && children(size)}
     </div>
   );
 }
@@ -769,7 +743,7 @@ export default function TeireiKaigi() {
   const silenced = !!(view && view.silenceAt != null && progress >= view.silenceAt);
   const joinerVisible = !!(view && view.lateJoiner && progress >= 0.45);
 
-  const LATE_JOINER = { id: "late_joiner", name: "user_039", skin: "#777", shirt: "#222", bgType: "dark", bgA: "#0a0a0c", bgB: "#000000", muted: true, cameraOff: true };
+  const LATE_JOINER = { id: "late_joiner", name: "user_039", muted: true, cameraOff: true };
 
   const tiles = view
     ? [
@@ -816,10 +790,11 @@ export default function TeireiKaigi() {
         .tk-root { height: 100vh; height: 100dvh; overflow: hidden; }
         @keyframes tk-blink { 0%, 92% { transform: scaleY(1); } 94%, 97% { transform: scaleY(0.08); } 100% { transform: scaleY(1); } }
         @keyframes tk-talk { from { transform: scaleY(0.45); } to { transform: scaleY(1.3); } }
+        @keyframes tk-sway { 0%, 100% { transform: rotate(-0.9deg); } 50% { transform: rotate(1.1deg) translateX(0.4px); } }
         @keyframes tk-fadein { from { opacity: 0; } to { opacity: 1; } }
         @keyframes tk-recblink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
         @keyframes tk-trophyglow { 0%,100% { box-shadow: 0 0 12px rgba(255,211,90,0.18); } 50% { box-shadow: 0 0 22px rgba(255,211,90,0.4); } }
-        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01s !important; } }
+        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01s !important; } .tk-sway { animation: none !important; } }
         .tk-btn { border: none; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
         .tk-btn:focus-visible { outline: 2px solid #7ab8ff; outline-offset: 2px; }
       `}</style>
@@ -925,15 +900,15 @@ export default function TeireiKaigi() {
             </button>
           </div>
 
-          {/* grid */}
-          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: 12, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gridAutoRows: "1fr" }}>
-            {tiles.map((p, i) => (
-              <Tile key={p.id} p={p} idx={i}
+          {/* gallery */}
+          <Gallery count={tiles.length}>
+            {({ width, height }) => tiles.map((p, i) => (
+              <Tile key={p.id} p={p} idx={i} width={width} height={height}
                 talking={silenced ? false : (p.host === true || (view.selfTalk && p.isSelf && progress > 0.4))}
                 syncBlink={view.syncBlink} selfName={view.selfName}
                 progress={progress} silenced={silenced} />
             ))}
-          </div>
+          </Gallery>
 
           {/* caption */}
           <div style={{ textAlign: "center", padding: "4px 16px 10px", fontSize: 13, color: "#c9cdd6", minHeight: 24 }}>
