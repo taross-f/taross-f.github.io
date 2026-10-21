@@ -155,6 +155,11 @@ const ANOMALIES = [
     label: "渡辺さんの目が、赤かった",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "watanabe" ? { ...p, eyeColor: "#c01818" } : p); },
   },
+  {
+    id: "myroom",
+    label: "渡辺さんが、あなたの部屋にいた",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "watanabe" ? { ...p, room: SELF.room } : p); },
+  },
   // ---- 不気味強化系（静的） ----
   {
     id: "noblink",
@@ -182,6 +187,11 @@ const ANOMALIES = [
     label: "残り時間が、途中から増えていった",
     apply: (v) => { v.timerReverse = true; },
   },
+  {
+    id: "turnaway",
+    label: "途中から、佐藤さんが後ろを向いていた",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "sato" ? { ...p, turnAwayAt: 0.5 } : p); },
+  },
   // ---- じわじわ系（時間経過で進行） ----
   {
     id: "approach",
@@ -202,6 +212,26 @@ const ANOMALIES = [
     id: "thirdeye",
     label: "田中さんの額に、もう一つ目が開いていた",
     apply: (v) => { v.participants = v.participants.map(p => p.id === "tanaka" ? { ...p, thirdEye: true } : p); },
+  },
+  {
+    id: "fade",
+    label: "あなたの姿が、だんだん薄くなっていった",
+    apply: (v) => { v.selfFade = true; },
+  },
+  {
+    id: "neck",
+    label: "高橋さんの首が、だんだん伸びていった",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "takahashi" ? { ...p, neckStretch: true } : p); },
+  },
+  {
+    id: "wither",
+    label: "佐藤さんの後ろの植物が、だんだん枯れていった",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "sato" ? { ...p, wither: true } : p); },
+  },
+  {
+    id: "dusk",
+    label: "鈴木さんの窓の外が、どんどん暗くなっていった",
+    apply: (v) => { v.participants = v.participants.map(p => p.id === "suzuki" ? { ...p, dusk: true } : p); },
   },
 ];
 
@@ -307,6 +337,7 @@ function buildView(anomalyId) {
     closing: CLOSING,
     leaveLabel: "退出",
     selfTalk: false,
+    selfFade: false,
     lateJoiner: false,
     silenceAt: null,
     timerReverse: false,
@@ -449,6 +480,8 @@ function Tile({ p, width, height, talking, syncBlink, idx, selfName, progress, s
   const name = p.isSelf ? selfName : p.name;
   // じわじわ系: 序盤は気づけないよう二乗カーブで進行させる
   const growScale = p.grow ? 1 + 1.6 * progress * progress : 1;
+  // fade 異変: 人物だけが薄れて、後ろの部屋が透けていく
+  const personOpacity = p.fade ? 1 - 0.85 * progress * progress : 1;
   const redOpacity = p.redden ? 0.65 * Math.pow(progress, 1.5) : 0;
   const frozen = !!p.frozenEyes || silenced;
   // 枠線(2px×2)を除いた映像部分の縦横比で、部屋と人物の写る範囲を決める
@@ -466,7 +499,8 @@ function Tile({ p, width, height, talking, syncBlink, idx, selfName, progress, s
           position: "absolute", inset: 0,
           transform: `scale(${growScale})`,
           transformOrigin: "50% 47%", // 顔の中心
-          transition: "transform 1.1s linear",
+          opacity: personOpacity,
+          transition: "transform 1.1s linear, opacity 1.1s linear",
         }}>
           <Avatar p={p} viewBox={viewBox} talking={talking} syncBlink={syncBlink} idx={idx}
             frozen={frozen} still={silenced} progress={progress} />
@@ -738,7 +772,7 @@ export default function TeireiKaigi() {
   const tiles = view
     ? [
         ...view.participants.slice(0, 3),
-        SELF,
+        view.selfFade ? { ...SELF, fade: true } : SELF,
         ...view.participants.slice(3),
         ...(joinerVisible ? [LATE_JOINER] : []),
       ]
