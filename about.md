@@ -17,7 +17,12 @@ permalink: /about/
 
 
 # 経歴
-- 2024.12 -
+- 2026.7 -
+  - 株式会社 PKSHA Technology ソフトウェアエンジニア / エンジニアリングマネージャー   
+- 2025.7 - 2026.6
+  - 株式会社 PKSHA Technology カンパニー執行役員（PKSHA Communicationの吸収合併に伴い）   
+    - AI SaaSプロダクト開発のSWE全体を統括
+- 2024.12 - 2025.6
   - 株式会社 PKSHA Communication 執行役員   
     - AI SaaSプロダクト開発のSWE全体を統括
 - 2021.9 - 2024.11
